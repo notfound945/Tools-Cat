@@ -1,0 +1,23 @@
+.DS_Store
+# Xcode specific
+DerivedData/
+*.xcworkspace
+xcuserdata/
+
+# CocoaPods
+Pods/
+
+# Carthage
+Carthage/Build/
+
+# Build
+build/
+
+# Other
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+
+dist/
+
