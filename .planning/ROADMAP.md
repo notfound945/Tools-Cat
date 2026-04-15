@@ -4,11 +4,11 @@
 
 - ✅ **v1.0 MVP** — Phases 1-5 shipped 2026-04-13. Archive: `.planning/milestones/v1.0-ROADMAP.md`
 - ✅ **v1.1 Hardening** — Phases 6-9 shipped 2026-04-13. Archive: `.planning/milestones/v1.1-ROADMAP.md`
-- 🚧 **v1.2 Menu Truth** — Phases 10-11 in progress
+- 🚧 **v1.2 Menu Truth** — Phases 10-11 complete and ready for milestone archive
 
 ## Overview
 
-This milestone is intentionally small. It fixes one keep-awake menu truth leak that remained after the hardening pass: when keep-awake is already off, the root menu still shows `关闭常亮` even though there is nothing to stop. The milestone keeps the existing timed / indefinite model and only tightens which keep-awake actions are visible in idle versus active states. After the feature work landed, the milestone audit found one remaining closure gap: Phase 10 still needs an explicit verification artifact and closed requirement traceability before the milestone can be archived cleanly.
+This milestone is intentionally small. It fixes one keep-awake menu truth leak that remained after the hardening pass: when keep-awake is already off, the root menu still shows `关闭常亮` even though there is nothing to stop. The milestone keeps the existing timed / indefinite model and only tightens which keep-awake actions are visible in idle versus active states. Phase 11 then closes the remaining audit gap by adding the missing Phase 10 verification artifact, restoring requirement traceability, and refreshing the milestone audit into a passing state.
 
 ## Phases
 
@@ -17,7 +17,7 @@ This milestone is intentionally small. It fixes one keep-awake menu truth leak t
 - v1.2 therefore starts at Phase 10 and now includes Phase 11 for audit-driven verification closure
 
 - [x] **Phase 10: Keep-Awake Menu Truth** - Make the keep-awake action group truthful in idle and active states without reopening the broader menu structure.
-- [ ] **Phase 11: Menu Truth Verification Closure** - Close the remaining milestone-audit gap by adding formal Phase 10 verification and requirement traceability evidence.
+- [x] **Phase 11: Menu Truth Verification Closure** - Close the remaining milestone-audit gap by adding formal Phase 10 verification and requirement traceability evidence. (completed 2026-04-15)
 
 ## Phase Details
 
@@ -43,9 +43,9 @@ Plans:
   1. Phase 10 has a `10-VERIFICATION.md` that maps MENU-01 through MENU-03 to concrete shipped evidence.
   2. `REQUIREMENTS.md` and milestone traceability no longer show MENU-01 through MENU-03 as orphaned pending requirements.
   3. Re-running `$gsd-audit-milestone` for v1.2 passes without critical gaps.
-**Plans**: 0/1 plans complete
+**Plans**: 1/1 plans complete
 Plans:
-- [ ] 11-01-PLAN.md — Create the missing Phase 10 verification artifact and close Menu Truth requirements traceability
+- [x] 11-01-PLAN.md — Create the missing Phase 10 verification artifact and close Menu Truth requirements traceability
 
 ## Progress
 
@@ -54,5 +54,5 @@ Phases execute in numeric order: 10 → 11
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 10. Keep-Awake Menu Truth | 2/2 | Feature complete | - |
-| 11. Menu Truth Verification Closure | 0/1 | Not started | - |
+| 10. Keep-Awake Menu Truth | 2/2 | Complete | 2026-04-15 |
+| 11. Menu Truth Verification Closure | 1/1 | Complete | 2026-04-15 |

@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Menu Truth
-status: planning
-stopped_at: Phase 11 gap-closure phase created
-last_updated: "2026-04-15T02:12:11Z"
-last_activity: 2026-04-15 -- Phase 11 created from v1.2 milestone audit gaps
+status: ready_to_complete_milestone
+stopped_at: Phase 11 complete; v1.2 audit passed
+last_updated: "2026-04-15T04:27:29Z"
+last_activity: 2026-04-15 -- Phase 11 completed and the v1.2 audit passed
 progress:
   total_phases: 2
-  completed_phases: 0
+  completed_phases: 2
   total_plans: 3
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -20,16 +20,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-13)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Phase 11 — menu-truth-verification-closure
+**Current focus:** Milestone completion — v1.2 Menu Truth archive
 
 ## Current Position
 
-Phase: 11 (menu-truth-verification-closure) — PLANNING
-Plan: 0 of 1
-Status: Gap-closure phase added from milestone audit
-Last activity: 2026-04-15 -- Phase 11 created from v1.2 milestone audit gaps
+Phase: 11 (Menu Truth Verification Closure) — COMPLETE
+Plan: 1 of 1
+Status: Ready for `$gsd-complete-milestone v1.2`
+Last activity: 2026-04-15 -- Phase 11 completed and the v1.2 audit passed
 
-Progress: [█████████████░░░░░░░] 2/3 plans complete
+Progress: [████████████████████] 3/3 plans complete
 
 ## Milestone Summary
 
@@ -56,12 +56,11 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Close the remaining verification artifact gap for the shipped keep-awake menu-truth work.
-- Preserve the Phase 10 behavior while proving it through formal verification and requirements traceability.
-- Re-run the milestone audit cleanly so v1.2 can be archived without accepted process debt.
+- Run `$gsd-complete-milestone v1.2` now that all phases and the milestone audit are complete.
+- Review deferred convenience and distribution follow-ups (`CONV-04`, `DIST-01`) when the next milestone begins.
 
 ## Session Continuity
 
 Last session: 2026-04-14T06:06:43.282Z
-Stopped at: Phase 11 gap-closure phase created
+Stopped at: Phase 11 complete; v1.2 audit passed
 Resume file: .planning/phases/11-menu-truth-verification-closure
