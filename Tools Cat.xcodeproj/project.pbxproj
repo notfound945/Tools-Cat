@@ -37,7 +37,10 @@
 			explicitFileTypes = {
 				DeviceLibraryManagementPresentation.swift = sourcecode.swift;
 				KeepAwakeCountdownScheduler.swift = sourcecode.swift;
+				KeepAwakeDurationRepository.swift = sourcecode.swift;
+				KeepAwakeDurationStore.swift = sourcecode.swift;
 				KeepAwakeDurationPreset.swift = sourcecode.swift;
+				ManagedKeepAwakeDuration.swift = sourcecode.swift;
 				KeepAwakePresentation.swift = sourcecode.swift;
 				KeepAwakeSessionModel.swift = sourcecode.swift;
 				ManualMACValidator.swift = sourcecode.swift;
@@ -60,6 +63,8 @@
 			explicitFileTypes = {
 				DeviceLibraryManagementPresentationTests.swift = sourcecode.swift;
 				DeviceLibrarySessionModelTests.swift = sourcecode.swift;
+				KeepAwakeDurationRepositoryTests.swift = sourcecode.swift;
+				KeepAwakeDurationStoreTests.swift = sourcecode.swift;
 				KeepAwakeMenuStateTests.swift = sourcecode.swift;
 				KeepAwakeSessionModelTests.swift = sourcecode.swift;
 				MACAddressValidatorTests.swift = sourcecode.swift;
