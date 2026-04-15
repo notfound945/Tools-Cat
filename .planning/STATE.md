@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Duration Management
-status: ready_for_execution
-stopped_at: Phase 13 UAT complete, gap plan created
-last_updated: "2026-04-15T17:09:35+0800"
-last_activity: 2026-04-15 -- completed Phase 13 UAT and planned gap closure for menu placement, modal CRUD, and live sync
+status: ready_for_verification
+stopped_at: Phase 13 execution complete, awaiting verify-work
+last_updated: "2026-04-15T17:44:19+0800"
+last_activity: 2026-04-15 -- completed Phase 13 gap closure execution and full automated validation slice
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 6
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -20,16 +20,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-15)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Phase 13 — Duration Management Surface gap closure
+**Current focus:** Phase 13 — verification closure
 
 ## Current Position
 
-Phase: 13 (duration-management-surface) — READY FOR EXECUTION
+Phase: 13 (duration-management-surface) — READY FOR VERIFICATION
 Plan: 3 of 3
-Status: Ready for `$gsd-execute-phase 13`
-Last activity: 2026-04-15 -- completed Phase 13 UAT and planned one gap-closure execute slice
+Status: Ready for `$gsd-verify-work 13`
+Last activity: 2026-04-15 -- completed Phase 13 gap closure execution and full automated validation slice
 
-Progress: [████████░░] 5/6 plans complete
+Progress: [██████████] 6/6 plans complete
 
 ## Milestone Summary
 
@@ -57,6 +57,7 @@ The latest completed milestone established these durable decisions:
 - [Phase 12.1]: Treat macOS 14.0 as the deployment-target truth and keep real macOS 14.8.3 launch proof as an explicit manual boundary.
 - [Phase 12]: Seed managed keep-awake durations exactly once from one defaults key and bridge the fixed root menu through canonical duration seconds until dynamic rendering lands.
 - [Phase 13]: Manage timed keep-awake durations through a dedicated native window and shared session; after UAT, pull the minimum required root-menu sync slice forward so CRUD truth holds live.
+- [Phase 13 gap closure]: Keep timed root-menu rows subscribed directly to the managed duration store, and keep add/edit inside one shared list-local sheet.
 
 ### Roadmap Evolution
 
@@ -65,12 +66,11 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Replace the fixed timed keep-awake enum with a persisted managed-duration source of truth.
-- Seed `15 分钟` / `30 分钟` / `1 小时` / `2 小时` exactly once and never re-add deleted defaults on relaunch.
-- Keep the current keep-awake menu truthful while the duration domain migrates underneath it.
+- Re-run Phase 13 `verify-work` now that the gap-closure slice and automation are green.
+- Re-evaluate whether Phase 14 still needs independent scope after Phase 13 verification, since live menu integration now ships in the gap closure.
 
 ## Session Continuity
 
-Last session: 2026-04-15T08:36:16Z
-Stopped at: Phase 13 UAT complete, gap plan created
-Resume file: .planning/phases/13-duration-management-surface/13-03-PLAN.md
+Last session: 2026-04-15T17:44:19+08:00
+Stopped at: Phase 13 execution complete, awaiting verify-work
+Resume file: .planning/phases/13-duration-management-surface/13-03-SUMMARY.md

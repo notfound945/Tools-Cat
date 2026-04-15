@@ -19,7 +19,7 @@ This milestone extends the keep-awake menu without reopening its broader truth c
 
 - [x] **Phase 12: Duration Preset Persistence** - Establish the persisted keep-awake duration list, default seeded presets, and validation rules. (completed 2026-04-15)
 - [x] **Phase 12.1: macOS 14.8.3 Compatibility Support** - Restore runtime support for macOS 14.8.3 by aligning the deployment target and shipped app baseline. (completed 2026-04-15)
-- [ ] **Phase 13: Duration Management Surface** - Let users add, edit, and delete managed keep-awake durations from a dedicated native flow.
+- [ ] **Phase 13: Duration Management Surface** - Let users add, edit, and delete managed keep-awake durations from a dedicated native flow. (execution complete 2026-04-15; ready for verify-work)
 - [ ] **Phase 14: Managed Duration Menu Integration** - Render the keep-awake menu from the managed duration list while keeping `无限常亮` fixed first.
 
 ## Phase Details
@@ -54,21 +54,23 @@ Plans:
 ### Phase 13: Duration Management Surface
 **Goal**: Users can manage timed keep-awake durations themselves through a small native management flow.
 **Depends on**: Phase 12, Phase 12.1
-**Requirements**: AWAKE-06, AWAKE-07, AWAKE-08, AWAKE-09
+**Requirements**: AWAKE-05, AWAKE-06, AWAKE-07, AWAKE-08, AWAKE-09
 **Plans**: 3/3 plans complete
 Plans:
 - [x] 13-01-PLAN.md - Build the store-backed duration-management session model and CRUD validation contract.
 - [x] 13-02-PLAN.md - Add the native duration-management window, direct-launch coverage, and status-menu entry wiring.
-- [ ] 13-03-PLAN.md - Close UAT gaps for keep-awake menu placement, compact add/edit modal flow, and live root-menu synchronization.
+- [x] 13-03-PLAN.md - Close UAT gaps for keep-awake menu placement, compact add/edit modal flow, and live root-menu synchronization.
 **Success Criteria** (what must be TRUE):
   1. User can open a duration-management surface and inspect the current managed duration list.
   2. User can add or edit a managed duration and see the list update into the correct sorted position after save.
   3. User can delete a managed duration, while `无限常亮` remains fixed and unavailable for deletion.
+  4. The root keep-awake menu immediately reflects managed-duration CRUD truth in sorted order, with `管理常亮时长…` grouped at the bottom of the keep-awake section.
 
 ### Phase 14: Managed Duration Menu Integration
 **Goal**: The keep-awake menu consumes the managed duration list while preserving the current truthful menu structure.
 **Depends on**: Phase 12, Phase 13
 **Requirements**: AWAKE-05
+**Status Note**: Most planned scope was pulled forward into Phase 13 gap closure. Re-evaluate after `$gsd-verify-work 13` before creating any new plans here.
 **Success Criteria** (what must be TRUE):
   1. `无限常亮` remains the first keep-awake action in the root menu.
   2. All timed keep-awake rows after it come from the managed duration list and are sorted from shortest to longest.
@@ -83,5 +85,5 @@ Phases execute in numeric order: 12 → 12.1 → 13 → 14
 |-------|----------------|--------|-----------|
 | 12. Duration Preset Persistence | 2/2 | Complete   | 2026-04-15 |
 | 12.1. macOS 14.8.3 Compatibility Support | 1/1 | Complete   | 2026-04-15 |
-| 13. Duration Management Surface | 3/3 | Ready to execute | - |
-| 14. Managed Duration Menu Integration | 0/0 | Not started | - |
+| 13. Duration Management Surface | 3/3 | Ready for verify-work | - |
+| 14. Managed Duration Menu Integration | 0/0 | Re-evaluate after Phase 13 verify-work | - |
