@@ -25,7 +25,7 @@ Tools Cat is a personal macOS menu bar utility for two everyday jobs: keeping th
 - Objective-C/C system APIs via Swift imports - The app bridges into Apple frameworks and POSIX APIs through `import Cocoa`, `import IOKit.pwr_mgt`, and `import Darwin` in `Tools Cat/AppDelegate.swift`, `Tools Cat/StatusBarController.swift`, `Tools Cat/PowerAssertionManager.swift`, and `Tools Cat/WOLSender.swift`.
 ## Runtime
 - Native macOS app runtime - The main target is an app bundle (`Tools Cat.app`) in `Tools Cat.xcodeproj/project.pbxproj`.
-- macOS 15.6 minimum deployment target - Set as `MACOSX_DEPLOYMENT_TARGET = 15.6` for the project and test targets in `Tools Cat.xcodeproj/project.pbxproj`.
+- macOS 14.0 minimum deployment target - Set as `MACOSX_DEPLOYMENT_TARGET = 14.0` for the project and test targets in `Tools Cat.xcodeproj/project.pbxproj`.
 - Menu bar app configuration - `INFOPLIST_KEY_LSUIElement = 1` in `Tools Cat.xcodeproj/project.pbxproj` makes the app run without a standard dock/main window flow.
 - None detected - No `Package.swift`, `Package.resolved`, `Podfile`, `Cartfile`, or other dependency manager manifests are present at the project root.
 - Lockfile: missing

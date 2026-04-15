@@ -15,7 +15,7 @@
 
 **Environment:**
 - Native macOS app runtime - The main target is an app bundle (`Tools Cat.app`) in `Tools Cat.xcodeproj/project.pbxproj`.
-- macOS 15.6 minimum deployment target - Set as `MACOSX_DEPLOYMENT_TARGET = 15.6` for the project and test targets in `Tools Cat.xcodeproj/project.pbxproj`.
+- macOS 14.0 minimum deployment target - Set as `MACOSX_DEPLOYMENT_TARGET = 14.0` for the project and test targets in `Tools Cat.xcodeproj/project.pbxproj`.
 - Menu bar app configuration - `INFOPLIST_KEY_LSUIElement = 1` in `Tools Cat.xcodeproj/project.pbxproj` makes the app run without a standard dock/main window flow.
 
 **Package Manager:**
