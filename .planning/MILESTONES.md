@@ -1,5 +1,25 @@
 # Milestones
 
+## v1.2 Menu Truth (Shipped: 2026-04-15)
+
+**Phases completed:** 2 phases, 3 plans, 5 tasks
+**Audit:** passed
+
+**Key accomplishments:**
+
+- The keep-awake root menu now hides the idle `关闭常亮` row while keeping a direct stop action visible for real active or stopping sessions.
+- Phase 10 now has startup, replacement, stopping, and compact-idle regression coverage plus a validation contract that maps `MENU-01` through `MENU-03` to exact checks.
+- The missing `10-VERIFICATION.md` artifact now ties the shipped evidence chain to all three MENU requirements without reopening runtime scope.
+- The v1.2 audit now passes with closed traceability, formal verification, and no remaining milestone blockers.
+
+**Archive files:**
+
+- `.planning/milestones/v1.2-ROADMAP.md`
+- `.planning/milestones/v1.2-REQUIREMENTS.md`
+- `.planning/milestones/v1.2-MILESTONE-AUDIT.md`
+
+---
+
 ## v1.1 Hardening (Shipped: 2026-04-13)
 
 **Phases completed:** 4 phases, 11 plans, 12 tasks

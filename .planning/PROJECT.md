@@ -10,37 +10,32 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 
 ## Current State
 
-- Shipped: `v1.1 Hardening` on 2026-04-13
+- Shipped: `v1.2 Menu Truth` on 2026-04-15
 - Live product identity: `Tools Cat`
-- Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, and full rename closure
-- Planning state: `v1.2 Menu Truth` has completed Phase 10 behavior work and Phase 11 verification closure; the milestone audit now passes and the project is ready to archive v1.2
+- Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, and the final keep-awake menu-truth fix plus verification closure
+- Planning state: no active milestone. `v1.2 Menu Truth` is archived and the next milestone is ready to be defined
 
 ## Next Milestone Goals
 
-- Keep the keep-awake action group truthful in idle state instead of showing impossible stop actions
-- Tighten the keep-awake menu contract without reopening the broader menu structure
-- Lock the idle/active visibility rule into regression coverage so the row does not silently come back
+- Decide whether `CONV-04` recent-device convenience is the next milestone or should remain deferred.
+- Decide whether `DIST-01` packaging hardening is the next highest-leverage follow-up.
+- Preserve the current compact wake surface and explicit verification boundary while choosing the next scope.
 
-## Current Milestone: v1.2 Menu Truth
+## Latest Shipped Milestone: v1.2 Menu Truth
 
-**Goal:** Keep-awake menu actions should only show what the user can truthfully do right now, starting by hiding `关闭常亮` whenever no keep-awake session is active.
-
-**Status:** All planned phases are complete, the milestone audit passes, and the project is ready for `$gsd-complete-milestone v1.2`.
-
-**Target features:**
-- Hide `关闭常亮` when keep-awake is off and no stop transition is in progress
-- Preserve a direct stop action whenever infinite or timed keep-awake is actually active
-- Re-baseline tests and validation docs around the new idle-vs-active keep-awake action truth
-
-## Latest Shipped Milestone: v1.1 Hardening
-
-**Result:** The shipped baseline is now easier to trust and maintain: current-facing planning docs match shipped behavior, verification boundaries are explicit, validation debt is closed for Phases 01-04, and the live app / automation / documentation surface all use `Tools Cat`.
+**Result:** The shipped baseline now keeps the keep-awake action group truthful in idle and active states, and the evidence chain for that behavior is fully closed from implementation through milestone audit.
 
 **Delivered:**
-- Restore planning truth in phase verification and project docs so they match the shipped `快速 WOL` submenu plus the dedicated `发送 WOL …` row
-- Make the menu-bar entry-point verification strategy explicit and durable across controller tests, direct-launch UI smoke, and manual tray-entry checks
-- Finish Phase 01-04 validation debt so milestone coverage is easier to trust and maintain
-- Hard-switch the live product identity to `Tools Cat` without losing saved-device persistence or breaking packaging automation
+- Hide `关闭常亮` whenever keep-awake is already off and no stop transition is running
+- Preserve one direct `关闭常亮` action for active or stopping keep-awake sessions
+- Lock the idle/active keep-awake truth boundary with focused controller regressions, a formal Phase 10 verification report, and closed milestone traceability
+
+<details>
+<summary>Previous shipped milestone: v1.1 Hardening</summary>
+
+The shipped baseline became easier to trust and maintain: current-facing planning docs matched shipped behavior, verification boundaries became explicit, validation debt closed for Phases 01-04, and the live app / automation / documentation surface all aligned on `Tools Cat`.
+
+</details>
 
 ## Requirements
 
@@ -67,7 +62,8 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 
 ### Active
 
-None - the current v1.2 requirements are fully validated and ready to archive.
+- [ ] Decide whether `CONV-04` should become active scope for the next milestone
+- [ ] Decide whether `DIST-01` should become active scope for the next milestone
 
 ### Out of Scope
 
@@ -142,4 +138,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-15 after completing Phase 11 and passing the v1.2 audit*
+*Last updated: 2026-04-15 after archiving the v1.2 milestone*
