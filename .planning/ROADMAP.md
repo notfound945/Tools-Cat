@@ -19,7 +19,7 @@ This milestone extends the keep-awake menu without reopening its broader truth c
 
 - [x] **Phase 12: Duration Preset Persistence** - Establish the persisted keep-awake duration list, default seeded presets, and validation rules. (completed 2026-04-15)
 - [x] **Phase 12.1: macOS 14.8.3 Compatibility Support** - Restore runtime support for macOS 14.8.3 by aligning the deployment target and shipped app baseline. (completed 2026-04-15)
-- [ ] **Phase 13: Duration Management Surface** - Let users add, edit, and delete managed keep-awake durations from a dedicated native flow. (execution complete 2026-04-15; ready for verify-work)
+- [ ] **Phase 13: Duration Management Surface** - Let users add, edit, and delete managed keep-awake durations from a dedicated native flow. (UAT found one cosmetic list-surface gap; 13-04 ready to execute)
 - [ ] **Phase 14: Managed Duration Menu Integration** - Render the keep-awake menu from the managed duration list while keeping `无限常亮` fixed first.
 
 ## Phase Details
@@ -55,11 +55,12 @@ Plans:
 **Goal**: Users can manage timed keep-awake durations themselves through a small native management flow.
 **Depends on**: Phase 12, Phase 12.1
 **Requirements**: AWAKE-05, AWAKE-06, AWAKE-07, AWAKE-08, AWAKE-09
-**Plans**: 3/3 plans complete
+**Plans**: 3/4 plans complete
 Plans:
 - [x] 13-01-PLAN.md - Build the store-backed duration-management session model and CRUD validation contract.
 - [x] 13-02-PLAN.md - Add the native duration-management window, direct-launch coverage, and status-menu entry wiring.
 - [x] 13-03-PLAN.md - Close UAT gaps for keep-awake menu placement, compact add/edit modal flow, and live root-menu synchronization.
+- [ ] 13-04-PLAN.md - Give the timed-duration area a distinct native list surface so it no longer blends into the window background.
 **Success Criteria** (what must be TRUE):
   1. User can open a duration-management surface and inspect the current managed duration list.
   2. User can add or edit a managed duration and see the list update into the correct sorted position after save.
@@ -85,5 +86,5 @@ Phases execute in numeric order: 12 → 12.1 → 13 → 14
 |-------|----------------|--------|-----------|
 | 12. Duration Preset Persistence | 2/2 | Complete   | 2026-04-15 |
 | 12.1. macOS 14.8.3 Compatibility Support | 1/1 | Complete   | 2026-04-15 |
-| 13. Duration Management Surface | 3/3 | Ready for verify-work | - |
+| 13. Duration Management Surface | 3/4 | Cosmetic gap plan ready | - |
 | 14. Managed Duration Menu Integration | 0/0 | Re-evaluate after Phase 13 verify-work | - |

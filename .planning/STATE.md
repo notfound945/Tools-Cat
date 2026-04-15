@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Duration Management
-status: ready_for_verification
-stopped_at: Phase 13 execution complete, awaiting verify-work
-last_updated: "2026-04-15T17:44:19+0800"
-last_activity: 2026-04-15 -- completed Phase 13 gap closure execution and full automated validation slice
+status: ready_for_execution
+stopped_at: Phase 13 UAT complete, cosmetic list-surface gap diagnosed and planned
+last_updated: "2026-04-15T18:08:36+0800"
+last_activity: 2026-04-15 -- completed Phase 13 UAT, diagnosed one cosmetic issue, and created gap plan 13-04
 progress:
   total_phases: 4
   completed_phases: 2
-  total_plans: 6
+  total_plans: 7
   completed_plans: 6
 ---
 
@@ -20,16 +20,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-15)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Phase 13 — verification closure
+**Current focus:** Phase 13 — cosmetic gap closure
 
 ## Current Position
 
-Phase: 13 (duration-management-surface) — READY FOR VERIFICATION
-Plan: 3 of 3
-Status: Ready for `$gsd-verify-work 13`
-Last activity: 2026-04-15 -- completed Phase 13 gap closure execution and full automated validation slice
+Phase: 13 (duration-management-surface) — READY FOR EXECUTION
+Plan: 4 of 4
+Status: Ready for `$gsd-execute-phase 13 --gaps-only`
+Last activity: 2026-04-15 -- completed Phase 13 UAT, diagnosed one cosmetic issue, and created gap plan 13-04
 
-Progress: [██████████] 6/6 plans complete
+Progress: [█████████░] 6/7 plans complete
 
 ## Milestone Summary
 
@@ -58,6 +58,7 @@ The latest completed milestone established these durable decisions:
 - [Phase 12]: Seed managed keep-awake durations exactly once from one defaults key and bridge the fixed root menu through canonical duration seconds until dynamic rendering lands.
 - [Phase 13]: Manage timed keep-awake durations through a dedicated native window and shared session; after UAT, pull the minimum required root-menu sync slice forward so CRUD truth holds live.
 - [Phase 13 gap closure]: Keep timed root-menu rows subscribed directly to the managed duration store, and keep add/edit inside one shared list-local sheet.
+- [Phase 13 cosmetic gap]: The duration manager's timed rows need a distinct native list surface; functional correctness alone was not enough for discoverability.
 
 ### Roadmap Evolution
 
@@ -66,11 +67,11 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Re-run Phase 13 `verify-work` now that the gap-closure slice and automation are green.
-- Re-evaluate whether Phase 14 still needs independent scope after Phase 13 verification, since live menu integration now ships in the gap closure.
+- Execute Phase 13 cosmetic gap plan `13-04` and re-run `verify-work`.
+- Re-evaluate whether Phase 14 still needs independent scope after Phase 13 closes, since live menu integration now ships in the earlier gap closure.
 
 ## Session Continuity
 
-Last session: 2026-04-15T17:44:19+08:00
-Stopped at: Phase 13 execution complete, awaiting verify-work
-Resume file: .planning/phases/13-duration-management-surface/13-03-SUMMARY.md
+Last session: 2026-04-15T18:08:36+08:00
+Stopped at: Phase 13 UAT complete, cosmetic list-surface gap diagnosed and planned
+Resume file: .planning/phases/13-duration-management-surface/13-04-PLAN.md

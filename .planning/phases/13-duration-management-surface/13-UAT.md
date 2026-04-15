@@ -1,5 +1,5 @@
 ---
-status: complete
+status: diagnosed
 phase: 13-duration-management-surface
 source:
   - 13-01-SUMMARY.md
@@ -53,7 +53,13 @@ blocked: 0
   reason: "User reported: 功能正常，但是UI不合我胃口，列表应该有列表的样子，不应该和背景同色，让人不能发现是个列表"
   severity: cosmetic
   test: 2
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "时长列表当前只是裸 `ScrollView` + `LazyVStack`，没有任何独立的列表容器背景、边界、内边距层次或行级表面处理，导致内容直接贴在窗口背景上，视觉上无法被识别成一个可操作列表。"
+  artifacts:
+    - "Tools Cat/KeepAwakeDurationManagementView.swift:71"
+    - "Tools Cat/KeepAwakeDurationManagementView.swift:90"
+    - "Tools Cat/KeepAwakeDurationManagementView.swift:230"
+    - "Tools Cat/KeepAwakeDurationManagementView.swift:253"
+  missing:
+    - "缺少一个与窗口背景区分开的原生列表容器样式，例如圆角面板、描边、次级背景色或 inset 分组视觉。"
+    - "缺少行级视觉层次，当前各时长项只有文字和分隔线，没有让用户一眼识别为列表项的表面或间距设计。"
+  debug_session: "local-diagnosis"
