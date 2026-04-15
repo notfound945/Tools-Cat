@@ -13,13 +13,23 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 - Shipped: `v1.2 Menu Truth` on 2026-04-15
 - Live product identity: `Tools Cat`
 - Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, and the final keep-awake menu-truth fix plus verification closure
-- Planning state: no active milestone. `v1.2 Menu Truth` is archived and the next milestone is ready to be defined
+- Planning state: `v1.3 Duration Management` is active and queued for phase planning
 
 ## Next Milestone Goals
 
-- Decide whether `CONV-04` recent-device convenience is the next milestone or should remain deferred.
-- Decide whether `DIST-01` packaging hardening is the next highest-leverage follow-up.
-- Preserve the current compact wake surface and explicit verification boundary while choosing the next scope.
+- Replace the fixed timed keep-awake presets with a user-managed duration list.
+- Keep `无限常亮` fixed and undeletable while all timed rows come from managed data.
+- Add a native duration-management flow that supports add, edit, delete, validation, persistence, and duration-based sorting.
+
+## Current Milestone: v1.3 Duration Management
+
+**Goal:** Let users manage timed keep-awake durations themselves while keeping `无限常亮` fixed as the first menu action.
+
+**Target features:**
+- A duration-management entry point seeded with `15 分钟` / `30 分钟` / `1 小时` / `2 小时`
+- Add, edit, and delete for managed timed durations
+- Menu rows sourced from the managed duration list and sorted by duration
+- Validation and persistence so invalid or duplicate durations cannot be saved and the list survives relaunch
 
 ## Latest Shipped Milestone: v1.2 Menu Truth
 
@@ -62,8 +72,9 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 
 ### Active
 
-- [ ] Decide whether `CONV-04` should become active scope for the next milestone
-- [ ] Decide whether `DIST-01` should become active scope for the next milestone
+- [ ] User can manage timed keep-awake durations without affecting the fixed `无限常亮` action
+- [ ] The keep-awake menu renders timed rows from the managed duration list in ascending duration order
+- [ ] Managed durations are validated, persisted, and reflected correctly after add/edit/delete operations
 
 ### Out of Scope
 
@@ -138,4 +149,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-15 after archiving the v1.2 milestone*
+*Last updated: 2026-04-15 after starting the v1.3 Duration Management milestone*

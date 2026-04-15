@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: none
-milestone_name: none
-status: ready_for_new_milestone
-stopped_at: Archived v1.2 Menu Truth milestone
-last_updated: "2026-04-15T12:40:00+08:00"
-last_activity: 2026-04-15 -- archived v1.2 Menu Truth and prepared for next milestone
+milestone: v1.3
+milestone_name: Duration Management
+status: planning
+stopped_at: Milestone v1.3 started
+last_updated: "2026-04-15T12:50:00+08:00"
+last_activity: 2026-04-15 -- milestone v1.3 started and requirements are being defined
 progress:
-  total_phases: 11
-  completed_phases: 11
-  total_plans: 31
-  completed_plans: 31
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -20,24 +20,23 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-15)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Define the next milestone
+**Current focus:** Milestone v1.3 — Duration Management
 
 ## Current Position
 
-Phase: none
+Phase: Not started (defining requirements)
 Plan: 0 of 0
-Status: Ready for `$gsd-new-milestone`
-Last activity: 2026-04-15 -- archived v1.2 Menu Truth and prepared for next milestone
+Status: Defining requirements
+Last activity: 2026-04-15 -- milestone v1.3 started and requirements are being defined
 
-Progress: [████████████████████] 31/31 plans complete
+Progress: [░░░░░░░░░░░░░░░░░░░░] 0/0 plans complete
 
 ## Milestone Summary
 
-- Active milestone: none
+- Active milestone: `v1.3 Duration Management`
 - Latest archived milestone: `v1.2 Menu Truth`
 - Working files:
   - `.planning/PROJECT.md`
-  - `.planning/ROADMAP.md`
 - Latest shipped summary: `.planning/MILESTONES.md`
 
 ## Accumulated Context
@@ -55,11 +54,12 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Define the next milestone with `$gsd-new-milestone`.
-- Review whether `CONV-04` or `DIST-01` should drive the next active requirements set.
+- Keep `无限常亮` fixed while replacing the timed keep-awake rows with a managed duration list.
+- Add a native duration-management flow with add/edit/delete, sorting, and persistence.
+- Preserve the current explicit verification boundary while extending the keep-awake menu.
 
 ## Session Continuity
 
 Last session: 2026-04-14T06:06:43.282Z
-Stopped at: Archived v1.2 Menu Truth milestone
-Resume file: .planning/milestones/v1.2-ROADMAP.md
+Stopped at: Milestone v1.3 started
+Resume file: .planning/PROJECT.md
