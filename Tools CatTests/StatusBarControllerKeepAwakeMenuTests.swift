@@ -11,6 +11,7 @@ final class StatusBarControllerKeepAwakeMenuTests: XCTestCase {
         let keepAwakeTitles = keepAwakeItems.map(\.title)
         let keepAwakeIndexes = keepAwakeItems.map { fixture.controller.menuIndexForTesting(of: $0) }
         let statusIndex = fixture.controller.menuIndexForTesting(of: fixture.controller.keepAwakeStatusItem)
+        let manageIndex = fixture.controller.menuItemsForTesting.firstIndex(where: { $0.title == "管理常亮时长…" })
 
         XCTAssertEqual(
             keepAwakeTitles,
@@ -18,7 +19,8 @@ final class StatusBarControllerKeepAwakeMenuTests: XCTestCase {
         )
         XCTAssertEqual(keepAwakeIndexes, [0, 1, 2, 3, 4, 5])
         XCTAssertEqual(statusIndex, 6)
-        XCTAssertEqual(fixture.controller.wolMenuIndexForTesting, 8)
+        XCTAssertEqual(manageIndex, 7)
+        XCTAssertEqual(fixture.controller.wolMenuIndexForTesting, 9)
         XCTAssertEqual(fixture.controller.keepAwakeStatusItem.title, "")
         XCTAssertEqual(fixture.controller.keepAwakeStatusItem.isEnabled, false)
         XCTAssertTrue(fixture.controller.keepAwakeStatusItem.isHidden)
@@ -255,14 +257,7 @@ final class StatusBarControllerKeepAwakeMenuTests: XCTestCase {
     }
 
     private func keepAwakeActionItems(of controller: StatusBarController) -> [NSMenuItem] {
-        [
-            controller.keepAwakeIndefiniteItem,
-            controller.keepAwake15MinutesItem,
-            controller.keepAwake30MinutesItem,
-            controller.keepAwake1HourItem,
-            controller.keepAwake2HoursItem,
-            controller.keepAwakeOffItem,
-        ]
+        [controller.keepAwakeIndefiniteItem] + controller.keepAwakeTimedItemsForTesting + [controller.keepAwakeOffItem]
     }
 
     private func visibleKeepAwakeActionTitles(of controller: StatusBarController) -> [String] {

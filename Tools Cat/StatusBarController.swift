@@ -10,6 +10,7 @@ final class StatusBarController: NSObject {
     private let keepAwakeDurationStore: KeepAwakeDurationStore
     private var cancellables: Set<AnyCancellable> = []
     private var dynamicWakeItems: [NSMenuItem] = []
+    private var dynamicKeepAwakeTimedItems: [NSMenuItem] = []
     private var wolItem: NSMenuItem!
     private var keepAwakeWakeSeparatorItem: NSMenuItem!
     private var wakeQuitSeparatorItem: NSMenuItem!
@@ -18,18 +19,34 @@ final class StatusBarController: NSObject {
     private var quitItem: NSMenuItem!
 
     private(set) var keepAwakeIndefiniteItem: NSMenuItem!
-    private(set) var keepAwake15MinutesItem: NSMenuItem!
-    private(set) var keepAwake30MinutesItem: NSMenuItem!
-    private(set) var keepAwake1HourItem: NSMenuItem!
-    private(set) var keepAwake2HoursItem: NSMenuItem!
     private(set) var keepAwakeOffItem: NSMenuItem!
     private(set) var keepAwakeStatusItem: NSMenuItem!
     private(set) var recentWakeItems: [NSMenuItem] = []
     private(set) var allDevicesItem: NSMenuItem?
     private(set) var wakeStatusItem: NSMenuItem?
 
+    var keepAwake15MinutesItem: NSMenuItem {
+        forceTimedKeepAwakeItem(seconds: 900)
+    }
+
+    var keepAwake30MinutesItem: NSMenuItem {
+        forceTimedKeepAwakeItem(seconds: 1800)
+    }
+
+    var keepAwake1HourItem: NSMenuItem {
+        forceTimedKeepAwakeItem(seconds: 3600)
+    }
+
+    var keepAwake2HoursItem: NSMenuItem {
+        forceTimedKeepAwakeItem(seconds: 7200)
+    }
+
     var menuItemsForTesting: [NSMenuItem] {
         menu.items
+    }
+
+    var keepAwakeTimedItemsForTesting: [NSMenuItem] {
+        dynamicKeepAwakeTimedItems
     }
 
     var statusButtonForTesting: NSStatusBarButton? {
@@ -75,38 +92,6 @@ final class StatusBarController: NSObject {
         keepAwakeIndefiniteItem.target = self
         menu.addItem(keepAwakeIndefiniteItem)
 
-        keepAwake15MinutesItem = NSMenuItem(
-            title: "15 分钟",
-            action: #selector(startKeepAwake15Minutes(_:)),
-            keyEquivalent: ""
-        )
-        keepAwake15MinutesItem.target = self
-        menu.addItem(keepAwake15MinutesItem)
-
-        keepAwake30MinutesItem = NSMenuItem(
-            title: "30 分钟",
-            action: #selector(startKeepAwake30Minutes(_:)),
-            keyEquivalent: ""
-        )
-        keepAwake30MinutesItem.target = self
-        menu.addItem(keepAwake30MinutesItem)
-
-        keepAwake1HourItem = NSMenuItem(
-            title: "1 小时",
-            action: #selector(startKeepAwake1Hour(_:)),
-            keyEquivalent: ""
-        )
-        keepAwake1HourItem.target = self
-        menu.addItem(keepAwake1HourItem)
-
-        keepAwake2HoursItem = NSMenuItem(
-            title: "2 小时",
-            action: #selector(startKeepAwake2Hours(_:)),
-            keyEquivalent: ""
-        )
-        keepAwake2HoursItem.target = self
-        menu.addItem(keepAwake2HoursItem)
-
         keepAwakeOffItem = NSMenuItem(
             title: "关闭常亮",
             action: #selector(stopKeepAwake(_:)),
@@ -120,6 +105,14 @@ final class StatusBarController: NSObject {
         keepAwakeStatusItem.isHidden = true
         menu.addItem(keepAwakeStatusItem)
 
+        manageKeepAwakeDurationsItem = NSMenuItem(
+            title: "管理常亮时长…",
+            action: #selector(openKeepAwakeDurationManagement),
+            keyEquivalent: ""
+        )
+        manageKeepAwakeDurationsItem.target = self
+        menu.addItem(manageKeepAwakeDurationsItem)
+
         keepAwakeWakeSeparatorItem = NSMenuItem.separator()
         menu.addItem(keepAwakeWakeSeparatorItem)
 
@@ -131,14 +124,6 @@ final class StatusBarController: NSObject {
         manageDevicesItem.target = self
         menu.addItem(manageDevicesItem)
 
-        manageKeepAwakeDurationsItem = NSMenuItem(
-            title: "管理常亮时长…",
-            action: #selector(openKeepAwakeDurationManagement),
-            keyEquivalent: ""
-        )
-        manageKeepAwakeDurationsItem.target = self
-        menu.addItem(manageKeepAwakeDurationsItem)
-
         wakeQuitSeparatorItem = NSMenuItem.separator()
         menu.addItem(wakeQuitSeparatorItem)
 
@@ -147,6 +132,7 @@ final class StatusBarController: NSObject {
         menu.addItem(quitItem)
 
         statusItem.menu = menu
+        rebuildKeepAwakeMenu()
         rebuildWakeMenu()
         bindWakeMenuState()
         renderKeepAwakePresentation()
@@ -175,6 +161,16 @@ final class StatusBarController: NSObject {
                 }
             }
             .store(in: &cancellables)
+
+        keepAwakeDurationStore.$durations
+            .dropFirst()
+            .sink { [weak self] _ in
+                DispatchQueue.main.async {
+                    self?.rebuildKeepAwakeMenu()
+                    self?.renderKeepAwakePresentation()
+                }
+            }
+            .store(in: &cancellables)
     }
 
     private func renderKeepAwakePresentation() {
@@ -186,10 +182,11 @@ final class StatusBarController: NSObject {
         )
 
         keepAwakeIndefiniteItem.state = presentation.isIndefiniteActive ? .on : .off
-        keepAwake15MinutesItem.state = presentation.activeTimedDuration?.durationSeconds == 900 ? .on : .off
-        keepAwake30MinutesItem.state = presentation.activeTimedDuration?.durationSeconds == 1800 ? .on : .off
-        keepAwake1HourItem.state = presentation.activeTimedDuration?.durationSeconds == 3600 ? .on : .off
-        keepAwake2HoursItem.state = presentation.activeTimedDuration?.durationSeconds == 7200 ? .on : .off
+        let activeTimedSeconds = presentation.activeTimedDuration?.durationSeconds
+        dynamicKeepAwakeTimedItems.forEach { item in
+            let duration = item.representedObject as? ManagedKeepAwakeDuration
+            item.state = duration?.durationSeconds == activeTimedSeconds ? .on : .off
+        }
         keepAwakeOffItem.state = .off
         keepAwakeOffItem.isHidden = !presentation.showsStopAction
 
@@ -208,14 +205,50 @@ final class StatusBarController: NSObject {
     }
 
     private var keepAwakeActionItems: [NSMenuItem] {
-        [
-            keepAwakeIndefiniteItem,
-            keepAwake15MinutesItem,
-            keepAwake30MinutesItem,
-            keepAwake1HourItem,
-            keepAwake2HoursItem,
-            keepAwakeOffItem,
-        ]
+        [keepAwakeIndefiniteItem] + dynamicKeepAwakeTimedItems + [keepAwakeOffItem]
+    }
+
+    private func rebuildKeepAwakeMenu() {
+        for item in dynamicKeepAwakeTimedItems {
+            menu.removeItem(item)
+        }
+
+        dynamicKeepAwakeTimedItems.removeAll()
+
+        let insertIndex = menu.index(of: keepAwakeOffItem)
+        guard insertIndex >= 0 else { return }
+
+        let items = keepAwakeDurationStore.durations.map(makeKeepAwakeTimedMenuItem(for:))
+        dynamicKeepAwakeTimedItems = items
+
+        for (offset, item) in items.enumerated() {
+            menu.insertItem(item, at: insertIndex + offset)
+        }
+    }
+
+    private func makeKeepAwakeTimedMenuItem(for duration: ManagedKeepAwakeDuration) -> NSMenuItem {
+        let item = NSMenuItem(
+            title: duration.menuTitle,
+            action: #selector(startKeepAwakeTimedDuration(_:)),
+            keyEquivalent: ""
+        )
+        item.target = self
+        item.representedObject = duration
+        return item
+    }
+
+    private func keepAwakeTimedItem(matchingSeconds seconds: Int) -> NSMenuItem? {
+        dynamicKeepAwakeTimedItems.first { item in
+            (item.representedObject as? ManagedKeepAwakeDuration)?.durationSeconds == seconds
+        }
+    }
+
+    private func forceTimedKeepAwakeItem(seconds: Int) -> NSMenuItem {
+        guard let item = keepAwakeTimedItem(matchingSeconds: seconds) else {
+            fatalError("Expected timed keep-awake item for \(seconds) seconds")
+        }
+
+        return item
     }
 
     private func rebuildWakeMenu() {
@@ -336,23 +369,9 @@ final class StatusBarController: NSObject {
         renderKeepAwakePresentation()
     }
 
-    @objc private func startKeepAwake15Minutes(_ sender: NSMenuItem) {
-        keepAwakeSession.startTimed(bridgedDuration(seconds: 900))
-        renderKeepAwakePresentation()
-    }
-
-    @objc private func startKeepAwake30Minutes(_ sender: NSMenuItem) {
-        keepAwakeSession.startTimed(bridgedDuration(seconds: 1800))
-        renderKeepAwakePresentation()
-    }
-
-    @objc private func startKeepAwake1Hour(_ sender: NSMenuItem) {
-        keepAwakeSession.startTimed(bridgedDuration(seconds: 3600))
-        renderKeepAwakePresentation()
-    }
-
-    @objc private func startKeepAwake2Hours(_ sender: NSMenuItem) {
-        keepAwakeSession.startTimed(bridgedDuration(seconds: 7200))
+    @objc private func startKeepAwakeTimedDuration(_ sender: NSMenuItem) {
+        guard let duration = sender.representedObject as? ManagedKeepAwakeDuration else { return }
+        keepAwakeSession.startTimed(duration)
         renderKeepAwakePresentation()
     }
 
@@ -396,9 +415,5 @@ final class StatusBarController: NSObject {
         keepAwakeSession.stop {
             NSApp.terminate(nil)
         }
-    }
-
-    private func bridgedDuration(seconds: Int) -> ManagedKeepAwakeDuration {
-        keepAwakeDurationStore.duration(matchingSeconds: seconds) ?? ManagedKeepAwakeDuration(durationSeconds: seconds)
     }
 }

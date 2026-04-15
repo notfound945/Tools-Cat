@@ -17,14 +17,19 @@ final class StatusBarControllerMenuPolishTests: XCTestCase {
         let secondSeparatorIndex = try XCTUnwrap(separators.last?.offset)
 
         XCTAssertEqual(separators.count, 2)
-        XCTAssertEqual(firstSeparatorIndex, controller.menuIndexForTesting(of: controller.keepAwakeStatusItem) + 1)
+        XCTAssertEqual(firstSeparatorIndex, controller.menuIndexForTesting(of: controller.keepAwakeStatusItem) + 2)
         XCTAssertLessThan(firstSeparatorIndex, controller.wolMenuIndexForTesting)
         XCTAssertLessThan(controller.wolMenuIndexForTesting, secondSeparatorIndex)
+
+        let keepAwakeTitles = controller.menuItemsForTesting[..<firstSeparatorIndex]
+            .filter { !$0.isSeparatorItem && !$0.isHidden }
+            .map(\.title)
+        XCTAssertEqual(keepAwakeTitles, ["无限常亮", "15 分钟", "30 分钟", "1 小时", "2 小时", "管理常亮时长…"])
 
         let wakeTitles = controller.menuItemsForTesting[(firstSeparatorIndex + 1)..<secondSeparatorIndex]
             .filter { !$0.isSeparatorItem }
             .map(\.title)
-        XCTAssertEqual(wakeTitles, ["快速 WOL", "发送 WOL …", "", "管理 WOL 设备…", "管理常亮时长…"])
+        XCTAssertEqual(wakeTitles, ["快速 WOL", "发送 WOL …", "", "管理 WOL 设备…"])
     }
 
     func testIdleMenuCollapsesBothStatusRows() {
@@ -51,16 +56,16 @@ final class StatusBarControllerMenuPolishTests: XCTestCase {
             controller.menuItemsForTesting[..<firstSeparatorIndex]
                 .filter { !$0.isSeparatorItem && !$0.isHidden }
                 .map(\.title),
-            ["无限常亮", "15 分钟", "30 分钟", "1 小时", "2 小时"]
+            ["无限常亮", "15 分钟", "30 分钟", "1 小时", "2 小时", "管理常亮时长…"]
         )
         XCTAssertTrue(controller.keepAwakeOffItem.isHidden)
         XCTAssertTrue(controller.keepAwakeStatusItem.isHidden)
-        XCTAssertEqual(firstSeparatorIndex, controller.menuIndexForTesting(of: controller.keepAwakeStatusItem) + 1)
+        XCTAssertEqual(firstSeparatorIndex, controller.menuIndexForTesting(of: controller.keepAwakeStatusItem) + 2)
         XCTAssertEqual(
             controller.menuItemsForTesting[(firstSeparatorIndex + 1)..<secondSeparatorIndex]
                 .filter { !$0.isSeparatorItem }
                 .map(\.title),
-            ["快速 WOL", "发送 WOL …", "", "管理 WOL 设备…", "管理常亮时长…"]
+            ["快速 WOL", "发送 WOL …", "", "管理 WOL 设备…"]
         )
         XCTAssertEqual(controller.wolMenuIndexForTesting, firstSeparatorIndex + 2)
 
@@ -87,7 +92,7 @@ final class StatusBarControllerMenuPolishTests: XCTestCase {
             controller.menuItemsForTesting[(firstSeparatorIndex + 1)..<secondSeparatorIndex]
                 .filter { !$0.isSeparatorItem }
                 .map(\.title),
-            ["发送 WOL …", "", "管理 WOL 设备…", "管理常亮时长…"]
+            ["发送 WOL …", "", "管理 WOL 设备…"]
         )
         XCTAssertEqual(controller.wolMenuIndexForTesting, firstSeparatorIndex + 1)
 
@@ -99,7 +104,7 @@ final class StatusBarControllerMenuPolishTests: XCTestCase {
         XCTAssertEqual(controller.wakeStatusItem?.isHidden, false)
     }
 
-    func testManageWOLDevicesStaysAtEndOfWakeGroupAndQuitRemainsLastRow() {
+    func testManageKeepAwakeDurationsSitsAtEndOfKeepAwakeGroupAndQuitRemainsLastRow() {
         let devices = makeDevices()
         let store = SavedDeviceLibraryStore(repository: InMemoryMenuPolishSavedDeviceRepository(devices: devices))
         try? store.markWakeSucceeded(deviceID: devices[0].id)
@@ -107,19 +112,68 @@ final class StatusBarControllerMenuPolishTests: XCTestCase {
 
         let titles = controller.menuItemsForTesting.map(\.title)
         let separators = controller.menuItemsForTesting.enumerated().filter { $0.element.isSeparatorItem }
+        let firstSeparatorIndex = try! XCTUnwrap(separators.first?.offset)
         let secondSeparatorIndex = try! XCTUnwrap(separators.last?.offset)
 
         XCTAssertEqual(titles.last, "退出 Tools Cat")
-        XCTAssertEqual(titles[secondSeparatorIndex - 2], "管理 WOL 设备…")
-        XCTAssertEqual(titles[secondSeparatorIndex - 1], "管理常亮时长…")
+        XCTAssertEqual(titles[firstSeparatorIndex - 1], "管理常亮时长…")
+        XCTAssertEqual(titles[secondSeparatorIndex - 1], "管理 WOL 设备…")
         XCTAssertEqual(controller.menuItemsForTesting[secondSeparatorIndex].isSeparatorItem, true)
+    }
+
+    func testKeepAwakeTimedRowsRefreshAfterDurationStoreMutations() async throws {
+        let deviceStore = SavedDeviceLibraryStore(repository: InMemoryMenuPolishSavedDeviceRepository(devices: []))
+        let durationStore = KeepAwakeDurationStore(
+            repository: InMemoryMenuPolishDurationRepository(
+                durations: [900, 1800, 3600, 7200].map { ManagedKeepAwakeDuration(durationSeconds: $0) }
+            )
+        )
+        let controller = makeController(
+            deviceLibrary: deviceStore,
+            keepAwakeDurationStore: durationStore
+        )
+
+        XCTAssertEqual(
+            controller.menuItemsForTesting[..<controller.wolMenuIndexForTesting]
+                .filter { !$0.isSeparatorItem && !$0.isHidden }
+                .map(\.title),
+            ["无限常亮", "15 分钟", "30 分钟", "1 小时", "2 小时", "管理常亮时长…"]
+        )
+
+        try durationStore.addDuration(seconds: 5400)
+        await Task.yield()
+        try? await Task.sleep(nanoseconds: 50_000_000)
+
+        XCTAssertEqual(
+            controller.menuItemsForTesting[..<controller.wolMenuIndexForTesting]
+                .filter { !$0.isSeparatorItem && !$0.isHidden }
+                .map(\.title),
+            ["无限常亮", "15 分钟", "30 分钟", "1 小时", "1 小时 30 分钟", "2 小时", "管理常亮时长…"]
+        )
+
+        try durationStore.deleteDuration(id: try XCTUnwrap(durationStore.duration(matchingSeconds: 1800)?.id))
+        await Task.yield()
+        try? await Task.sleep(nanoseconds: 50_000_000)
+
+        XCTAssertEqual(
+            controller.menuItemsForTesting[..<controller.wolMenuIndexForTesting]
+                .filter { !$0.isSeparatorItem && !$0.isHidden }
+                .map(\.title),
+            ["无限常亮", "15 分钟", "1 小时", "1 小时 30 分钟", "2 小时", "管理常亮时长…"]
+        )
     }
 
     private func makeController(
         deviceLibrary: SavedDeviceLibraryStore,
-        wolSession: WOLSessionModel? = nil
+        wolSession: WOLSessionModel? = nil,
+        keepAwakeDurationStore: KeepAwakeDurationStore? = nil
     ) -> StatusBarController {
         let session = wolSession ?? WOLSessionModel(deviceLibrary: deviceLibrary, wakeSender: RecordingMenuPolishWakeSender())
+        let durationStore = keepAwakeDurationStore ?? KeepAwakeDurationStore(
+            repository: InMemoryMenuPolishDurationRepository(
+                durations: [900, 1800, 3600, 7200].map { ManagedKeepAwakeDuration(durationSeconds: $0) }
+            )
+        )
         let controller = StatusBarController(
             deviceLibrary: deviceLibrary,
             wolSession: session,
@@ -127,7 +181,8 @@ final class StatusBarControllerMenuPolishTests: XCTestCase {
                 powerController: FakeMenuPolishPowerController(),
                 scheduler: FakeMenuPolishCountdownScheduler(),
                 nowProvider: { Date(timeIntervalSinceReferenceDate: 0) }
-            )
+            ),
+            keepAwakeDurationStore: durationStore
         )
         Self.retainedControllers.append(controller)
         return controller
@@ -185,6 +240,28 @@ private final class InMemoryMenuPolishSavedDeviceRepository: SavedDeviceReposito
 
     func saveWakeMetadata(_ metadata: SavedDeviceWakeMetadata) throws {
         wakeMetadata = metadata
+    }
+}
+
+private final class InMemoryMenuPolishDurationRepository: KeepAwakeDurationRepository {
+    private var durations: [ManagedKeepAwakeDuration]
+
+    init(durations: [ManagedKeepAwakeDuration]) {
+        self.durations = durations
+    }
+
+    func loadDurations() throws -> [ManagedKeepAwakeDuration] {
+        durations.sorted { lhs, rhs in
+            if lhs.durationSeconds == rhs.durationSeconds {
+                return lhs.id.uuidString < rhs.id.uuidString
+            }
+
+            return lhs.durationSeconds < rhs.durationSeconds
+        }
+    }
+
+    func saveDurations(_ durations: [ManagedKeepAwakeDuration]) throws {
+        self.durations = durations
     }
 }
 

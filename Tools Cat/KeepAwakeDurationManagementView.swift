@@ -5,16 +5,12 @@ struct KeepAwakeDurationManagementView: View {
     @ObservedObject var session: KeepAwakeDurationManagementSessionModel
 
     var body: some View {
-        Group {
-            switch session.screen {
-            case .list:
-                listContent
-            case .form(let mode):
-                formContent(mode: mode)
-            }
-        }
+        listContent
         .padding(24)
         .frame(minWidth: 420, minHeight: 360, alignment: .topLeading)
+        .sheet(isPresented: formSheetIsPresented) {
+            formSheetContent
+        }
         .alert(
             session.pendingDeleteDuration.map {
                 KeepAwakeDurationManagementPresentation.deleteConfirmationMessage(
@@ -59,6 +55,16 @@ struct KeepAwakeDurationManagementView: View {
             } else {
                 populatedListContent
             }
+        }
+    }
+
+    @ViewBuilder
+    private var formSheetContent: some View {
+        if let mode = session.currentFormMode {
+            formContent(mode: mode)
+                .padding(24)
+                .frame(width: 320, alignment: .topLeading)
+                .accessibilityIdentifier("keep-awake-duration-form-sheet")
         }
     }
 
@@ -199,6 +205,17 @@ struct KeepAwakeDurationManagementView: View {
             set: { isPresented in
                 if !isPresented {
                     session.cancelDelete()
+                }
+            }
+        )
+    }
+
+    private var formSheetIsPresented: Binding<Bool> {
+        Binding(
+            get: { session.isPresentingForm },
+            set: { isPresented in
+                if !isPresented {
+                    session.cancelForm()
                 }
             }
         )

@@ -1,11 +1,6 @@
 import Combine
 import Foundation
 
-enum KeepAwakeDurationManagementScreen: Equatable {
-    case list
-    case form(KeepAwakeDurationManagementFormMode)
-}
-
 enum KeepAwakeDurationManagementFormMode: Equatable {
     case add
     case edit(durationID: UUID)
@@ -14,7 +9,7 @@ enum KeepAwakeDurationManagementFormMode: Equatable {
 @MainActor
 final class KeepAwakeDurationManagementSessionModel: ObservableObject {
     @Published var durations: [ManagedKeepAwakeDuration]
-    @Published var screen: KeepAwakeDurationManagementScreen
+    @Published var currentFormMode: KeepAwakeDurationManagementFormMode?
     @Published var draftMinutesText: String
     @Published var pendingDeleteDuration: ManagedKeepAwakeDuration?
     @Published var validationMessage: String?
@@ -22,9 +17,8 @@ final class KeepAwakeDurationManagementSessionModel: ObservableObject {
 
     private let durationStore: KeepAwakeDurationStore
 
-    var currentFormMode: KeepAwakeDurationManagementFormMode? {
-        guard case .form(let mode) = screen else { return nil }
-        return mode
+    var isPresentingForm: Bool {
+        currentFormMode != nil
     }
 
     var canSaveDraft: Bool {
@@ -35,7 +29,7 @@ final class KeepAwakeDurationManagementSessionModel: ObservableObject {
         let resolvedStore = durationStore ?? KeepAwakeDurationStore()
         self.durationStore = resolvedStore
         durations = resolvedStore.durations
-        screen = .list
+        currentFormMode = nil
         draftMinutesText = ""
         pendingDeleteDuration = nil
         validationMessage = nil
@@ -58,7 +52,7 @@ final class KeepAwakeDurationManagementSessionModel: ObservableObject {
         clearErrors()
         clearDraft()
         pendingDeleteDuration = nil
-        screen = .form(.add)
+        currentFormMode = .add
     }
 
     func beginEdit(durationID: UUID) {
@@ -67,23 +61,23 @@ final class KeepAwakeDurationManagementSessionModel: ObservableObject {
         clearErrors()
         draftMinutesText = minutesText(for: duration)
         pendingDeleteDuration = nil
-        screen = .form(.edit(durationID: duration.id))
+        currentFormMode = .edit(durationID: duration.id)
     }
 
     func cancelForm() {
         clearErrors()
         clearDraft()
-        screen = .list
+        currentFormMode = nil
     }
 
     func saveDraft() {
-        guard let currentFormMode else { return }
+        guard let activeFormMode = currentFormMode else { return }
         guard let draftMinutes = validatedDraftMinutes() else { return }
 
         let seconds = draftMinutes * 60
 
         do {
-            switch currentFormMode {
+            switch activeFormMode {
             case .add:
                 try durationStore.addDuration(seconds: seconds)
             case .edit(let durationID):
@@ -93,7 +87,7 @@ final class KeepAwakeDurationManagementSessionModel: ObservableObject {
             syncDurationsFromStore()
             clearErrors()
             clearDraft()
-            screen = .list
+            currentFormMode = nil
         } catch let error as KeepAwakeDurationStoreError {
             validationMessage = validationMessage(for: error)
             saveErrorMessage = nil

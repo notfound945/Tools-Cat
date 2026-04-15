@@ -35,7 +35,7 @@ final class KeepAwakeDurationManagementSessionModelTests: XCTestCase {
 
         XCTAssertEqual(session.durations.map(\.durationSeconds), [900, 1800, 3600, 7200])
         XCTAssertEqual(session.durations.map(\.menuTitle), ["15 分钟", "30 分钟", "1 小时", "2 小时"])
-        XCTAssertEqual(session.screen, .list)
+        XCTAssertNil(session.currentFormMode)
         XCTAssertNil(session.pendingDeleteDuration)
     }
 
@@ -47,7 +47,7 @@ final class KeepAwakeDurationManagementSessionModelTests: XCTestCase {
         session.saveDraft()
 
         XCTAssertEqual(session.durations.map(\.durationSeconds), [900, 1800, 3600, 7200])
-        XCTAssertEqual(session.screen, .form(.add))
+        XCTAssertEqual(session.currentFormMode, .add)
         XCTAssertEqual(
             session.validationMessage,
             KeepAwakeDurationManagementPresentation.missingMinutesMessage
@@ -75,7 +75,7 @@ final class KeepAwakeDurationManagementSessionModelTests: XCTestCase {
         session.draftMinutesText = "90"
         session.saveDraft()
 
-        XCTAssertEqual(session.screen, .list)
+        XCTAssertNil(session.currentFormMode)
         XCTAssertEqual(session.durations.map(\.durationSeconds), [900, 1800, 3600, 5400, 7200])
         XCTAssertEqual(session.durations.first(where: { $0.durationSeconds == 5400 })?.menuTitle, "1 小时 30 分钟")
 
@@ -88,13 +88,13 @@ final class KeepAwakeDurationManagementSessionModelTests: XCTestCase {
         let editedDuration = try! XCTUnwrap(session.durations.first(where: { $0.durationSeconds == 1800 }))
 
         session.beginEdit(durationID: editedDuration.id)
-        XCTAssertEqual(session.screen, .form(.edit(durationID: editedDuration.id)))
+        XCTAssertEqual(session.currentFormMode, .edit(durationID: editedDuration.id))
         XCTAssertEqual(session.draftMinutesText, "30")
 
         session.draftMinutesText = "90"
         session.saveDraft()
 
-        XCTAssertEqual(session.screen, .list)
+        XCTAssertNil(session.currentFormMode)
         XCTAssertEqual(session.durations.map(\.durationSeconds), [900, 3600, 5400, 7200])
         XCTAssertEqual(session.durations.first(where: { $0.durationSeconds == 5400 })?.id, editedDuration.id)
 
@@ -107,7 +107,7 @@ final class KeepAwakeDurationManagementSessionModelTests: XCTestCase {
             session.validationMessage,
             KeepAwakeDurationManagementPresentation.duplicateDurationMessage
         )
-        XCTAssertEqual(session.screen, .form(.edit(durationID: conflictingDuration.id)))
+        XCTAssertEqual(session.currentFormMode, .edit(durationID: conflictingDuration.id))
     }
 
     func testDeleteRequiresConfirmationAndPersists() {

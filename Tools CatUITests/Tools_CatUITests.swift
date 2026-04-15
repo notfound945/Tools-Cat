@@ -5,6 +5,7 @@
 //  Created by hailinpan on 2025/10/19.
 //
 
+import AppKit
 import XCTest
 
 final class Tools_CatUITests: XCTestCase {
@@ -218,12 +219,19 @@ final class Tools_CatUITests: XCTestCase {
 
         clickElementAfterActivatingApp(addButton, in: app)
 
+        XCTAssertTrue(durationList.exists)
+        XCTAssertTrue(app.descendants(matching: .any)["keep-awake-duration-form-sheet"].waitForExistence(timeout: 2.0))
         XCTAssertTrue(window.staticTexts["时长（分钟）"].waitForExistence(timeout: 2.0))
         XCTAssertTrue(
             window.textFields["keep-awake-duration-minutes-field"].waitForExistence(timeout: 2.0)
                 || window.textFields["请输入分钟数"].waitForExistence(timeout: 2.0)
         )
         XCTAssertTrue(window.buttons["保存时长"].waitForExistence(timeout: 2.0))
+
+        let cancelButton = app.buttons["取消"]
+        if cancelButton.waitForExistence(timeout: 2.0) {
+            clickElementAfterActivatingApp(cancelButton, in: app)
+        }
     }
 }
 
@@ -316,9 +324,8 @@ private func waitForAnyElement(_ elements: [XCUIElement], timeout: TimeInterval)
 }
 
 private func terminateIfRunning(_ app: XCUIApplication) {
-    if app.state != .notRunning {
-        app.terminate()
-    }
+    _ = app
+    forceTerminateApplications(matchingBundleIdentifier: toolsCatBundleIdentifier)
 }
 
 private func clickElementAfterActivatingApp(_ element: XCUIElement, in app: XCUIApplication) {
@@ -367,6 +374,8 @@ private func makeApplication(
     launchContext: LaunchContext,
     additionalArguments: [String]
 ) -> XCUIApplication {
+    forceTerminateApplications(matchingBundleIdentifier: toolsCatBundleIdentifier)
+
     let app = XCUIApplication()
     app.launchArguments.append(contentsOf: additionalArguments)
     app.launchArguments.append("--ui-test-user-defaults-suite")
@@ -378,4 +387,13 @@ private func makeApplication(
     }
 
     return app
+}
+
+private let toolsCatBundleIdentifier = "cn.notfound945.Tools-Cat"
+
+private func forceTerminateApplications(matchingBundleIdentifier bundleIdentifier: String) {
+    let runningApps = NSRunningApplication.runningApplications(withBundleIdentifier: bundleIdentifier)
+    runningApps.forEach { app in
+        _ = app.forceTerminate()
+    }
 }
