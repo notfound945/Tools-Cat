@@ -9,9 +9,9 @@ Requirements for the v1.2 menu-truth milestone. This milestone keeps scope tight
 
 ### Menu Truth
 
-- [ ] **MENU-01**: User does not see `关闭常亮` in the menu when keep-awake is already off and no keep-awake stop transition is running
-- [ ] **MENU-02**: User still sees one direct `关闭常亮` action whenever infinite or timed keep-awake is active so the session can be ended from the menu
-- [ ] **MENU-03**: User sees keep-awake menu rows whose visible actions match the real current keep-awake state without losing the existing start actions or truthful status feedback
+- [x] **MENU-01**: User does not see `关闭常亮` in the menu when keep-awake is already off and no keep-awake stop transition is running
+- [x] **MENU-02**: User still sees one direct `关闭常亮` action whenever infinite or timed keep-awake is active so the session can be ended from the menu
+- [x] **MENU-03**: User sees keep-awake menu rows whose visible actions match the real current keep-awake state without losing the existing start actions or truthful status feedback
 
 ## v2 Requirements
 
@@ -41,9 +41,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MENU-01 | Phase 11 | Pending |
-| MENU-02 | Phase 11 | Pending |
-| MENU-03 | Phase 11 | Pending |
+| MENU-01 | Phase 10 | Complete |
+| MENU-02 | Phase 10 | Complete |
+| MENU-03 | Phase 10 | Complete |
 
 **Coverage:**
 - v1 requirements: 3 total
@@ -52,4 +52,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-04-13*
-*Last updated: 2026-04-15 after adding the v1.2 verification-closure phase*
+*Last updated: 2026-04-15 after closing the v1.2 verification and traceability loop*
