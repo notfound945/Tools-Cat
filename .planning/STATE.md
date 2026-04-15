@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Duration Management
-status: ready_for_execution
-stopped_at: Phase 12.1 planned
-last_updated: "2026-04-15T14:36:48+08:00"
-last_activity: 2026-04-15 -- planned Phase 12.1 macOS 14.8.3 compatibility support
+status: verifying
+stopped_at: Completed 12.1-01-PLAN.md
+last_updated: "2026-04-15T06:50:14.541Z"
+last_activity: 2026-04-15
 progress:
   total_phases: 4
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 0
+  completed_plans: 1
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-04-15)
 
 ## Current Position
 
-Phase: 12.1 (macos-14-8-3-compatibility-support) — NOT STARTED
-Plan: 0 of 1
-Status: Ready for `$gsd-execute-phase 12.1`
-Last activity: 2026-04-15 -- planned Phase 12.1 macOS 14.8.3 compatibility support
+Phase: 12.1 (macOS 14.8.3 Compatibility Support) — READY FOR VERIFICATION
+Plan: 1 of 1
+Status: Phase complete — ready for verification
+Last activity: 2026-04-15 -- completed 12.1-01 execution
 
-Progress: [░░░░░░░░░░░░░░░░░░░░] 0/3 plans complete
+Progress: [███░░░░░░░] 1/3 plans complete
 
 ## Milestone Summary
 
@@ -54,6 +54,7 @@ The latest completed milestone established these durable decisions:
 - Treat Phase 01-04 validation debt as documentation-truth work, not new harness work.
 - Keep runtime persistence on `UserDefaults.standard` and migrate legacy bundle-ID defaults only once.
 - Keep rename residue cleanup explicit and manual instead of destructive automation.
+- [Phase 12.1]: Treat macOS 14.0 as the deployment-target truth and keep real macOS 14.8.3 launch proof as an explicit manual boundary.
 
 ### Roadmap Evolution
 
@@ -68,6 +69,6 @@ The latest completed milestone established these durable decisions:
 
 ## Session Continuity
 
-Last session: 2026-04-14T06:06:43.282Z
-Stopped at: Phase 12.1 planned
-Resume file: .planning/phases/12.1-macos-14-8-3-compatibility-support/12.1-01-PLAN.md
+Last session: 2026-04-15T06:50:14.539Z
+Stopped at: Completed 12.1-01-PLAN.md
+Resume file: None

@@ -18,7 +18,7 @@ This milestone extends the keep-awake menu without reopening its broader truth c
 - v1.3 therefore starts at Phase 12
 
 - [ ] **Phase 12: Duration Preset Persistence** - Establish the persisted keep-awake duration list, default seeded presets, and validation rules.
-- [ ] **Phase 12.1: macOS 14.8.3 Compatibility Support** - Restore runtime support for macOS 14.8.3 by aligning the deployment target and shipped app baseline.
+- [x] **Phase 12.1: macOS 14.8.3 Compatibility Support** - Restore runtime support for macOS 14.8.3 by aligning the deployment target and shipped app baseline. (completed 2026-04-15)
 - [ ] **Phase 13: Duration Management Surface** - Let users add, edit, and delete managed keep-awake durations from a dedicated native flow.
 - [ ] **Phase 14: Managed Duration Menu Integration** - Render the keep-awake menu from the managed duration list while keeping `无限常亮` fixed first.
 
@@ -42,10 +42,10 @@ Plans:
 **Goal:** Restore app launch support on macOS 14.8.3 without reopening broader product scope.
 **Requirements**: TBD
 **Depends on:** Phase 12
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
-- [ ] 12.1-01-PLAN.md - Align the deployment target, documentation truth, and compatibility verification boundary for macOS 14.8.3 support.
+- [x] 12.1-01-PLAN.md - Align the deployment target, documentation truth, and compatibility verification boundary for macOS 14.8.3 support.
 **Success Criteria** (what must be TRUE):
   1. The Xcode project no longer declares macOS 15.6 as the minimum deployment target for the app or test targets.
   2. Repo guidance now matches the 14.x compatibility baseline instead of describing 15.6-only support.
@@ -77,6 +77,6 @@ Phases execute in numeric order: 12 → 12.1 → 13 → 14
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 12. Duration Preset Persistence | 0/2 | Planned | - |
-| 12.1. macOS 14.8.3 Compatibility Support | 0/1 | Planned | - |
+| 12.1. macOS 14.8.3 Compatibility Support | 1/1 | Complete   | 2026-04-15 |
 | 13. Duration Management Surface | 0/0 | Not started | - |
 | 14. Managed Duration Menu Integration | 0/0 | Not started | - |
