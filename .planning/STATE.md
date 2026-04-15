@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Duration Management
-status: verifying
-stopped_at: Completed 12.1-01-PLAN.md
-last_updated: "2026-04-15T06:50:14.541Z"
-last_activity: 2026-04-15
+status: ready_for_execution
+stopped_at: Phase 12.1 verified
+last_updated: "2026-04-15T15:44:43+0800"
+last_activity: 2026-04-15 -- verified Phase 12.1 macOS 14.8.3 compatibility support
 progress:
   total_phases: 4
   completed_phases: 1
@@ -20,14 +20,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-15)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Phase 12.1 — macOS 14.8.3 Compatibility Support
+**Current focus:** Phase 12 — Duration Preset Persistence
 
 ## Current Position
 
-Phase: 12.1 (macOS 14.8.3 Compatibility Support) — READY FOR VERIFICATION
-Plan: 1 of 1
-Status: Phase complete — ready for verification
-Last activity: 2026-04-15 -- completed 12.1-01 execution
+Phase: 12 (duration-preset-persistence) — READY FOR EXECUTION
+Plan: 0 of 2
+Status: Ready for `$gsd-execute-phase 12`
+Last activity: 2026-04-15 -- verified Phase 12.1 macOS 14.8.3 compatibility support
 
 Progress: [███░░░░░░░] 1/3 plans complete
 
@@ -69,6 +69,6 @@ The latest completed milestone established these durable decisions:
 
 ## Session Continuity
 
-Last session: 2026-04-15T06:50:14.539Z
-Stopped at: Completed 12.1-01-PLAN.md
-Resume file: None
+Last session: 2026-04-15T07:44:43Z
+Stopped at: Phase 12.1 verified
+Resume file: .planning/phases/12-duration-preset-persistence/12-01-PLAN.md
