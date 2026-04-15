@@ -4,12 +4,12 @@ import Foundation
 enum KeepAwakeMode: Equatable {
     case off
     case indefinite
-    case timed(preset: KeepAwakeDurationPreset, endDate: Date)
+    case timed(duration: ManagedKeepAwakeDuration, endDate: Date)
 }
 
 enum KeepAwakePendingAction: Equatable {
     case startingIndefinite
-    case startingTimed(KeepAwakeDurationPreset)
+    case startingTimed(ManagedKeepAwakeDuration)
     case stopping
 }
 
@@ -62,20 +62,20 @@ final class KeepAwakeSessionModel: ObservableObject {
         }
     }
 
-    func startTimed(_ preset: KeepAwakeDurationPreset) {
+    func startTimed(_ duration: ManagedKeepAwakeDuration) {
         guard pendingAction == nil else { return }
 
-        pendingAction = .startingTimed(preset)
+        pendingAction = .startingTimed(duration)
         message = nil
 
         powerController.setKeepAwakeEnabled(true) { [weak self] outcome in
             guard let self else { return }
             performKeepAwakeSessionUpdate {
                 let now = self.nowProvider()
-                let endDate = now.addingTimeInterval(preset.duration)
+                let endDate = now.addingTimeInterval(TimeInterval(duration.durationSeconds))
                 self.handleEnableOutcome(
                     outcome,
-                    requestedMode: .timed(preset: preset, endDate: endDate),
+                    requestedMode: .timed(duration: duration, endDate: endDate),
                     countdownNow: now
                 )
             }

@@ -20,9 +20,9 @@ struct KeepAwakePresentation: Equatable {
         return false
     }
 
-    var activeTimedPreset: KeepAwakeDurationPreset? {
-        if case let .timed(preset, _) = confirmedMode {
-            return preset
+    var activeTimedDuration: ManagedKeepAwakeDuration? {
+        if case let .timed(duration, _) = confirmedMode {
+            return duration
         }
 
         return nil
@@ -96,8 +96,8 @@ struct KeepAwakePresentation: Equatable {
         switch action {
         case .startingIndefinite:
             return "正在切换为无限常亮..."
-        case .startingTimed(let preset):
-            return "正在切换为 \(preset.menuTitle)常亮..."
+        case .startingTimed(let duration):
+            return "正在切换为 \(duration.menuTitle)常亮..."
         case .stopping:
             return "正在关闭常亮..."
         }

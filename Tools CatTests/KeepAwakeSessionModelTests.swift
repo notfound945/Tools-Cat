@@ -32,21 +32,22 @@ final class KeepAwakeSessionModelTests: XCTestCase {
         XCTAssertTrue(scheduler.startedTokens.isEmpty)
     }
 
-    func testStartTimedSessionStoresPresetAndEndDateAfterConfirmedEnable() async {
+    func testStartTimedSessionStoresManagedDurationAndEndDateAfterConfirmedEnable() async {
         let powerController = FakeKeepAwakePowerController(isEnabled: false)
         let scheduler = FakeKeepAwakeCountdownScheduler()
         let startNow = Date(timeIntervalSinceReferenceDate: 20_000)
         var currentNow = startNow
+        let minutes15 = makeDuration(900)
         let model = KeepAwakeSessionModel(
             powerController: powerController,
             scheduler: scheduler,
             nowProvider: { currentNow }
         )
 
-        model.startTimed(.minutes15)
+        model.startTimed(minutes15)
 
         XCTAssertEqual(model.confirmedMode, .off)
-        XCTAssertEqual(model.pendingAction, .startingTimed(.minutes15))
+        XCTAssertEqual(model.pendingAction, .startingTimed(minutes15))
         XCTAssertEqual(powerController.requestedStates, [true])
 
         powerController.complete(with: .success(true))
@@ -55,8 +56,8 @@ final class KeepAwakeSessionModelTests: XCTestCase {
         XCTAssertEqual(
             model.confirmedMode,
             .timed(
-                preset: .minutes15,
-                endDate: startNow.addingTimeInterval(KeepAwakeDurationPreset.minutes15.duration)
+                duration: minutes15,
+                endDate: startNow.addingTimeInterval(TimeInterval(minutes15.durationSeconds))
             )
         )
         XCTAssertNil(model.pendingAction)
@@ -79,22 +80,24 @@ final class KeepAwakeSessionModelTests: XCTestCase {
         let initialNow = Date(timeIntervalSinceReferenceDate: 30_000)
         let replacementNow = initialNow.addingTimeInterval(120)
         var nowValues = [initialNow, initialNow, replacementNow]
+        let minutes15 = makeDuration(900)
+        let hours2 = makeDuration(7200)
         let model = KeepAwakeSessionModel(
             powerController: powerController,
             scheduler: scheduler,
             nowProvider: { nowValues.removeFirst() }
         )
 
-        model.startTimed(.minutes15)
+        model.startTimed(minutes15)
         powerController.complete(with: .unchanged(true))
         await flushSessionModelUpdates()
 
         let firstToken = scheduler.startedTokens[0]
         XCTAssertFalse(firstToken.didCancel)
 
-        model.startTimed(.hours2)
+        model.startTimed(hours2)
 
-        XCTAssertEqual(model.pendingAction, .startingTimed(.hours2))
+        XCTAssertEqual(model.pendingAction, .startingTimed(hours2))
         XCTAssertEqual(powerController.requestedStates, [true, true])
 
         powerController.complete(with: .unchanged(true))
@@ -105,8 +108,8 @@ final class KeepAwakeSessionModelTests: XCTestCase {
         XCTAssertEqual(
             model.confirmedMode,
             .timed(
-                preset: .hours2,
-                endDate: replacementNow.addingTimeInterval(KeepAwakeDurationPreset.hours2.duration)
+                duration: hours2,
+                endDate: replacementNow.addingTimeInterval(TimeInterval(hours2.durationSeconds))
             )
         )
     }
@@ -115,7 +118,8 @@ final class KeepAwakeSessionModelTests: XCTestCase {
         let powerController = FakeKeepAwakePowerController(isEnabled: false)
         let scheduler = FakeKeepAwakeCountdownScheduler()
         let startNow = Date(timeIntervalSinceReferenceDate: 40_000)
-        let expiryNow = startNow.addingTimeInterval(KeepAwakeDurationPreset.minutes30.duration)
+        let minutes30 = makeDuration(1800)
+        let expiryNow = startNow.addingTimeInterval(TimeInterval(minutes30.durationSeconds))
         var currentNow = startNow
         let model = KeepAwakeSessionModel(
             powerController: powerController,
@@ -123,7 +127,7 @@ final class KeepAwakeSessionModelTests: XCTestCase {
             nowProvider: { currentNow }
         )
 
-        model.startTimed(.minutes30)
+        model.startTimed(minutes30)
         powerController.complete(with: .success(true))
         await flushSessionModelUpdates()
 
@@ -134,7 +138,7 @@ final class KeepAwakeSessionModelTests: XCTestCase {
         XCTAssertEqual(powerController.requestedStates, [true, false])
         XCTAssertEqual(
             model.confirmedMode,
-            .timed(preset: .minutes30, endDate: expiryNow)
+            .timed(duration: minutes30, endDate: expiryNow)
         )
         XCTAssertEqual(model.pendingAction, .stopping)
 
@@ -150,7 +154,8 @@ final class KeepAwakeSessionModelTests: XCTestCase {
         let powerController = FakeKeepAwakePowerController(isEnabled: false)
         let scheduler = FakeKeepAwakeCountdownScheduler()
         let startNow = Date(timeIntervalSinceReferenceDate: 50_000)
-        let expiryNow = startNow.addingTimeInterval(KeepAwakeDurationPreset.minutes15.duration)
+        let minutes15 = makeDuration(900)
+        let expiryNow = startNow.addingTimeInterval(TimeInterval(minutes15.durationSeconds))
         var currentNow = startNow
         let model = KeepAwakeSessionModel(
             powerController: powerController,
@@ -158,7 +163,7 @@ final class KeepAwakeSessionModelTests: XCTestCase {
             nowProvider: { currentNow }
         )
 
-        model.startTimed(.minutes15)
+        model.startTimed(minutes15)
         powerController.complete(with: .success(true))
         await flushSessionModelUpdates()
 
@@ -171,10 +176,14 @@ final class KeepAwakeSessionModelTests: XCTestCase {
 
         XCTAssertEqual(
             model.confirmedMode,
-            .timed(preset: .minutes15, endDate: expiryNow)
+            .timed(duration: minutes15, endDate: expiryNow)
         )
         XCTAssertNil(model.pendingAction)
         XCTAssertEqual(model.message, "关闭失败")
+    }
+
+    private func makeDuration(_ seconds: Int) -> ManagedKeepAwakeDuration {
+        ManagedKeepAwakeDuration(id: UUID(uuidString: "00000000-0000-0000-0000-\(String(format: "%012d", seconds))")!, durationSeconds: seconds)
     }
 
     private func flushSessionModelUpdates() async {
