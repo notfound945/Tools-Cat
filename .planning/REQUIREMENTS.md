@@ -5,7 +5,7 @@
 
 ## v1 Requirements
 
-Requirements for the v1.2 menu-truth milestone. This milestone keeps scope tight: it fixes keep-awake action truth in the menu instead of reopening the broader menu architecture.
+Requirements for the v1.2 menu-truth milestone. This milestone keeps scope tight: it fixes keep-awake action truth in the menu instead of reopening the broader menu architecture, then closes the verification and traceability loop needed to archive the milestone cleanly.
 
 ### Menu Truth
 
@@ -41,9 +41,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MENU-01 | Phase 10 | Pending |
-| MENU-02 | Phase 10 | Pending |
-| MENU-03 | Phase 10 | Pending |
+| MENU-01 | Phase 11 | Pending |
+| MENU-02 | Phase 11 | Pending |
+| MENU-03 | Phase 11 | Pending |
 
 **Coverage:**
 - v1 requirements: 3 total
@@ -52,4 +52,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-04-13*
-*Last updated: 2026-04-13 after defining the v1.2 milestone*
+*Last updated: 2026-04-15 after adding the v1.2 verification-closure phase*
