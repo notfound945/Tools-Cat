@@ -1,7 +1,7 @@
 ---
 phase: 10
 slug: keep-awake-menu-truth
-status: draft
+status: ready-for-verification
 nyquist_compliant: true
 wave_0_complete: true
 created: 2026-04-14
@@ -38,12 +38,22 @@ created: 2026-04-14
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 10-01-01 | 01 | 1 | MENU-01 | unit | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/KeepAwakeMenuStateTests'` | ✅ | ⬜ pending |
-| 10-01-02 | 01 | 1 | MENU-01, MENU-02 | controller | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/StatusBarControllerKeepAwakeMenuTests'` | ✅ | ⬜ pending |
-| 10-02-01 | 02 | 2 | MENU-02, MENU-03 | controller | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/StatusBarControllerKeepAwakeMenuTests' -only-testing:'Tools CatTests/StatusBarControllerMenuPolishTests'` | ✅ | ⬜ pending |
-| 10-02-02 | 02 | 2 | MENU-03 | docs + regression | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/KeepAwakeMenuStateTests' -only-testing:'Tools CatTests/StatusBarControllerKeepAwakeMenuTests' -only-testing:'Tools CatTests/StatusBarControllerMenuPolishTests'` | ✅ | ⬜ pending |
+| 10-01-01 | 01 | 1 | MENU-01 | unit | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/KeepAwakeMenuStateTests'` | ✅ | ✅ green |
+| 10-01-02 | 01 | 1 | MENU-01, MENU-02 | controller | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/StatusBarControllerKeepAwakeMenuTests'` | ✅ | ✅ green |
+| 10-02-01 | 02 | 2 | MENU-02, MENU-03 | controller | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/StatusBarControllerKeepAwakeMenuTests' -only-testing:'Tools CatTests/StatusBarControllerMenuPolishTests'` | ✅ | ✅ green |
+| 10-02-02 | 02 | 2 | MENU-03 | docs + regression | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/KeepAwakeMenuStateTests' -only-testing:'Tools CatTests/StatusBarControllerKeepAwakeMenuTests' -only-testing:'Tools CatTests/StatusBarControllerMenuPolishTests'` | ✅ | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠ manual-only boundary*
+
+---
+
+## Requirement Coverage
+
+| Requirement | Truth Locked | Automated Evidence | Manual Boundary |
+|-------------|--------------|--------------------|-----------------|
+| MENU-01 | Idle menus omit `关闭常亮` when keep-awake is off and no transition is pending | `KeepAwakeMenuStateTests.testStopActionVisibilityFollowsConfirmedAndPendingState`, `StatusBarControllerKeepAwakeMenuTests.testIdleMenuHidesStopRowWhenKeepAwakeIsOff`, `StatusBarControllerKeepAwakeMenuTests.testStartupFromOffKeepsStopRowHiddenUntilActivationSucceeds`, `StatusBarControllerMenuPolishTests.testIdleKeepAwakeSectionStaysCompactWhenStopRowIsHidden` | Live tray idle-open check confirms the AppKit menu hides the row in the real status item |
+| MENU-02 | Active sessions and stop transitions keep one direct `关闭常亮` row visible | `StatusBarControllerKeepAwakeMenuTests.testConfirmedActiveSessionShowsStopRow`, `StatusBarControllerKeepAwakeMenuTests.testReplacementWhileAlreadyActiveKeepsStopRowVisibleDuringPendingStart`, `StatusBarControllerKeepAwakeMenuTests.testStoppingStateKeepsStopRowVisibleButDisabled`, `KeepAwakeMenuStateTests.testStopActionVisibilityFollowsConfirmedAndPendingState` | Live tray active/open and stopping/open check confirms the row stays visible and disabled only while stopping |
+| MENU-03 | Start rows remain intact, countdown/status text stays truthful, and compact grouping does not regress | `KeepAwakeMenuStateTests.testPendingPresentationUsesExactModeSpecificStatusCopy`, `KeepAwakeMenuStateTests.testTimedPresentationShowsCountdownInStatusRowOnly`, `StatusBarControllerKeepAwakeMenuTests.testCountdownNeverAppearsInAnyActionTitle`, `StatusBarControllerKeepAwakeMenuTests.testKeepAwakeStatusRowRendersPresentationStatusText`, `StatusBarControllerMenuPolishTests.testIdleKeepAwakeSectionStaysCompactWhenStopRowIsHidden` | One live tray smoke confirms idle, active, and stopping visuals match the controller-tested structure |
 
 ---
 
@@ -75,4 +85,4 @@ Existing infrastructure covers all Phase 10 validation references.
 - [x] Feedback latency < 60s
 - [x] `nyquist_compliant: true` is justified by the targeted Phase 10 slice plus one explicit live-menu smoke
 
-**Approval:** pending
+**Approval:** verification-ready
