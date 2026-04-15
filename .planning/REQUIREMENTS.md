@@ -44,23 +44,23 @@ Explicitly excluded to keep v1.3 focused on managed timed durations.
 
 ## Traceability
 
-Phase mapping will be assigned during roadmap creation.
+Phase mapping assigned during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AWAKE-05 | TBD | Pending roadmap |
-| AWAKE-06 | TBD | Pending roadmap |
-| AWAKE-07 | TBD | Pending roadmap |
-| AWAKE-08 | TBD | Pending roadmap |
-| AWAKE-09 | TBD | Pending roadmap |
-| AWAKE-10 | TBD | Pending roadmap |
-| AWAKE-11 | TBD | Pending roadmap |
+| AWAKE-05 | Phase 14 | Pending |
+| AWAKE-06 | Phase 12 | Pending |
+| AWAKE-07 | Phase 13 | Pending |
+| AWAKE-08 | Phase 13 | Pending |
+| AWAKE-09 | Phase 13 | Pending |
+| AWAKE-10 | Phase 12 | Pending |
+| AWAKE-11 | Phase 12 | Pending |
 
 **Coverage:**
 - v1 requirements: 7 total
-- Mapped to phases: 0
-- Unmapped: 7
+- Mapped to phases: 7
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-15*
-*Last updated: 2026-04-15 after defining the v1.3 duration-management milestone*
+*Last updated: 2026-04-15 after mapping the v1.3 duration-management requirements into phases 12-14*
