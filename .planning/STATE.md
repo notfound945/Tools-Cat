@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Duration Management
 status: ready_for_execution
-stopped_at: Phase 12 planned
-last_updated: "2026-04-15T13:24:44+08:00"
-last_activity: 2026-04-15 -- planned Phase 12 duration preset persistence
+stopped_at: Phase 12.1 planned
+last_updated: "2026-04-15T14:36:48+08:00"
+last_activity: 2026-04-15 -- planned Phase 12.1 macOS 14.8.3 compatibility support
 progress:
-  total_phases: 3
+  total_phases: 4
   completed_phases: 0
-  total_plans: 2
+  total_plans: 3
   completed_plans: 0
 ---
 
@@ -20,22 +20,22 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-15)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Phase 12 — Duration Preset Persistence
+**Current focus:** Phase 12.1 — macOS 14.8.3 Compatibility Support
 
 ## Current Position
 
-Phase: 12 (duration-preset-persistence) — NOT STARTED
-Plan: 0 of 2
-Status: Ready for `$gsd-execute-phase 12`
-Last activity: 2026-04-15 -- planned Phase 12 duration preset persistence
+Phase: 12.1 (macos-14-8-3-compatibility-support) — NOT STARTED
+Plan: 0 of 1
+Status: Ready for `$gsd-execute-phase 12.1`
+Last activity: 2026-04-15 -- planned Phase 12.1 macOS 14.8.3 compatibility support
 
-Progress: [░░░░░░░░░░░░░░░░░░░░] 0/2 plans complete
+Progress: [░░░░░░░░░░░░░░░░░░░░] 0/3 plans complete
 
 ## Milestone Summary
 
 - Active milestone: `v1.3 Duration Management`
 - Latest archived milestone: `v1.2 Menu Truth`
-- Scope planned: Phase 12
+- Scope planned: Phase 12 plus urgent inserted Phase 12.1
 - Working files:
   - `.planning/PROJECT.md`
   - `.planning/REQUIREMENTS.md`
@@ -55,6 +55,11 @@ The latest completed milestone established these durable decisions:
 - Keep runtime persistence on `UserDefaults.standard` and migrate legacy bundle-ID defaults only once.
 - Keep rename residue cleanup explicit and manual instead of destructive automation.
 
+### Roadmap Evolution
+
+- Phase 12.1 inserted after Phase 12: macOS 14.8.3 compatibility support (URGENT)
+- Phase 12.1 planned as a single compatibility-truth fix covering deployment target, doc alignment, and explicit Sonoma verification boundary
+
 ### Open Follow-Up Themes
 
 - Replace the fixed timed keep-awake enum with a persisted managed-duration source of truth.
@@ -64,5 +69,5 @@ The latest completed milestone established these durable decisions:
 ## Session Continuity
 
 Last session: 2026-04-14T06:06:43.282Z
-Stopped at: Phase 12 planned
-Resume file: .planning/phases/12-duration-preset-persistence/12-01-PLAN.md
+Stopped at: Phase 12.1 planned
+Resume file: .planning/phases/12.1-macos-14-8-3-compatibility-support/12.1-01-PLAN.md
