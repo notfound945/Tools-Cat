@@ -55,10 +55,11 @@ Plans:
 **Goal**: Users can manage timed keep-awake durations themselves through a small native management flow.
 **Depends on**: Phase 12, Phase 12.1
 **Requirements**: AWAKE-06, AWAKE-07, AWAKE-08, AWAKE-09
-**Plans**: 2/2 plans complete
+**Plans**: 3/3 plans complete
 Plans:
 - [x] 13-01-PLAN.md - Build the store-backed duration-management session model and CRUD validation contract.
 - [x] 13-02-PLAN.md - Add the native duration-management window, direct-launch coverage, and status-menu entry wiring.
+- [ ] 13-03-PLAN.md - Close UAT gaps for keep-awake menu placement, compact add/edit modal flow, and live root-menu synchronization.
 **Success Criteria** (what must be TRUE):
   1. User can open a duration-management surface and inspect the current managed duration list.
   2. User can add or edit a managed duration and see the list update into the correct sorted position after save.
@@ -82,5 +83,5 @@ Phases execute in numeric order: 12 → 12.1 → 13 → 14
 |-------|----------------|--------|-----------|
 | 12. Duration Preset Persistence | 2/2 | Complete   | 2026-04-15 |
 | 12.1. macOS 14.8.3 Compatibility Support | 1/1 | Complete   | 2026-04-15 |
-| 13. Duration Management Surface | 2/2 | Ready for verify | - |
+| 13. Duration Management Surface | 3/3 | Ready to execute | - |
 | 14. Managed Duration Menu Integration | 0/0 | Not started | - |
