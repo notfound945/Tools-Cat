@@ -14,8 +14,8 @@ Requirements for the v1.3 duration-management milestone. This milestone extends 
 - [ ] **AWAKE-07**: User can add a custom managed keep-awake duration
 - [ ] **AWAKE-08**: User can edit an existing managed keep-awake duration
 - [ ] **AWAKE-09**: User can delete a managed keep-awake duration while `无限常亮` remains fixed and undeletable
-- [ ] **AWAKE-10**: User cannot save invalid or duplicate managed keep-awake durations
-- [ ] **AWAKE-11**: User sees managed keep-awake durations persist across app relaunch and return in the correct sorted positions
+- [x] **AWAKE-10**: User cannot save invalid or duplicate managed keep-awake durations
+- [x] **AWAKE-11**: User sees managed keep-awake durations persist across app relaunch and return in the correct sorted positions
 
 ## v2 Requirements
 
@@ -53,8 +53,8 @@ Phase mapping assigned during roadmap creation.
 | AWAKE-07 | Phase 13 | Pending |
 | AWAKE-08 | Phase 13 | Pending |
 | AWAKE-09 | Phase 13 | Pending |
-| AWAKE-10 | Phase 12 | Pending |
-| AWAKE-11 | Phase 12 | Pending |
+| AWAKE-10 | Phase 12 | Complete |
+| AWAKE-11 | Phase 12 | Complete |
 
 **Coverage:**
 - v1 requirements: 7 total
@@ -63,4 +63,4 @@ Phase mapping assigned during roadmap creation.
 
 ---
 *Requirements defined: 2026-04-15*
-*Last updated: 2026-04-15 after mapping the v1.3 duration-management requirements into phases 12-14*
+*Last updated: 2026-04-15 after Phase 12 closed AWAKE-10 and AWAKE-11 while leaving AWAKE-06 for the Phase 13 management surface*

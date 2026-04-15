@@ -17,7 +17,7 @@ This milestone extends the keep-awake menu without reopening its broader truth c
 - Integer phases continue from the last shipped milestone
 - v1.3 therefore starts at Phase 12
 
-- [ ] **Phase 12: Duration Preset Persistence** - Establish the persisted keep-awake duration list, default seeded presets, and validation rules.
+- [x] **Phase 12: Duration Preset Persistence** - Establish the persisted keep-awake duration list, default seeded presets, and validation rules. (completed 2026-04-15)
 - [x] **Phase 12.1: macOS 14.8.3 Compatibility Support** - Restore runtime support for macOS 14.8.3 by aligning the deployment target and shipped app baseline. (completed 2026-04-15)
 - [ ] **Phase 13: Duration Management Surface** - Let users add, edit, and delete managed keep-awake durations from a dedicated native flow.
 - [ ] **Phase 14: Managed Duration Menu Integration** - Render the keep-awake menu from the managed duration list while keeping `无限常亮` fixed first.
@@ -28,10 +28,10 @@ This milestone extends the keep-awake menu without reopening its broader truth c
 **Goal**: The app owns timed keep-awake durations as persisted, validated data instead of hardcoded menu rows.
 **Depends on**: Phase 11
 **Requirements**: AWAKE-06, AWAKE-10, AWAKE-11
-**Plans**: 2 plans
+**Plans**: 2/2 plans complete
 Plans:
-- [ ] 12-01-PLAN.md - Persist managed keep-awake durations with exact-once seeding, normalization, and validation.
-- [ ] 12-02-PLAN.md - Migrate keep-awake timed state off the preset enum and keep the current root menu as a fixed-row bridge.
+- [x] 12-01-PLAN.md - Persist managed keep-awake durations with exact-once seeding, normalization, and validation.
+- [x] 12-02-PLAN.md - Migrate keep-awake timed state off the preset enum and keep the current root menu as a fixed-row bridge.
 **Success Criteria** (what must be TRUE):
   1. A duration store exists and seeds `15 分钟`, `30 分钟`, `1 小时`, and `2 小时` exactly once for existing users.
   2. Invalid or duplicate managed durations cannot be saved.
@@ -76,7 +76,7 @@ Phases execute in numeric order: 12 → 12.1 → 13 → 14
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 12. Duration Preset Persistence | 0/2 | Planned | - |
+| 12. Duration Preset Persistence | 2/2 | Complete   | 2026-04-15 |
 | 12.1. macOS 14.8.3 Compatibility Support | 1/1 | Complete   | 2026-04-15 |
 | 13. Duration Management Surface | 0/0 | Not started | - |
 | 14. Managed Duration Menu Integration | 0/0 | Not started | - |

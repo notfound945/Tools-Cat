@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Duration Management
-status: ready_for_execution
-stopped_at: Phase 12.1 verified
-last_updated: "2026-04-15T15:44:43+0800"
-last_activity: 2026-04-15 -- verified Phase 12.1 macOS 14.8.3 compatibility support
+status: ready_for_planning
+stopped_at: Phase 12 complete
+last_updated: "2026-04-15T16:06:42+0800"
+last_activity: 2026-04-15 -- completed Phase 12 duration preset persistence
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 3
 ---
 
 # Project State
@@ -20,16 +20,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-15)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Phase 12 — Duration Preset Persistence
+**Current focus:** Phase 13 — Duration Management Surface
 
 ## Current Position
 
-Phase: 12 (duration-preset-persistence) — READY FOR EXECUTION
-Plan: 0 of 2
-Status: Ready for `$gsd-execute-phase 12`
-Last activity: 2026-04-15 -- verified Phase 12.1 macOS 14.8.3 compatibility support
+Phase: 13 (duration-management-surface) — NOT STARTED
+Plan: 0 of 0
+Status: Ready for `$gsd-plan-phase 13`
+Last activity: 2026-04-15 -- completed Phase 12 duration preset persistence
 
-Progress: [███░░░░░░░] 1/3 plans complete
+Progress: [██████████] 3/3 plans complete
 
 ## Milestone Summary
 
@@ -55,6 +55,7 @@ The latest completed milestone established these durable decisions:
 - Keep runtime persistence on `UserDefaults.standard` and migrate legacy bundle-ID defaults only once.
 - Keep rename residue cleanup explicit and manual instead of destructive automation.
 - [Phase 12.1]: Treat macOS 14.0 as the deployment-target truth and keep real macOS 14.8.3 launch proof as an explicit manual boundary.
+- [Phase 12]: Seed managed keep-awake durations exactly once from one defaults key and bridge the fixed root menu through canonical duration seconds until dynamic rendering lands.
 
 ### Roadmap Evolution
 
@@ -69,6 +70,6 @@ The latest completed milestone established these durable decisions:
 
 ## Session Continuity
 
-Last session: 2026-04-15T07:44:43Z
-Stopped at: Phase 12.1 verified
-Resume file: .planning/phases/12-duration-preset-persistence/12-01-PLAN.md
+Last session: 2026-04-15T08:06:42Z
+Stopped at: Phase 12 complete
+Resume file: None
