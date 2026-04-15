@@ -49,7 +49,7 @@ Phase mapping assigned during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | AWAKE-05 | Phase 14 | Pending |
-| AWAKE-06 | Phase 12 | Pending |
+| AWAKE-06 | Phase 13 | Pending |
 | AWAKE-07 | Phase 13 | Pending |
 | AWAKE-08 | Phase 13 | Pending |
 | AWAKE-09 | Phase 13 | Pending |
@@ -63,4 +63,4 @@ Phase mapping assigned during roadmap creation.
 
 ---
 *Requirements defined: 2026-04-15*
-*Last updated: 2026-04-15 after Phase 12 closed AWAKE-10 and AWAKE-11 while leaving AWAKE-06 for the Phase 13 management surface*
+*Last updated: 2026-04-15 after planning Phase 13 and remapping AWAKE-06 to the duration-management surface while keeping AWAKE-10 and AWAKE-11 complete from Phase 12*
