@@ -13,7 +13,7 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 - Shipped: `v1.1 Hardening` on 2026-04-13
 - Live product identity: `Tools Cat`
 - Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, and full rename closure
-- Planning state: `v1.2 Menu Truth` is active; requirements and roadmap are defined and Phase 10 is ready to discuss
+- Planning state: `v1.2 Menu Truth` has completed Phase 10 behavior work and Phase 11 verification closure; the milestone audit now passes and the project is ready to archive v1.2
 
 ## Next Milestone Goals
 
@@ -24,6 +24,8 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 ## Current Milestone: v1.2 Menu Truth
 
 **Goal:** Keep-awake menu actions should only show what the user can truthfully do right now, starting by hiding `关闭常亮` whenever no keep-awake session is active.
+
+**Status:** All planned phases are complete, the milestone audit passes, and the project is ready for `$gsd-complete-milestone v1.2`.
 
 **Target features:**
 - Hide `关闭常亮` when keep-awake is off and no stop transition is in progress
@@ -59,12 +61,13 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 - ✓ Menu-bar entry flows now have an explicit, durable layered regression strategy — validated in Phase 7
 - ✓ Phase 01-04 validation artifacts now match actual coverage, wave-0 truth, and explicit ownership — validated in Phase 8
 - ✓ Rename the shipped app, current planning docs, automation scripts, and packaging outputs to `Tools Cat` without breaking saved-device persistence or regression coverage — validated in Phase 9
+- ✓ Keep-awake idle menus no longer show `关闭常亮` when there is no active session to stop — validated in Phase 10 and closed through Phase 11 verification
+- ✓ Active or stopping keep-awake sessions still expose one clear `关闭常亮` action from the menu — validated in Phase 10 and closed through Phase 11 verification
+- ✓ The keep-awake menu-truth contract is now locked by focused regression coverage and formal traceability — validated in Phase 10 and closed through Phase 11 verification
 
 ### Active
 
-- [ ] Keep-awake menu should not show `关闭常亮` when the app is already in the off state
-- [ ] Active keep-awake sessions should still expose one clear stop action from the menu
-- [ ] Keep-awake menu truth regressions should be caught by focused controller coverage instead of rediscovery
+None - the current v1.2 requirements are fully validated and ready to archive.
 
 ### Out of Scope
 
@@ -119,6 +122,7 @@ Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, mo
 | Treat validation debt closure as documentation-truth work, not new harness work | Phase 8 only needed validation contracts rewritten to match current evidence | Validated in Phase 8 |
 | Keep runtime storage on `UserDefaults.standard` and treat the legacy bundle-ID suite only as a one-time migration source | Using the app bundle identifier as a custom defaults suite causes macOS warnings and breaks the intended storage model | Validated in Phase 9 |
 | Pass `-project "Tools Cat.xcodeproj"` through release automation | Rename residue can temporarily leave multiple project directories in the worktree, so the release path must be explicit | Validated in Phase 9 |
+| Keep MENU traceability anchored to the phase that shipped the behavior, even when a later closure phase only fixes verification debt | Phase 11 closes documentation truth without pretending it shipped the runtime keep-awake change | Validated in Phase 11 |
 
 ## Evolution
 
@@ -138,4 +142,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-13 after starting the v1.2 milestone*
+*Last updated: 2026-04-15 after completing Phase 11 and passing the v1.2 audit*
