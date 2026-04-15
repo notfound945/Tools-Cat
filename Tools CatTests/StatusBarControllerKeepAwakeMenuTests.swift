@@ -28,21 +28,28 @@ final class StatusBarControllerKeepAwakeMenuTests: XCTestCase {
     }
 
     func testKeepAwakeActionItemsDispatchThroughSharedSession() throws {
-        let startCases: [(String, KeepAwakePendingAction, [Bool])] = [
-            ("无限常亮", .startingIndefinite, [true]),
-            ("15 分钟", .startingTimed(.minutes15), [true]),
-            ("30 分钟", .startingTimed(.minutes30), [true]),
-            ("1 小时", .startingTimed(.hour1), [true]),
-            ("2 小时", .startingTimed(.hours2), [true]),
+        let startCases: [(String, Int?, [Bool])] = [
+            ("无限常亮", nil, [true]),
+            ("15 分钟", 900, [true]),
+            ("30 分钟", 1800, [true]),
+            ("1 小时", 3600, [true]),
+            ("2 小时", 7200, [true]),
         ]
 
-        for (title, expectedPendingAction, expectedRequests) in startCases {
+        for (title, expectedSeconds, expectedRequests) in startCases {
             let fixture = makeFixture()
             let actionItem = try actionItemMatching(title, in: fixture.controller)
 
             trigger(actionItem)
 
-            XCTAssertEqual(fixture.session.pendingAction, expectedPendingAction)
+            switch (fixture.session.pendingAction, expectedSeconds) {
+            case (.startingIndefinite, nil):
+                break
+            case let (.startingTimed(duration), .some(seconds)):
+                XCTAssertEqual(duration.durationSeconds, seconds)
+            default:
+                XCTFail("Unexpected pending action for \(title)")
+            }
             XCTAssertEqual(fixture.powerController.requestedStates, expectedRequests)
         }
 
@@ -213,6 +220,12 @@ final class StatusBarControllerKeepAwakeMenuTests: XCTestCase {
         let powerController = RecordingKeepAwakePowerController(isEnabled: initiallyEnabled)
         let scheduler = RecordingKeepAwakeCountdownScheduler()
         let now = MutableNowBox(value: Date(timeIntervalSinceReferenceDate: 80_000))
+        let durationSuiteName = "StatusBarControllerKeepAwakeMenuTests.\(UUID().uuidString)"
+        let durationDefaults = UserDefaults(suiteName: durationSuiteName)!
+        durationDefaults.removePersistentDomain(forName: durationSuiteName)
+        let durationStore = KeepAwakeDurationStore(
+            repository: UserDefaultsKeepAwakeDurationRepository(defaults: durationDefaults)
+        )
         let session = KeepAwakeSessionModel(
             powerController: powerController,
             scheduler: scheduler,
@@ -221,7 +234,8 @@ final class StatusBarControllerKeepAwakeMenuTests: XCTestCase {
         let controller = StatusBarController(
             deviceLibrary: deviceLibrary,
             wolSession: wolSession,
-            keepAwakeSession: session
+            keepAwakeSession: session,
+            keepAwakeDurationStore: durationStore
         )
 
         return KeepAwakeMenuFixture(
@@ -229,6 +243,8 @@ final class StatusBarControllerKeepAwakeMenuTests: XCTestCase {
             session: session,
             powerController: powerController,
             scheduler: scheduler,
+            durationStore: durationStore,
+            durationDefaults: durationDefaults,
             now: now,
             startNow: now.value
         )
@@ -281,6 +297,8 @@ private struct KeepAwakeMenuFixture {
     let session: KeepAwakeSessionModel
     let powerController: RecordingKeepAwakePowerController
     let scheduler: RecordingKeepAwakeCountdownScheduler
+    let durationStore: KeepAwakeDurationStore
+    let durationDefaults: UserDefaults
     let now: MutableNowBox
     let startNow: Date
 }

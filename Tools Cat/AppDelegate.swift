@@ -7,6 +7,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var savedDeviceLibrary: SavedDeviceLibraryStore!
     private var wolSession: WOLSessionModel!
     private var keepAwakeSession: KeepAwakeSessionModel!
+    private var keepAwakeDurationStore: KeepAwakeDurationStore!
     private var deviceLibrarySession: DeviceLibrarySessionModel!
     private var deviceLibraryWindow: DeviceLibraryWindow?
 
@@ -20,7 +21,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let status = StatusBarController(
             deviceLibrary: savedDeviceLibrary,
             wolSession: wolSession,
-            keepAwakeSession: keepAwakeSession
+            keepAwakeSession: keepAwakeSession,
+            keepAwakeDurationStore: keepAwakeDurationStore
         )
         status.onOpenWOL = { [weak self] in
             self?.openWOLWindow()
@@ -72,12 +74,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             defaults.synchronize()
         }
         let repository = UserDefaultsSavedDeviceRepository(defaults: defaults)
+        let keepAwakeDurationRepository = UserDefaultsKeepAwakeDurationRepository(defaults: defaults)
         savedDeviceLibrary = SavedDeviceLibraryStore(repository: repository)
         wolSession = WOLSessionModel(deviceLibrary: savedDeviceLibrary)
         keepAwakeSession = KeepAwakeSessionModel(
             powerController: SystemKeepAwakePowerController(manager: .shared),
             scheduler: TimerKeepAwakeCountdownScheduler()
         )
+        keepAwakeDurationStore = KeepAwakeDurationStore(repository: keepAwakeDurationRepository)
         deviceLibrarySession = DeviceLibrarySessionModel(libraryStore: savedDeviceLibrary)
     }
 

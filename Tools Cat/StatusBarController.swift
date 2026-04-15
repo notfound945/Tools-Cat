@@ -7,6 +7,7 @@ final class StatusBarController: NSObject {
     private let deviceLibrary: SavedDeviceLibraryStore
     private let wolSession: WOLSessionModel
     private let keepAwakeSession: KeepAwakeSessionModel
+    private let keepAwakeDurationStore: KeepAwakeDurationStore
     private var cancellables: Set<AnyCancellable> = []
     private var dynamicWakeItems: [NSMenuItem] = []
     private var wolItem: NSMenuItem!
@@ -48,12 +49,14 @@ final class StatusBarController: NSObject {
     init(
         deviceLibrary: SavedDeviceLibraryStore? = nil,
         wolSession: WOLSessionModel? = nil,
-        keepAwakeSession: KeepAwakeSessionModel? = nil
+        keepAwakeSession: KeepAwakeSessionModel? = nil,
+        keepAwakeDurationStore: KeepAwakeDurationStore? = nil
     ) {
         let resolvedDeviceLibrary = deviceLibrary ?? SavedDeviceLibraryStore()
         self.deviceLibrary = resolvedDeviceLibrary
         self.wolSession = wolSession ?? WOLSessionModel(deviceLibrary: resolvedDeviceLibrary)
         self.keepAwakeSession = keepAwakeSession ?? KeepAwakeSessionModel()
+        self.keepAwakeDurationStore = keepAwakeDurationStore ?? KeepAwakeDurationStore()
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         menu = NSMenu()
         menu.autoenablesItems = false
@@ -173,10 +176,10 @@ final class StatusBarController: NSObject {
         )
 
         keepAwakeIndefiniteItem.state = presentation.isIndefiniteActive ? .on : .off
-        keepAwake15MinutesItem.state = presentation.activeTimedPreset == .minutes15 ? .on : .off
-        keepAwake30MinutesItem.state = presentation.activeTimedPreset == .minutes30 ? .on : .off
-        keepAwake1HourItem.state = presentation.activeTimedPreset == .hour1 ? .on : .off
-        keepAwake2HoursItem.state = presentation.activeTimedPreset == .hours2 ? .on : .off
+        keepAwake15MinutesItem.state = presentation.activeTimedDuration?.durationSeconds == 900 ? .on : .off
+        keepAwake30MinutesItem.state = presentation.activeTimedDuration?.durationSeconds == 1800 ? .on : .off
+        keepAwake1HourItem.state = presentation.activeTimedDuration?.durationSeconds == 3600 ? .on : .off
+        keepAwake2HoursItem.state = presentation.activeTimedDuration?.durationSeconds == 7200 ? .on : .off
         keepAwakeOffItem.state = .off
         keepAwakeOffItem.isHidden = !presentation.showsStopAction
 
@@ -324,22 +327,22 @@ final class StatusBarController: NSObject {
     }
 
     @objc private func startKeepAwake15Minutes(_ sender: NSMenuItem) {
-        keepAwakeSession.startTimed(.minutes15)
+        keepAwakeSession.startTimed(bridgedDuration(seconds: 900))
         renderKeepAwakePresentation()
     }
 
     @objc private func startKeepAwake30Minutes(_ sender: NSMenuItem) {
-        keepAwakeSession.startTimed(.minutes30)
+        keepAwakeSession.startTimed(bridgedDuration(seconds: 1800))
         renderKeepAwakePresentation()
     }
 
     @objc private func startKeepAwake1Hour(_ sender: NSMenuItem) {
-        keepAwakeSession.startTimed(.hour1)
+        keepAwakeSession.startTimed(bridgedDuration(seconds: 3600))
         renderKeepAwakePresentation()
     }
 
     @objc private func startKeepAwake2Hours(_ sender: NSMenuItem) {
-        keepAwakeSession.startTimed(.hours2)
+        keepAwakeSession.startTimed(bridgedDuration(seconds: 7200))
         renderKeepAwakePresentation()
     }
 
@@ -376,5 +379,9 @@ final class StatusBarController: NSObject {
         keepAwakeSession.stop {
             NSApp.terminate(nil)
         }
+    }
+
+    private func bridgedDuration(seconds: Int) -> ManagedKeepAwakeDuration {
+        keepAwakeDurationStore.duration(matchingSeconds: seconds) ?? ManagedKeepAwakeDuration(durationSeconds: seconds)
     }
 }
