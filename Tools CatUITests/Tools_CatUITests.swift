@@ -189,6 +189,42 @@ final class Tools_CatUITests: XCTestCase {
                 || window.buttons["发送唤醒包"].waitForExistence(timeout: 1.0)
         )
     }
+
+    @MainActor
+    func testLaunchWithSeededKeepAwakeDurationsShowsManagementSurface() throws {
+        let launchContext = try makeLaunchContext()
+        defer {
+            launchContext.defaults.removePersistentDomain(forName: launchContext.suiteName)
+        }
+
+        let app = makeApplication(
+            launchContext: launchContext,
+            additionalArguments: ["--ui-test-open-keep-awake-duration-management"]
+        )
+        app.launch()
+        defer { terminateIfRunning(app) }
+
+        let window = waitForKeepAwakeDurationManagementWindow(in: app)
+        let durationList = window.descendants(matching: .any)["keep-awake-duration-list"]
+        XCTAssertTrue(durationList.waitForExistence(timeout: 2.0))
+
+        XCTAssertTrue(window.staticTexts["15 分钟"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(window.staticTexts["30 分钟"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(window.staticTexts["1 小时"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(window.staticTexts["2 小时"].waitForExistence(timeout: 2.0))
+
+        let addButton = window.buttons["添加时长"]
+        XCTAssertTrue(addButton.waitForExistence(timeout: 2.0))
+
+        clickElementAfterActivatingApp(addButton, in: app)
+
+        XCTAssertTrue(window.staticTexts["时长（分钟）"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(
+            window.textFields["keep-awake-duration-minutes-field"].waitForExistence(timeout: 2.0)
+                || window.textFields["请输入分钟数"].waitForExistence(timeout: 2.0)
+        )
+        XCTAssertTrue(window.buttons["保存时长"].waitForExistence(timeout: 2.0))
+    }
 }
 
 private func waitForDeviceLibraryWindow(in app: XCUIApplication) -> XCUIElement {
@@ -238,6 +274,32 @@ private func waitForWOLWindow(in app: XCUIApplication) -> XCUIElement {
     let fallbackWindow = app.windows.firstMatch
     XCTAssertTrue(fallbackWindow.waitForExistence(timeout: 2.0), "Expected a WOL window after the surface appeared.")
     return fallbackWindow
+}
+
+private func waitForKeepAwakeDurationManagementWindow(in app: XCUIApplication) -> XCUIElement {
+    XCTAssertTrue(
+        waitForAnyElement(
+            [
+                app.descendants(matching: .any)["keep-awake-duration-top-actions"],
+                app.descendants(matching: .any)["keep-awake-duration-list"],
+                app.buttons["添加时长"]
+            ],
+            timeout: 5.0
+        ),
+        "Expected the keep-awake duration management surface to appear after direct launch."
+    )
+
+    let titledWindow = app.windows["常亮时长"]
+    if titledWindow.waitForExistence(timeout: 2.0) {
+        return titledWindow
+    }
+
+    let fallbackWindow = app.windows.firstMatch
+    if fallbackWindow.exists || fallbackWindow.waitForExistence(timeout: 2.0) {
+        return fallbackWindow
+    }
+
+    return app
 }
 
 private func waitForAnyElement(_ elements: [XCUIElement], timeout: TimeInterval) -> Bool {

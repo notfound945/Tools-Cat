@@ -40,6 +40,23 @@ final class StatusBarControllerEntryFlowTests: XCTestCase {
         XCTAssertEqual(openCount, 1)
     }
 
+    func testKeepAwakeDurationManagementEntryDispatchesThroughCallback() async throws {
+        let controller = makeController(deviceLibrary: makeStore())
+        let managementItem = try findMenuItem(titled: "管理常亮时长…", in: controller.menuItemsForTesting)
+        let callbackExpectation = expectation(description: "keep awake duration management entry dispatched")
+        var openCount = 0
+
+        controller.onOpenKeepAwakeDurationManagement = {
+            openCount += 1
+            callbackExpectation.fulfill()
+        }
+
+        trigger(managementItem)
+
+        await fulfillment(of: [callbackExpectation], timeout: 1.0)
+        XCTAssertEqual(openCount, 1)
+    }
+
     func testWakeMenuEntryDisablesDuringInFlightSendWhileManagementEntryRemainsEnabled() async throws {
         let devices = makeDevices()
         let store = makeStore(devices: devices)

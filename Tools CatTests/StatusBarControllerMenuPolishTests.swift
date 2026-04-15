@@ -24,7 +24,7 @@ final class StatusBarControllerMenuPolishTests: XCTestCase {
         let wakeTitles = controller.menuItemsForTesting[(firstSeparatorIndex + 1)..<secondSeparatorIndex]
             .filter { !$0.isSeparatorItem }
             .map(\.title)
-        XCTAssertEqual(wakeTitles, ["快速 WOL", "发送 WOL …", "", "管理 WOL 设备…"])
+        XCTAssertEqual(wakeTitles, ["快速 WOL", "发送 WOL …", "", "管理 WOL 设备…", "管理常亮时长…"])
     }
 
     func testIdleMenuCollapsesBothStatusRows() {
@@ -60,7 +60,7 @@ final class StatusBarControllerMenuPolishTests: XCTestCase {
             controller.menuItemsForTesting[(firstSeparatorIndex + 1)..<secondSeparatorIndex]
                 .filter { !$0.isSeparatorItem }
                 .map(\.title),
-            ["快速 WOL", "发送 WOL …", "", "管理 WOL 设备…"]
+            ["快速 WOL", "发送 WOL …", "", "管理 WOL 设备…", "管理常亮时长…"]
         )
         XCTAssertEqual(controller.wolMenuIndexForTesting, firstSeparatorIndex + 2)
 
@@ -87,7 +87,7 @@ final class StatusBarControllerMenuPolishTests: XCTestCase {
             controller.menuItemsForTesting[(firstSeparatorIndex + 1)..<secondSeparatorIndex]
                 .filter { !$0.isSeparatorItem }
                 .map(\.title),
-            ["发送 WOL …", "", "管理 WOL 设备…"]
+            ["发送 WOL …", "", "管理 WOL 设备…", "管理常亮时长…"]
         )
         XCTAssertEqual(controller.wolMenuIndexForTesting, firstSeparatorIndex + 1)
 
@@ -110,7 +110,8 @@ final class StatusBarControllerMenuPolishTests: XCTestCase {
         let secondSeparatorIndex = try! XCTUnwrap(separators.last?.offset)
 
         XCTAssertEqual(titles.last, "退出 Tools Cat")
-        XCTAssertEqual(titles[secondSeparatorIndex - 1], "管理 WOL 设备…")
+        XCTAssertEqual(titles[secondSeparatorIndex - 2], "管理 WOL 设备…")
+        XCTAssertEqual(titles[secondSeparatorIndex - 1], "管理常亮时长…")
         XCTAssertEqual(controller.menuItemsForTesting[secondSeparatorIndex].isSeparatorItem, true)
     }
 

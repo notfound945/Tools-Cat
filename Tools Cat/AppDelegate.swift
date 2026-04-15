@@ -8,6 +8,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var wolSession: WOLSessionModel!
     private var keepAwakeSession: KeepAwakeSessionModel!
     private var keepAwakeDurationStore: KeepAwakeDurationStore!
+    private var keepAwakeDurationManagementSession: KeepAwakeDurationManagementSessionModel!
+    private var keepAwakeDurationManagementWindow: KeepAwakeDurationManagementWindow?
     private var deviceLibrarySession: DeviceLibrarySessionModel!
     private var deviceLibraryWindow: DeviceLibraryWindow?
 
@@ -30,6 +32,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         status.onOpenDeviceLibrary = { [weak self] in
             self?.openDeviceLibraryWindow()
         }
+        status.onOpenKeepAwakeDurationManagement = { [weak self] in
+            self?.openKeepAwakeDurationManagementWindow()
+        }
         statusController = status
 
         if launchConfiguration.shouldOpenWOLWindow {
@@ -38,6 +43,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         if launchConfiguration.shouldOpenDeviceLibrary {
             openDeviceLibraryWindow()
+        }
+
+        if launchConfiguration.shouldOpenKeepAwakeDurationManagement {
+            openKeepAwakeDurationManagementWindow()
         }
     }
 
@@ -57,6 +66,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             deviceLibraryWindow = DeviceLibraryWindow(session: deviceLibrarySession)
         }
         deviceLibraryWindow?.show()
+    }
+
+    private func openKeepAwakeDurationManagementWindow() {
+        if keepAwakeDurationManagementWindow == nil {
+            keepAwakeDurationManagementWindow = KeepAwakeDurationManagementWindow(
+                session: keepAwakeDurationManagementSession
+            )
+        }
+        keepAwakeDurationManagementWindow?.show()
     }
 
     private func configureSharedStores() {
@@ -82,6 +100,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             scheduler: TimerKeepAwakeCountdownScheduler()
         )
         keepAwakeDurationStore = KeepAwakeDurationStore(repository: keepAwakeDurationRepository)
+        keepAwakeDurationManagementSession = KeepAwakeDurationManagementSessionModel(
+            durationStore: keepAwakeDurationStore
+        )
         deviceLibrarySession = DeviceLibrarySessionModel(libraryStore: savedDeviceLibrary)
     }
 
@@ -97,16 +118,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 private struct LaunchConfiguration {
     let shouldOpenWOLWindow: Bool
     let shouldOpenDeviceLibrary: Bool
+    let shouldOpenKeepAwakeDurationManagement: Bool
     let userDefaults: UserDefaults?
     let seededDeviceLibraryData: Data?
 
     var shouldOpenUtilityWindow: Bool {
-        shouldOpenWOLWindow || shouldOpenDeviceLibrary
+        shouldOpenWOLWindow || shouldOpenDeviceLibrary || shouldOpenKeepAwakeDurationManagement
     }
 
     init(arguments: [String]) {
         shouldOpenWOLWindow = arguments.contains("--ui-test-open-wol-window")
         shouldOpenDeviceLibrary = arguments.contains("--ui-test-open-device-library")
+        shouldOpenKeepAwakeDurationManagement = arguments.contains("--ui-test-open-keep-awake-duration-management")
 
         if let suiteFlagIndex = arguments.firstIndex(of: "--ui-test-user-defaults-suite"),
            arguments.indices.contains(arguments.index(after: suiteFlagIndex)) {

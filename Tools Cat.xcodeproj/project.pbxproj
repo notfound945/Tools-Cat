@@ -39,6 +39,8 @@
 				KeepAwakeCountdownScheduler.swift = sourcecode.swift;
 				KeepAwakeDurationManagementPresentation.swift = sourcecode.swift;
 				KeepAwakeDurationManagementSessionModel.swift = sourcecode.swift;
+				KeepAwakeDurationManagementView.swift = sourcecode.swift;
+				KeepAwakeDurationManagementWindow.swift = sourcecode.swift;
 				KeepAwakeDurationRepository.swift = sourcecode.swift;
 				KeepAwakeDurationStore.swift = sourcecode.swift;
 				KeepAwakeDurationPreset.swift = sourcecode.swift;

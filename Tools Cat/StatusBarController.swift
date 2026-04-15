@@ -14,6 +14,7 @@ final class StatusBarController: NSObject {
     private var keepAwakeWakeSeparatorItem: NSMenuItem!
     private var wakeQuitSeparatorItem: NSMenuItem!
     private var manageDevicesItem: NSMenuItem!
+    private var manageKeepAwakeDurationsItem: NSMenuItem!
     private var quitItem: NSMenuItem!
 
     private(set) var keepAwakeIndefiniteItem: NSMenuItem!
@@ -45,6 +46,7 @@ final class StatusBarController: NSObject {
 
     var onOpenWOL: (() -> Void)?
     var onOpenDeviceLibrary: (() -> Void)?
+    var onOpenKeepAwakeDurationManagement: (() -> Void)?
 
     init(
         deviceLibrary: SavedDeviceLibraryStore? = nil,
@@ -128,6 +130,14 @@ final class StatusBarController: NSObject {
         manageDevicesItem = NSMenuItem(title: "管理 WOL 设备…", action: #selector(openDeviceLibrary), keyEquivalent: "")
         manageDevicesItem.target = self
         menu.addItem(manageDevicesItem)
+
+        manageKeepAwakeDurationsItem = NSMenuItem(
+            title: "管理常亮时长…",
+            action: #selector(openKeepAwakeDurationManagement),
+            keyEquivalent: ""
+        )
+        manageKeepAwakeDurationsItem.target = self
+        menu.addItem(manageKeepAwakeDurationsItem)
 
         wakeQuitSeparatorItem = NSMenuItem.separator()
         menu.addItem(wakeQuitSeparatorItem)
@@ -362,6 +372,13 @@ final class StatusBarController: NSObject {
         NSApp.activate(ignoringOtherApps: true)
         DispatchQueue.main.async { [weak self] in
             self?.onOpenDeviceLibrary?()
+        }
+    }
+
+    @objc private func openKeepAwakeDurationManagement() {
+        NSApp.activate(ignoringOtherApps: true)
+        DispatchQueue.main.async { [weak self] in
+            self?.onOpenKeepAwakeDurationManagement?()
         }
     }
 
