@@ -27,6 +27,10 @@ This milestone extends the keep-awake menu without reopening its broader truth c
 **Goal**: The app owns timed keep-awake durations as persisted, validated data instead of hardcoded menu rows.
 **Depends on**: Phase 11
 **Requirements**: AWAKE-06, AWAKE-10, AWAKE-11
+**Plans**: 2 plans
+Plans:
+- [ ] 12-01-PLAN.md - Persist managed keep-awake durations with exact-once seeding, normalization, and validation.
+- [ ] 12-02-PLAN.md - Migrate keep-awake timed state off the preset enum and keep the current root menu as a fixed-row bridge.
 **Success Criteria** (what must be TRUE):
   1. A duration store exists and seeds `15 分钟`, `30 分钟`, `1 小时`, and `2 小时` exactly once for existing users.
   2. Invalid or duplicate managed durations cannot be saved.
@@ -57,6 +61,6 @@ Phases execute in numeric order: 12 → 13 → 14
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 12. Duration Preset Persistence | 0/0 | Not started | - |
+| 12. Duration Preset Persistence | 0/2 | Planned | - |
 | 13. Duration Management Surface | 0/0 | Not started | - |
 | 14. Managed Duration Menu Integration | 0/0 | Not started | - |
