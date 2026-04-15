@@ -206,6 +206,9 @@ final class Tools_CatUITests: XCTestCase {
         defer { terminateIfRunning(app) }
 
         let window = waitForKeepAwakeDurationManagementWindow(in: app)
+        XCTAssertTrue(
+            window.descendants(matching: .any)["keep-awake-duration-list-surface"].waitForExistence(timeout: 2.0)
+        )
         let durationList = window.descendants(matching: .any)["keep-awake-duration-list"]
         XCTAssertTrue(durationList.waitForExistence(timeout: 2.0))
 
@@ -228,7 +231,7 @@ final class Tools_CatUITests: XCTestCase {
         )
         XCTAssertTrue(window.buttons["保存时长"].waitForExistence(timeout: 2.0))
 
-        let cancelButton = app.buttons["取消"]
+        let cancelButton = window.buttons["取消"]
         if cancelButton.waitForExistence(timeout: 2.0) {
             clickElementAfterActivatingApp(cancelButton, in: app)
         }
