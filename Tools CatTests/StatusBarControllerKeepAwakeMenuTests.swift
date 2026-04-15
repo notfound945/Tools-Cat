@@ -80,6 +80,84 @@ final class StatusBarControllerKeepAwakeMenuTests: XCTestCase {
         XCTAssertTrue(keepAwakeActionItems(of: fixture.controller).allSatisfy { !$0.isEnabled })
     }
 
+    func testIdleMenuHidesStopRowWhenKeepAwakeIsOff() async {
+        let fixture = makeFixture()
+
+        XCTAssertEqual(
+            visibleKeepAwakeActionTitles(of: fixture.controller),
+            ["无限常亮", "15 分钟", "30 分钟", "1 小时", "2 小时"]
+        )
+        XCTAssertTrue(fixture.controller.keepAwakeOffItem.isHidden)
+
+        await flushControllerUpdates()
+        withExtendedLifetime(fixture) {}
+    }
+
+    func testStartupFromOffKeepsStopRowHiddenUntilActivationSucceeds() async {
+        let fixture = makeFixture()
+
+        trigger(fixture.controller.keepAwake15MinutesItem)
+
+        XCTAssertEqual(
+            visibleKeepAwakeActionTitles(of: fixture.controller),
+            ["无限常亮", "15 分钟", "30 分钟", "1 小时", "2 小时"]
+        )
+        XCTAssertTrue(fixture.controller.keepAwakeOffItem.isHidden)
+        XCTAssertEqual(fixture.controller.keepAwakeStatusItem.title, "正在切换为 15 分钟常亮...")
+        XCTAssertTrue(keepAwakeActionItems(of: fixture.controller).allSatisfy { !$0.isEnabled })
+
+        fixture.powerController.complete(with: .success(true))
+        await flushControllerUpdates()
+
+        XCTAssertEqual(
+            visibleKeepAwakeActionTitles(of: fixture.controller),
+            ["无限常亮", "15 分钟", "30 分钟", "1 小时", "2 小时", "关闭常亮"]
+        )
+        XCTAssertFalse(fixture.controller.keepAwakeOffItem.isHidden)
+        XCTAssertEqual(fixture.controller.keepAwake15MinutesItem.state, .on)
+    }
+
+    func testConfirmedActiveSessionShowsStopRow() async {
+        let fixture = makeFixture()
+
+        trigger(fixture.controller.keepAwakeIndefiniteItem)
+        fixture.powerController.complete(with: .success(true))
+        await flushControllerUpdates()
+
+        XCTAssertEqual(
+            visibleKeepAwakeActionTitles(of: fixture.controller),
+            ["无限常亮", "15 分钟", "30 分钟", "1 小时", "2 小时", "关闭常亮"]
+        )
+        XCTAssertFalse(fixture.controller.keepAwakeOffItem.isHidden)
+    }
+
+    func testReplacementWhileAlreadyActiveKeepsStopRowVisibleDuringPendingStart() {
+        let fixture = makeFixture(initiallyEnabled: true)
+
+        trigger(fixture.controller.keepAwake30MinutesItem)
+
+        XCTAssertEqual(
+            visibleKeepAwakeActionTitles(of: fixture.controller),
+            ["无限常亮", "15 分钟", "30 分钟", "1 小时", "2 小时", "关闭常亮"]
+        )
+        XCTAssertFalse(fixture.controller.keepAwakeOffItem.isHidden)
+        XCTAssertEqual(fixture.controller.keepAwakeStatusItem.title, "正在切换为 30 分钟常亮...")
+        XCTAssertTrue(keepAwakeActionItems(of: fixture.controller).allSatisfy { !$0.isEnabled })
+    }
+
+    func testStoppingStateKeepsStopRowVisibleButDisabled() {
+        let fixture = makeFixture(initiallyEnabled: true)
+
+        trigger(fixture.controller.keepAwakeOffItem)
+
+        XCTAssertEqual(
+            visibleKeepAwakeActionTitles(of: fixture.controller),
+            ["无限常亮", "15 分钟", "30 分钟", "1 小时", "2 小时", "关闭常亮"]
+        )
+        XCTAssertFalse(fixture.controller.keepAwakeOffItem.isHidden)
+        XCTAssertTrue(keepAwakeActionItems(of: fixture.controller).allSatisfy { !$0.isEnabled })
+    }
+
     func testCountdownNeverAppearsInAnyActionTitle() async {
         let fixture = makeFixture()
 
@@ -169,6 +247,12 @@ final class StatusBarControllerKeepAwakeMenuTests: XCTestCase {
             controller.keepAwake2HoursItem,
             controller.keepAwakeOffItem,
         ]
+    }
+
+    private func visibleKeepAwakeActionTitles(of controller: StatusBarController) -> [String] {
+        keepAwakeActionItems(of: controller)
+            .filter { !$0.isHidden }
+            .map(\.title)
     }
 
     private func trigger(_ item: NSMenuItem) {

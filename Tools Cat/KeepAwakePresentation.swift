@@ -79,6 +79,19 @@ struct KeepAwakePresentation: Equatable {
         pendingAction != nil
     }
 
+    var showsStopAction: Bool {
+        if pendingAction == .stopping {
+            return true
+        }
+
+        switch confirmedMode {
+        case .off:
+            return false
+        case .indefinite, .timed:
+            return true
+        }
+    }
+
     private func pendingStatusText(for action: KeepAwakePendingAction) -> String {
         switch action {
         case .startingIndefinite:

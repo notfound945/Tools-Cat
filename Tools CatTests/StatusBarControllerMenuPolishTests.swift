@@ -40,6 +40,34 @@ final class StatusBarControllerMenuPolishTests: XCTestCase {
         XCTAssertEqual(controller.wakeStatusItem?.isHidden, true)
     }
 
+    func testIdleKeepAwakeSectionStaysCompactWhenStopRowIsHidden() async throws {
+        let store = SavedDeviceLibraryStore(repository: InMemoryMenuPolishSavedDeviceRepository(devices: makeDevices()))
+        let controller = makeController(deviceLibrary: store)
+        let separators = controller.menuItemsForTesting.enumerated().filter { $0.element.isSeparatorItem }
+        let firstSeparatorIndex = try XCTUnwrap(separators.first?.offset)
+        let secondSeparatorIndex = try XCTUnwrap(separators.last?.offset)
+
+        XCTAssertEqual(
+            controller.menuItemsForTesting[..<firstSeparatorIndex]
+                .filter { !$0.isSeparatorItem && !$0.isHidden }
+                .map(\.title),
+            ["无限常亮", "15 分钟", "30 分钟", "1 小时", "2 小时"]
+        )
+        XCTAssertTrue(controller.keepAwakeOffItem.isHidden)
+        XCTAssertTrue(controller.keepAwakeStatusItem.isHidden)
+        XCTAssertEqual(firstSeparatorIndex, controller.menuIndexForTesting(of: controller.keepAwakeStatusItem) + 1)
+        XCTAssertEqual(
+            controller.menuItemsForTesting[(firstSeparatorIndex + 1)..<secondSeparatorIndex]
+                .filter { !$0.isSeparatorItem }
+                .map(\.title),
+            ["快速 WOL", "发送 WOL …", "", "管理 WOL 设备…"]
+        )
+        XCTAssertEqual(controller.wolMenuIndexForTesting, firstSeparatorIndex + 2)
+
+        await Task.yield()
+        withExtendedLifetime(controller) {}
+    }
+
     func testWakeSectionKeepsManualSendRowWhenLibraryIsEmpty() async throws {
         let store = SavedDeviceLibraryStore(repository: InMemoryMenuPolishSavedDeviceRepository(devices: []))
         let sender = RecordingMenuPolishWakeSender()

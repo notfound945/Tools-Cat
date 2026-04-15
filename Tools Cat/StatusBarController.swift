@@ -178,6 +178,7 @@ final class StatusBarController: NSObject {
         keepAwake1HourItem.state = presentation.activeTimedPreset == .hour1 ? .on : .off
         keepAwake2HoursItem.state = presentation.activeTimedPreset == .hours2 ? .on : .off
         keepAwakeOffItem.state = .off
+        keepAwakeOffItem.isHidden = !presentation.showsStopAction
 
         keepAwakeActionItems.forEach { $0.isEnabled = !presentation.isPending }
         keepAwakeStatusItem.isEnabled = false

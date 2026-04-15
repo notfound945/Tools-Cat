@@ -100,5 +100,28 @@ final class KeepAwakeMenuStateTests: XCTestCase {
         XCTAssertFalse(presentation.statusText?.contains("已结束") ?? false)
     }
 
+    func testStopActionVisibilityFollowsConfirmedAndPendingState() {
+        let cases: [(KeepAwakeMode, KeepAwakePendingAction?, Bool)] = [
+            (.off, nil, false),
+            (.off, .startingIndefinite, false),
+            (.off, .startingTimed(.minutes15), false),
+            (.indefinite, .startingTimed(.minutes30), true),
+            (.timed(preset: .minutes30, endDate: referenceDate.addingTimeInterval(30 * 60)), .startingTimed(.hour1), true),
+            (.indefinite, nil, true),
+            (.timed(preset: .minutes15, endDate: referenceDate.addingTimeInterval(15 * 60)), .stopping, true),
+        ]
+
+        for (confirmedMode, pendingAction, expectedVisibility) in cases {
+            let presentation = KeepAwakePresentation(
+                confirmedMode: confirmedMode,
+                pendingAction: pendingAction,
+                message: nil,
+                now: referenceDate
+            )
+
+            XCTAssertEqual(presentation.showsStopAction, expectedVisibility)
+        }
+    }
+
     private let referenceDate = Date(timeIntervalSinceReferenceDate: 50_000)
 }
