@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Duration Management
-status: planning
-stopped_at: Milestone v1.3 roadmap created
-last_updated: "2026-04-15T13:09:59+08:00"
-last_activity: 2026-04-15 -- milestone v1.3 roadmap created with phases 12-14
+status: ready_for_execution
+stopped_at: Phase 12 planned
+last_updated: "2026-04-15T13:24:44+08:00"
+last_activity: 2026-04-15 -- planned Phase 12 duration preset persistence
 progress:
   total_phases: 3
   completed_phases: 0
-  total_plans: 0
+  total_plans: 2
   completed_plans: 0
 ---
 
@@ -20,21 +20,22 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-15)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Milestone v1.3 — Duration Management
+**Current focus:** Phase 12 — Duration Preset Persistence
 
 ## Current Position
 
-Phase: Not started (roadmap ready)
-Plan: 0 of 0
-Status: Ready for `$gsd-plan-phase 12`
-Last activity: 2026-04-15 -- milestone v1.3 roadmap created with phases 12-14
+Phase: 12 (duration-preset-persistence) — NOT STARTED
+Plan: 0 of 2
+Status: Ready for `$gsd-execute-phase 12`
+Last activity: 2026-04-15 -- planned Phase 12 duration preset persistence
 
-Progress: [░░░░░░░░░░░░░░░░░░░░] 0/0 plans complete
+Progress: [░░░░░░░░░░░░░░░░░░░░] 0/2 plans complete
 
 ## Milestone Summary
 
 - Active milestone: `v1.3 Duration Management`
 - Latest archived milestone: `v1.2 Menu Truth`
+- Scope planned: Phase 12
 - Working files:
   - `.planning/PROJECT.md`
   - `.planning/REQUIREMENTS.md`
@@ -56,12 +57,12 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Keep `无限常亮` fixed while replacing the timed keep-awake rows with a managed duration list.
-- Add a native duration-management flow with add/edit/delete, sorting, and persistence.
-- Preserve the current explicit verification boundary while extending the keep-awake menu.
+- Replace the fixed timed keep-awake enum with a persisted managed-duration source of truth.
+- Seed `15 分钟` / `30 分钟` / `1 小时` / `2 小时` exactly once and never re-add deleted defaults on relaunch.
+- Keep the current keep-awake menu truthful while the duration domain migrates underneath it.
 
 ## Session Continuity
 
 Last session: 2026-04-14T06:06:43.282Z
-Stopped at: Milestone v1.3 roadmap created
-Resume file: .planning/ROADMAP.md
+Stopped at: Phase 12 planned
+Resume file: .planning/phases/12-duration-preset-persistence/12-01-PLAN.md
