@@ -1,0 +1,66 @@
+# Requirements: Tools Cat
+
+**Defined:** 2026-04-15
+**Core Value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
+
+## v1 Requirements
+
+Requirements for the v1.3 duration-management milestone. This milestone extends keep-awake so timed durations come from a user-managed list instead of a fixed hardcoded preset set, while `无限常亮` stays fixed and always available.
+
+### Keep-Awake Duration Management
+
+- [ ] **AWAKE-05**: User sees `无限常亮` fixed as the first keep-awake menu action, followed by timed actions sorted from shortest to longest duration
+- [ ] **AWAKE-06**: User can open a duration-management surface seeded with `15 分钟`, `30 分钟`, `1 小时`, and `2 小时`
+- [ ] **AWAKE-07**: User can add a custom managed keep-awake duration
+- [ ] **AWAKE-08**: User can edit an existing managed keep-awake duration
+- [ ] **AWAKE-09**: User can delete a managed keep-awake duration while `无限常亮` remains fixed and undeletable
+- [ ] **AWAKE-10**: User cannot save invalid or duplicate managed keep-awake durations
+- [ ] **AWAKE-11**: User sees managed keep-awake durations persist across app relaunch and return in the correct sorted positions
+
+## v2 Requirements
+
+Deferred until after the duration-management milestone is complete.
+
+### Convenience
+
+- **CONV-04**: User can access a short recent-devices list for faster repeat wake actions
+- **AWAKE-12**: User can create a one-off timed keep-awake duration without saving it into the managed list
+- **AWAKE-13**: User can assign custom labels or notes to managed keep-awake durations
+
+### Distribution
+
+- **DIST-01**: App can move toward packaging hardening such as signing or notarization once the maintenance baseline is stable
+
+## Out of Scope
+
+Explicitly excluded to keep v1.3 focused on managed timed durations.
+
+| Feature | Reason |
+|---------|--------|
+| Managing or deleting `无限常亮` | Permanent keep-awake remains a fixed top-level action, not part of the managed duration list |
+| Manual drag ordering for timed durations | The milestone uses deterministic duration-based sorting instead of user-defined order |
+| Device-specific keep-awake duration profiles | The scope is one global duration list for the keep-awake menu |
+| Cloud sync or sharing of duration presets | Still misaligned with the personal local-first scope |
+
+## Traceability
+
+Phase mapping will be assigned during roadmap creation.
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| AWAKE-05 | TBD | Pending roadmap |
+| AWAKE-06 | TBD | Pending roadmap |
+| AWAKE-07 | TBD | Pending roadmap |
+| AWAKE-08 | TBD | Pending roadmap |
+| AWAKE-09 | TBD | Pending roadmap |
+| AWAKE-10 | TBD | Pending roadmap |
+| AWAKE-11 | TBD | Pending roadmap |
+
+**Coverage:**
+- v1 requirements: 7 total
+- Mapped to phases: 0
+- Unmapped: 7
+
+---
+*Requirements defined: 2026-04-15*
+*Last updated: 2026-04-15 after defining the v1.3 duration-management milestone*
