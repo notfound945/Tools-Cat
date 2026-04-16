@@ -7,7 +7,7 @@
 - ✅ **v1.2 Menu Truth** — Phases 10-11 shipped 2026-04-15. Archive: `.planning/milestones/v1.2-ROADMAP.md`
 - ✅ **v1.3 Duration Management** — Phases 12-13 shipped 2026-04-16. Archive: `.planning/milestones/v1.3-ROADMAP.md`
 - ✅ **v1.4 Duration UI Polish** — Phase 14 shipped 2026-04-16. Archive: `.planning/milestones/v1.4-ROADMAP.md`
-- 🚧 **v1.5 Device Library UI Parity** — Phase 15 executed, awaiting human verification
+- ✅ **v1.5 Device Library UI Parity** — Phase 15 shipped 2026-04-16
 
 ## Overview
 
@@ -19,7 +19,7 @@ This milestone keeps scope deliberately narrow. The saved-device CRUD and wake b
 - Integer phases continue from the last shipped milestone
 - v1.5 therefore starts at Phase 15
 
-- [ ] **Phase 15: Device Library UI Parity** - Align the device-library management surface with the duration manager's native list and semantic action styling. (execution complete; awaiting human verification)
+- [x] **Phase 15: Device Library UI Parity** - Align the device-library management surface with the duration manager's native list and semantic action styling. (completed 2026-04-16)
 
 ## Phase Details
 
@@ -41,4 +41,4 @@ Phases execute in numeric order: 15
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 15. Device Library UI Parity | 2/2 | Human verification | - |
+| 15. Device Library UI Parity | 2/2 | Complete | 2026-04-16 |

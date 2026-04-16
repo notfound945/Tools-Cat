@@ -1,7 +1,7 @@
 ---
 phase: 15-device-library-ui-parity
-verified: 2026-04-16T06:26:40Z
-status: human_needed
+verified: 2026-04-16T07:00:36Z
+status: passed
 score: 4/4 must-haves verified
 human_verification:
   - test: "Compare `设备库` and `常亮时长` windows side by side on macOS"
@@ -15,9 +15,9 @@ human_verification:
 # Phase 15: Device Library UI Parity Verification Report
 
 **Phase Goal:** The `设备库` manager feels visually and behaviorally aligned with the shipped `常亮时长` manager without changing saved-device truth.
-**Verified:** 2026-04-16T06:26:40Z
-**Status:** human_needed
-**Re-verification:** No — initial verification
+**Verified:** 2026-04-16T07:00:36Z
+**Status:** passed
+**Re-verification:** Yes — initial automated verification plus approved human UAT
 
 ## Goal Achievement
 
@@ -87,25 +87,25 @@ Orphaned requirements: None. All phase-15 requirement IDs in [`REQUIREMENTS.md`]
 | --- | --- | --- | --- | --- |
 | None | - | No TODO/FIXME placeholders, empty stub returns, or hollow hardcoded UI state found in the phase-15 implementation files | ℹ️ Info | No blocker anti-patterns detected in the verified phase files. |
 
-### Human Verification Required
+### Human Verification
 
 ### 1. Side-by-Side Visual Parity
 
 **Test:** Open `设备库` and `常亮时长` management windows side by side on macOS.
 **Expected:** The two managers read as the same product family: native list density, similar sheet framing, restrained controls, and obvious but not flashy edit/delete emphasis.
-**Why human:** The phase goal uses the word “feels”; typography, spacing, and visual restraint are partly subjective.
+**Result:** Approved in [`15-HUMAN-UAT.md`](./15-HUMAN-UAT.md).
 
 ### 2. Live Interaction Feel
 
 **Test:** In the `设备库` window, enter reorder mode, trigger add/edit, and cancel the sheet several times.
 **Expected:** Reorder exits before the sheet appears, the list stays present underneath, and the interaction feels native with no focus or animation oddities.
-**Why human:** Focus transfer, sheet animation quality, and interaction feel are not fully covered by source inspection or static test seams.
+**Result:** Approved in [`15-HUMAN-UAT.md`](./15-HUMAN-UAT.md).
 
 ### Gaps Summary
 
-No code gaps were found. The implementation, wiring, persistence path, and focused regression slice all support the phase contract. Final sign-off is still a human judgment call on visual and interaction parity, so the phase remains `human_needed` rather than `passed`.
+No code gaps were found. The implementation, wiring, persistence path, focused regression slice, and final human UAT all support the phase contract. The phase is now `passed`.
 
 ---
 
-_Verified: 2026-04-16T06:26:40Z_  
+_Verified: 2026-04-16T07:00:36Z_  
 _Verifier: Claude (gsd-verifier)_
