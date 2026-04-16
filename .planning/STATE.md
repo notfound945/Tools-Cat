@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.5
-milestone_name: Device Library UI Parity
-status: completed
-stopped_at: Milestone v1.5 archived
-last_updated: "2026-04-16T08:02:32Z"
-last_activity: 2026-04-16 -- v1.5 milestone archived after passed audit
+milestone: v1.6
+milestone_name: Distribution Hardening
+status: requirements
+stopped_at: Defining v1.6 requirements
+last_updated: "2026-04-16T08:12:00Z"
+last_activity: 2026-04-16 -- Started milestone v1.6 Distribution Hardening
 progress:
-  total_phases: 1
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -20,44 +20,43 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-16)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Planning next milestone
+**Current focus:** Milestone v1.6 — Distribution Hardening
 
 ## Current Position
 
-Milestone: v1.5 (device-library-ui-parity) — ARCHIVED
-Plan: 2 of 2
-Status: Milestone complete
-Last activity: 2026-04-16 -- v1.5 milestone archived after passed audit
+Phase: Not started (defining requirements)
+Plan: -
+Status: Defining requirements
+Last activity: 2026-04-16 -- Started milestone v1.6 Distribution Hardening
 
-Progress: [██████████] 2/2 plans complete
+Progress: [░░░░░░░░░░] 0/0 plans complete
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 2
-- Average duration: 6.5 min
-- Total execution time: 0.1 hours
+- Total plans completed: 0
+- Average duration: -
+- Total execution time: 0 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 15 | 2 | 13 min | 6.5 min |
+| - | - | - | - |
 
 **Recent Trend:**
 
-- Last 5 plans: 6.5 min avg
-- Trend: Stable
+- Last 5 plans: -
+- Trend: N/A
 
-| Phase 15-device-library-ui-parity P01 | 7 min | 1 tasks | 4 files |
-| Phase 15-device-library-ui-parity P02 | 6 min | 1 tasks | 1 files |
+No v1.6 plans yet.
 
 ## Milestone Summary
 
-- Active milestone: none
+- Active milestone: `v1.6 Distribution Hardening`
 - Latest archived milestone: `v1.5 Device Library UI Parity`
-- Scope shipped: Phase 15 only, focused on device-library list semantics, compact add/edit presentation, and semantic action styling
+- Scope being defined: friend-installable signed/notarized distribution without manual Gatekeeper overrides
 - Active roadmap: `.planning/ROADMAP.md`
 - Working files:
   - `.planning/PROJECT.md`
@@ -98,11 +97,11 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Start the next milestone planning cycle when ready.
-- Candidate themes: `CONV-04`, `AWAKE-12`, `AWAKE-13`, `DIST-01`.
+- Active milestone theme: `DIST-01` distribution hardening.
+- Deferred themes after v1.6: `CONV-04`, `AWAKE-12`, `AWAKE-13`.
 
 ## Session Continuity
 
-Last session: 2026-04-16T08:02:32Z
-Stopped at: Milestone v1.5 archived
+Last session: 2026-04-16T08:12:00Z
+Stopped at: Defining v1.6 requirements
 Resume file: None

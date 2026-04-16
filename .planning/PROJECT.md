@@ -13,13 +13,23 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 - Shipped: `v1.5 Device Library UI Parity` on 2026-04-16
 - Live product identity: `Tools Cat`
 - Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, and stabilized direct-launch manager smokes
-- Planning state: `v1.5 Device Library UI Parity` is archived after a passed milestone audit; the next milestone is not planned yet
+- Planning state: `v1.6 Distribution Hardening` is being defined to make friend-to-friend installation work without manual Gatekeeper overrides
 
 ## Next Milestone Goals
 
-- Decide whether the next milestone should prioritize repeat-wake convenience, one-off keep-awake flexibility, managed-duration metadata, or distribution hardening.
-- Preserve the shipped verification seams and native management-surface parity while expanding scope.
-- Keep future milestone scope narrow enough that product truth, planning docs, and verification evidence can stay aligned.
+- Make `Tools Cat` installable for friends without requiring the user to visit macOS `隐私与安全性` to force-open the app.
+- Keep the milestone limited to release-chain hardening: signing, notarization, stapling, packaging, and verification.
+- Preserve the current app behavior and avoid mixing new end-user features into the distribution milestone.
+
+## Current Milestone: v1.6 Distribution Hardening
+
+**Goal:** Make `Tools Cat` distributable to friends as a DMG-backed macOS app they can install directly, without manual security-approval workarounds.
+
+**Target features:**
+- Add the required signing chain for distributable release artifacts.
+- Notarize the shipped app and final DMG, then staple the notarization result to the deliverables.
+- Upgrade the current `release.sh` / `build_dmg.sh` flow so it produces a friend-installable release artifact and documents the verification steps clearly.
+- Keep this milestone release-only; no product-surface expansion.
 
 ## Latest Shipped Milestone: v1.5 Device Library UI Parity
 
@@ -102,10 +112,9 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 
 ### Active
 
-- [ ] User can access a short recent-devices list for faster repeat wake actions
-- [ ] User can create a one-off timed keep-awake duration without saving it into the managed list
-- [ ] User can assign custom labels or notes to managed keep-awake durations
-- [ ] App can move toward packaging hardening such as signing or notarization once the maintenance baseline is stable
+- [ ] Friends can install `Tools Cat` directly from the distributed artifact without using `仍要打开` or similar manual security overrides
+- [ ] The release flow produces signed, notarized, and stapled deliverables with a repeatable local verification path
+- [ ] Distribution hardening does not change the shipped wake or keep-awake product behavior
 
 ### Out of Scope
 
@@ -114,6 +123,7 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 - Broad marketplace-style device discovery or fleet management — the goal is quick access to a small personal set of devices
 - Restoring root-level recent-device wake shortcuts outside the shipped `快速 WOL` / `发送 WOL …` structure during the completed hardening cycle — deferred and tracked as `CONV-04`
 - Reopening shipped duration data-model or wake-menu truth without a dedicated future milestone — those contracts already shipped and should stay closed by default
+- Adding new end-user features during the distribution milestone — this pass is only about release-chain hardening and installability
 - Pulling in a third-party component library before exhausting the native macOS list/table components — native consistency and lower maintenance take priority
 - Public-distribution polish as the primary milestone — signing/notarization matters later, but current scope is daily-use quality first
 
@@ -140,6 +150,8 @@ The v1.3 milestone then converted timed keep-awake from fixed presets into manag
 The v1.4 milestone is intentionally narrower again: it does not reopen duration persistence or keep-awake behavior. It only revisits the `常亮时长` manager presentation so the timed list can lean harder on native list semantics and clearer edit/delete affordances.
 
 The v1.5 milestone then brought the `设备库` manager up to that same native-management bar: device browsing now uses a real list surface, add/edit stays in a retained shared sheet, row actions communicate edit versus delete semantics immediately, and the existing saved-device CRUD, reorder, and direct-launch flows stayed truthful.
+
+The v1.6 milestone is intentionally operational rather than product-facing: the app already works for daily use, but the release chain still stops at an unsigned, unnotarized DMG that friends must manually allow in macOS security settings. This milestone exists to close that distribution gap without reopening app behavior.
 
 Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, module, bundle IDs, regression scripts, release packaging defaults, and active docs now agree on one product identity. Historical workflow-stability exception: the planning artifact directory remains `.planning/phases/09-mac-os-swiss-knife-tools-cat/`.
 
@@ -174,6 +186,7 @@ Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, mo
 | Pull live managed-duration root-menu sync into Phase 13 and remove standalone Phase 14 | The milestone needed shipped CRUD truth in the root menu, and verification proved the separate follow-on phase was redundant | Validated in v1.3 |
 | Prefer native macOS list components and semantic button colors for duration-manager polish | This milestone is visual refinement of an existing native surface, so platform-consistent affordances beat extra UI-library complexity | Validated in Phase 14 |
 | Keep device-library polish presentation-only by deriving add/edit presentation from `currentFormMode` and reusing the duration-manager's list and action semantics | The milestone only needed cross-surface parity, not a new saved-device data or routing model | Validated in Phase 15 |
+| Keep v1.6 limited to release-chain hardening so installability improves without reopening shipped runtime behavior | The immediate user problem is distribution friction, not missing app capability | Active |
 
 ## Evolution
 
@@ -193,4 +206,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-16 after v1.5 milestone archival*
+*Last updated: 2026-04-16 after starting v1.6 milestone definition*
