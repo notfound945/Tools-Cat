@@ -1,11 +1,6 @@
 import Combine
 import Foundation
 
-enum DeviceLibraryScreen: Equatable {
-    case list
-    case form(DeviceLibraryFormMode)
-}
-
 enum DeviceLibraryFormMode: Equatable {
     case add
     case edit(deviceID: UUID)
@@ -14,7 +9,7 @@ enum DeviceLibraryFormMode: Equatable {
 @MainActor
 final class DeviceLibrarySessionModel: ObservableObject {
     @Published var devices: [SavedDevice]
-    @Published var screen: DeviceLibraryScreen
+    @Published var currentFormMode: DeviceLibraryFormMode?
     @Published var draftName: String
     @Published var draftMACAddress: String
     @Published var draftNote: String
@@ -25,9 +20,8 @@ final class DeviceLibrarySessionModel: ObservableObject {
 
     private let libraryStore: SavedDeviceLibraryStore
 
-    var currentFormMode: DeviceLibraryFormMode? {
-        guard case .form(let mode) = screen else { return nil }
-        return mode
+    var isPresentingForm: Bool {
+        currentFormMode != nil
     }
 
     var nameValidationMessage: String? {
@@ -50,7 +44,7 @@ final class DeviceLibrarySessionModel: ObservableObject {
         let resolvedStore = libraryStore ?? SavedDeviceLibraryStore()
         self.libraryStore = resolvedStore
         devices = resolvedStore.devices
-        screen = .list
+        currentFormMode = nil
         draftName = ""
         draftMACAddress = ""
         draftNote = ""
@@ -77,7 +71,7 @@ final class DeviceLibrarySessionModel: ObservableObject {
         clearDraft()
         pendingDeleteDevice = nil
         isReordering = false
-        screen = .form(.add)
+        currentFormMode = .add
     }
 
     func beginEdit(deviceID: UUID) {
@@ -89,17 +83,17 @@ final class DeviceLibrarySessionModel: ObservableObject {
         draftNote = device.note
         pendingDeleteDevice = nil
         isReordering = false
-        screen = .form(.edit(deviceID: device.id))
+        currentFormMode = .edit(deviceID: device.id)
     }
 
     func cancelForm() {
         clearErrors()
         clearDraft()
-        screen = .list
+        currentFormMode = nil
     }
 
     func saveDraft() {
-        guard let currentFormMode else { return }
+        guard let activeFormMode = currentFormMode else { return }
 
         let trimmedName = draftName.trimmingCharacters(in: .whitespacesAndNewlines)
         if let nameValidationMessage {
@@ -118,7 +112,7 @@ final class DeviceLibrarySessionModel: ObservableObject {
         let normalizedNote = draftNote.trimmingCharacters(in: .whitespacesAndNewlines)
 
         do {
-            switch currentFormMode {
+            switch activeFormMode {
             case .add:
                 let newDevice = SavedDevice(
                     id: UUID(),
@@ -144,7 +138,7 @@ final class DeviceLibrarySessionModel: ObservableObject {
             syncDevicesFromStore()
             clearErrors()
             clearDraft()
-            screen = .list
+            currentFormMode = nil
         } catch {
             saveErrorMessage = "无法保存设备，请稍后重试"
         }

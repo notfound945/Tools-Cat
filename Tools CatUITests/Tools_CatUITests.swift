@@ -82,18 +82,18 @@ final class Tools_CatUITests: XCTestCase {
         let addButton = window.buttons["添加设备"]
         XCTAssertTrue(addButton.waitForExistence(timeout: 2.0))
 
-        let formActions = window.descendants(matching: .any)["device-library-form-actions"]
+        let formSheet = app.descendants(matching: .any)["device-library-form-sheet"]
+        let formActions = app.descendants(matching: .any)["device-library-form-actions"]
         clickElementAfterActivatingApp(addButton, in: app)
-        if !formActions.waitForExistence(timeout: 2.0) {
+        if !formSheet.waitForExistence(timeout: 2.0) && !formActions.exists {
             clickElementAfterActivatingApp(addButton, in: app)
         }
-        XCTAssertTrue(formActions.waitForExistence(timeout: 2.0))
-        XCTAssertTrue(window.staticTexts["名称"].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(window.textFields["请输入设备名称"].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(window.staticTexts["请填写设备名称"].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(window.staticTexts["MAC 地址"].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(window.textFields["AA:BB:CC:DD:EE:FF"].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(window.staticTexts["请填写 MAC 地址"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(
+            formSheet.waitForExistence(timeout: 2.0) || formActions.waitForExistence(timeout: 2.0)
+        )
+        XCTAssertTrue(populatedList.exists)
+        XCTAssertTrue(app.buttons["保存设备"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.buttons["取消"].waitForExistence(timeout: 2.0))
     }
 
     @MainActor

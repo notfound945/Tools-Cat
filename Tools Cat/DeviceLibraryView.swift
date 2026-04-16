@@ -5,16 +5,12 @@ struct DeviceLibraryView: View {
     @ObservedObject var session: DeviceLibrarySessionModel
 
     var body: some View {
-        Group {
-            switch session.screen {
-            case .list:
-                listContent
-            case .form(let mode):
-                formContent(mode: mode)
-            }
-        }
+        listContent
         .padding(24)
         .frame(minWidth: 520, minHeight: 420, alignment: .topLeading)
+        .sheet(isPresented: formSheetIsPresented) {
+            formSheetContent
+        }
         .alert(
             session.pendingDeleteDevice.map {
                 DeviceLibraryManagementPresentation.deleteConfirmationMessage(deviceName: $0.name)
@@ -27,6 +23,16 @@ struct DeviceLibraryView: View {
             Button("删除设备", role: .destructive) {
                 session.confirmDelete()
             }
+        }
+    }
+
+    @ViewBuilder
+    private var formSheetContent: some View {
+        if let mode = session.currentFormMode {
+            formContent(mode: mode)
+                .padding(24)
+                .frame(width: 360, alignment: .topLeading)
+                .accessibilityIdentifier("device-library-form-sheet")
         }
     }
 
@@ -76,24 +82,18 @@ struct DeviceLibraryView: View {
                 }
                 .listStyle(.inset)
             } else {
-                ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 0) {
-                        ForEach(Array(session.devices.enumerated()), id: \.element.id) { entry in
-                            let index = entry.offset
-                            let device = entry.element
-                            DeviceRow(
-                                device: device,
-                                isReordering: false,
-                                onEdit: { session.beginEdit(deviceID: device.id) },
-                                onDelete: { session.requestDelete(deviceID: device.id) }
-                            )
-
-                            if index < session.devices.count - 1 {
-                                Divider()
-                            }
-                        }
+                List {
+                    ForEach(session.devices) { device in
+                        DeviceRow(
+                            device: device,
+                            isReordering: false,
+                            onEdit: { session.beginEdit(deviceID: device.id) },
+                            onDelete: { session.requestDelete(deviceID: device.id) }
+                        )
+                        .listRowInsets(EdgeInsets(top: 8, leading: 14, bottom: 8, trailing: 14))
                     }
                 }
+                .listStyle(.inset)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .accessibilityElement(children: .contain)
             }
@@ -225,6 +225,17 @@ struct DeviceLibraryView: View {
             set: { isPresented in
                 if !isPresented {
                     session.cancelDelete()
+                }
+            }
+        )
+    }
+
+    private var formSheetIsPresented: Binding<Bool> {
+        Binding(
+            get: { session.isPresentingForm },
+            set: { isPresented in
+                if !isPresented {
+                    session.cancelForm()
                 }
             }
         )

@@ -12,7 +12,7 @@ final class DeviceLibrarySessionModelTests: XCTestCase {
         session.saveDraft()
 
         XCTAssertEqual(session.devices, [])
-        XCTAssertEqual(session.screen, .form(.add))
+        XCTAssertEqual(session.currentFormMode, .add)
         XCTAssertEqual(session.validationMessage, "请填写设备名称")
 
         session.draftName = "书房主机"
@@ -20,7 +20,7 @@ final class DeviceLibrarySessionModelTests: XCTestCase {
         session.saveDraft()
 
         XCTAssertEqual(session.devices, [])
-        XCTAssertEqual(session.screen, .form(.add))
+        XCTAssertEqual(session.currentFormMode, .add)
         XCTAssertEqual(session.validationMessage, ManualMACValidation.wrongGroupCount.userMessage)
     }
 
@@ -34,7 +34,7 @@ final class DeviceLibrarySessionModelTests: XCTestCase {
         session.draftNote = "备份机"
         session.saveDraft()
 
-        XCTAssertEqual(session.screen, .list)
+        XCTAssertNil(session.currentFormMode)
         XCTAssertEqual(session.devices.count, 1)
         XCTAssertEqual(session.devices[0].name, "家用 NAS")
         XCTAssertEqual(session.devices[0].macAddress, "AA:BB:CC:DD:EE:FF")
@@ -57,7 +57,7 @@ final class DeviceLibrarySessionModelTests: XCTestCase {
 
         session.beginEdit(deviceID: device.id)
 
-        XCTAssertEqual(session.screen, .form(.edit(deviceID: device.id)))
+        XCTAssertEqual(session.currentFormMode, .edit(deviceID: device.id))
         XCTAssertEqual(session.draftName, "旧名称")
         XCTAssertEqual(session.draftMACAddress, "AA:BB:CC:DD:EE:FF")
         XCTAssertEqual(session.draftNote, "旧备注")
@@ -72,6 +72,30 @@ final class DeviceLibrarySessionModelTests: XCTestCase {
         XCTAssertEqual(session.devices[0].name, "新名称")
         XCTAssertEqual(session.devices[0].macAddress, "11:22:33:44:55:66")
         XCTAssertEqual(session.devices[0].note, "")
+    }
+
+    func testBeginAddAndEditExitReorderMode() {
+        let device = SavedDevice(
+            id: UUID(),
+            name: "书房主机",
+            macAddress: "AA:BB:CC:DD:EE:FF",
+            note: "",
+            sortOrder: 0
+        )
+        let session = makeSession(seedDevices: [device])
+
+        session.isReordering = true
+        session.beginAdd()
+
+        XCTAssertFalse(session.isReordering)
+        XCTAssertEqual(session.currentFormMode, .add)
+
+        session.cancelForm()
+        session.isReordering = true
+        session.beginEdit(deviceID: device.id)
+
+        XCTAssertFalse(session.isReordering)
+        XCTAssertEqual(session.currentFormMode, .edit(deviceID: device.id))
     }
 
     func testDeleteRequiresConfirmation() {
