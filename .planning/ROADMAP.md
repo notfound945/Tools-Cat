@@ -19,7 +19,7 @@ This milestone keeps scope deliberately narrow. The saved-device CRUD and wake b
 - Integer phases continue from the last shipped milestone
 - v1.5 therefore starts at Phase 15
 
-- [ ] **Phase 15: Device Library UI Parity** - Align the device-library management surface with the duration manager's native list and semantic action styling.
+- [x] **Phase 15: Device Library UI Parity** - Align the device-library management surface with the duration manager's native list and semantic action styling. (completed 2026-04-16)
 
 ## Phase Details
 
@@ -41,4 +41,4 @@ Phases execute in numeric order: 15
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 15. Device Library UI Parity | 1/2 | In Progress |  |
+| 15. Device Library UI Parity | 2/2 | Complete   | 2026-04-16 |
