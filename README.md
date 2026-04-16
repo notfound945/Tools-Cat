@@ -18,7 +18,7 @@
 2) 直接 Run 即可（应用以菜单栏图标运行，无主窗口）
 
 ## Release
-Phase 16 的维护者发布入口只有一个：
+维护者发布入口只有一个：
 ```bash
 sh ./release.sh
 ```
@@ -30,13 +30,19 @@ export RELEASE_SIGNING_IDENTITY='Developer ID Application: <Common Name> (Y2YJ48
 export RELEASE_NOTARY_PROFILE=TOOLS_CAT_NOTARY
 ```
 
-当前脚本会执行签名预检、归档并导出已签名应用，输出路径为：
-- `dist/export/Tools Cat.app`
+当前脚本会执行签名预检、归档、导出已签名应用、打包并签名 DMG、公证提交、stapling 以及本地评估，最终产物为：
+- `dist/Tools-Cat.dmg`
 
-完整的证书准备、`notarytool` profile 初始化、预检失败说明与 Phase 16 runbook 见：
+运行过程中还会保留：
+- `build/archive/Tools Cat.xcarchive`
+- `dist/export/Tools Cat.app`
+- `build/notary/Tools-Cat-notary-submit.plist`
+- `build/notary/Tools-Cat-notary-log.json`（仅公证被拒时生成）
+
+完整的证书准备、`notarytool` profile 初始化、预检失败说明与当前 runbook 见：
 - `docs/release/signing-readiness.md`
 
-Phase 16 只覆盖已签名 `.app` 导出。DMG 签名、公证提交、stapling 和 Gatekeeper 安装验证明确延后到 Phase 17+。
+Phase 17 负责把发布链路推进到已签名、已公证、已 stapled 的 `Tools-Cat.dmg`。Phase 18 再补齐可重复的 fresh-machine 安装验证与更完整的发布回归闭环。
 
 ## 更名后的可选清理
 - 只建议在你确认 `Tools Cat` 首次启动成功、历史保存设备也已经迁移后，再做旧标识清理。
