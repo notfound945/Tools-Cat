@@ -27,6 +27,7 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 
 **Target features:**
 - Replace the populated device-library custom stacked list surface with a native list-first presentation that matches the duration manager's current visual contract.
+- Present device-library add/edit flows through the same compact manager-shell pattern used in the duration manager instead of a visually separate full-screen mode.
 - Style device-row edit and delete controls with the same accent/destructive semantics used in the duration manager.
 - Keep add, edit, delete, reorder, and direct-launch device-library behavior stable while tightening UI smoke coverage around the polished surface.
 
@@ -97,7 +98,7 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 ### Active
 
 - [ ] User sees saved WOL devices inside a clearly native list surface that matches the duration manager's shipped list treatment
-- [ ] User sees device-library add, edit, and delete affordances styled consistently with the duration manager's current add/edit/delete semantics
+- [ ] User sees device-library add/edit presentation and edit/delete affordances styled consistently with the duration manager's current add/edit/delete semantics
 - [ ] User can use the polished device-library UI without regressing saved-device add, edit, delete, reorder, or direct-launch management behavior
 
 ### Out of Scope
