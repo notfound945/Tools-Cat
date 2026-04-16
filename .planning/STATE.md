@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Device Library UI Parity
-status: defining_requirements
-stopped_at: Milestone v1.5 initialized
-last_updated: "2026-04-16T04:30:00.000Z"
-last_activity: 2026-04-16 -- Milestone v1.5 started
+status: ready_to_plan
+stopped_at: Milestone v1.5 roadmap created
+last_updated: "2026-04-16T04:38:00.000Z"
+last_activity: 2026-04-16 -- Milestone v1.5 roadmap created
 progress:
   total_phases: 1
   completed_phases: 0
@@ -20,14 +20,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-16)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Milestone v1.5 requirements and roadmap definition
+**Current focus:** Phase 15 — device-library-ui-parity
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-04-16 -- Milestone v1.5 started
+Phase: 15 (device-library-ui-parity) — READY TO PLAN
+Plan: Not started
+Status: Ready to discuss and plan
+Last activity: 2026-04-16 -- Milestone v1.5 roadmap created
 
 Progress: [░░░░░░░░░░] 0/0 plans complete
 
@@ -35,7 +35,7 @@ Progress: [░░░░░░░░░░] 0/0 plans complete
 
 - Active milestone: `v1.5 Device Library UI Parity`
 - Latest archived milestone: `v1.4 Duration UI Polish`
-- Scope planned: align the device-library manager with the shipped duration-manager visual semantics
+- Scope planned: Phase 15 only, focused on device-library list semantics, compact add/edit presentation, and semantic action styling
 - Active roadmap: `.planning/ROADMAP.md`
 - Working files:
   - `.planning/PROJECT.md`
@@ -72,10 +72,10 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Define v1.5 requirements and roadmap for device-library UI parity, then start Phase 15 discussion/planning.
+- Run `$gsd-discuss-phase 15` to gather phase context, or `$gsd-plan-phase 15` to plan directly.
 
 ## Session Continuity
 
 Last session: 2026-04-16T02:39:19.532Z
-Stopped at: Milestone v1.5 initialized
-Resume file: .planning/PROJECT.md
+Stopped at: Milestone v1.5 roadmap created
+Resume file: .planning/ROADMAP.md

@@ -13,7 +13,7 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 - Shipped: `v1.4 Duration UI Polish` on 2026-04-16
 - Live product identity: `Tools Cat`
 - Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, a native duration-manager list presentation, semantic edit/delete affordances, and a stabilized direct-launch duration-manager smoke path
-- Planning state: `v1.5 Device Library UI Parity` is active and scoped for requirements and roadmap definition
+- Planning state: `v1.5 Device Library UI Parity` is active with requirements and roadmap defined; Phase 15 is ready for discussion and planning
 
 ## Next Milestone Goals
 
@@ -24,6 +24,8 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 ## Current Milestone: v1.5 Device Library UI Parity
 
 **Goal:** Make the WOL device-library manager feel visually and behaviorally consistent with the shipped duration-management surface without reopening saved-device truth or menu behavior.
+
+**Status:** Requirements and roadmap defined on 2026-04-16. Phase 15 is ready for discussion/planning.
 
 **Target features:**
 - Replace the populated device-library custom stacked list surface with a native list-first presentation that matches the duration manager's current visual contract.
@@ -184,4 +186,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-16 after starting milestone v1.5 Device Library UI Parity*
+*Last updated: 2026-04-16 after defining milestone v1.5 requirements and roadmap*
