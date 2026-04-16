@@ -69,7 +69,7 @@ struct KeepAwakeDurationManagementView: View {
     }
 
     private var populatedListContent: some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .center, spacing: 8) {
                 Text("定时时长")
                     .font(.caption)
@@ -82,42 +82,28 @@ struct KeepAwakeDurationManagementView: View {
                     .font(.caption)
                     .foregroundStyle(.tertiary)
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 14)
-            .padding(.bottom, 10)
+            .padding(.horizontal, 2)
 
-            Divider()
-
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 10) {
-                    ForEach(session.durations) { duration in
-                        KeepAwakeDurationRow(
-                            duration: duration,
-                            onEdit: { session.beginEdit(durationID: duration.id) },
-                            onDelete: { session.requestDelete(durationID: duration.id) }
-                        )
-                    }
+            List {
+                ForEach(session.durations) { duration in
+                    KeepAwakeDurationRow(
+                        duration: duration,
+                        onEdit: { session.beginEdit(durationID: duration.id) },
+                        onDelete: { session.requestDelete(durationID: duration.id) }
+                    )
+                    .listRowInsets(EdgeInsets(top: 8, leading: 14, bottom: 8, trailing: 14))
                 }
-                .padding(12)
             }
+            .listStyle(.inset)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .accessibilityIdentifier("keep-awake-duration-list")
         }
-        .background(listSurfaceBackground)
-        .overlay(listSurfaceBorder)
-        .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 4)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("keep-awake-duration-list-surface")
         .overlay(alignment: .topLeading) {
             KeepAwakeDurationAccessibilityMarker(
                 identifier: "keep-awake-duration-list-surface",
                 label: "常亮时长列表区域"
-            )
-            .frame(width: 1, height: 1)
-        }
-        .overlay(alignment: .topLeading) {
-            KeepAwakeDurationAccessibilityMarker(
-                identifier: "keep-awake-duration-list",
-                label: "常亮时长列表"
             )
             .frame(width: 1, height: 1)
         }
@@ -274,9 +260,7 @@ private struct KeepAwakeDurationRow: View {
                     .buttonStyle(.borderless)
             }
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 14)
-        .background(rowBackground)
+        .padding(.vertical, 4)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("keep-awake-duration-row-\(duration.id.uuidString)")
         .overlay(alignment: .topLeading) {
@@ -288,26 +272,6 @@ private struct KeepAwakeDurationRow: View {
         }
     }
 
-    private var rowBackground: some View {
-        RoundedRectangle(cornerRadius: 10, style: .continuous)
-            .fill(Color(nsColor: .controlBackgroundColor))
-            .overlay(
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .stroke(Color(nsColor: .separatorColor).opacity(0.35), lineWidth: 1)
-            )
-    }
-}
-
-private extension KeepAwakeDurationManagementView {
-    var listSurfaceBackground: some View {
-        RoundedRectangle(cornerRadius: 14, style: .continuous)
-            .fill(Color(nsColor: .underPageBackgroundColor))
-    }
-
-    var listSurfaceBorder: some View {
-        RoundedRectangle(cornerRadius: 14, style: .continuous)
-            .stroke(Color(nsColor: .separatorColor).opacity(0.55), lineWidth: 1)
-    }
 }
 
 private struct KeepAwakeDurationAccessibilityMarker: NSViewRepresentable {
