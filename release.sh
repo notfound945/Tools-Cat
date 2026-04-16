@@ -51,5 +51,9 @@ codesign --force --sign "$RELEASE_SIGNING_IDENTITY" --timestamp "$DMG_PATH"
 
 bash "$ROOT_DIR/scripts/release/inspect-dmg-signature.sh" "$DMG_PATH"
 
+bash "$ROOT_DIR/scripts/release/notarize-dmg.sh" "$DMG_PATH"
+xcrun stapler staple "$DMG_PATH"
+bash "$ROOT_DIR/scripts/release/assess-notarized-dmg.sh" "$DMG_PATH"
+
 echo "[DONE] Signed app exported to $SIGNED_APP_PATH"
-echo "[DONE] Signed DMG created at $DMG_PATH"
+echo "[DONE] Stapled DMG ready at $DMG_PATH"
