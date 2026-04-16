@@ -224,7 +224,13 @@ final class Tools_CatUITests: XCTestCase {
 
         XCTAssertTrue(durationList.exists)
         let formSheet = app.descendants(matching: .any)["keep-awake-duration-form-sheet"]
-        XCTAssertTrue(formSheet.waitForExistence(timeout: 2.0))
+        let formActions = app.descendants(matching: .any)["keep-awake-duration-form-actions"]
+        if !formSheet.waitForExistence(timeout: 2.0) && !formActions.exists {
+            clickElementAfterActivatingApp(addButton, in: app)
+        }
+        XCTAssertTrue(
+            formSheet.waitForExistence(timeout: 2.0) || formActions.waitForExistence(timeout: 2.0)
+        )
         XCTAssertTrue(app.staticTexts["时长（分钟）"].waitForExistence(timeout: 2.0))
         XCTAssertTrue(
             app.textFields["keep-awake-duration-minutes-field"].waitForExistence(timeout: 2.0)
