@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Device Library UI Parity
-status: verifying
-stopped_at: Phase 15 complete
-last_updated: "2026-04-16T07:00:36Z"
-last_activity: 2026-04-16 -- Phase 15 human verification approved and phase completed
+status: completed
+stopped_at: Milestone v1.5 archived
+last_updated: "2026-04-16T08:02:32Z"
+last_activity: 2026-04-16 -- v1.5 milestone archived after passed audit
 progress:
   total_phases: 1
   completed_phases: 1
@@ -20,14 +20,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-16)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Phase 15 — device-library-ui-parity
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 15 (device-library-ui-parity) — COMPLETE
+Milestone: v1.5 (device-library-ui-parity) — ARCHIVED
 Plan: 2 of 2
-Status: Phase complete
-Last activity: 2026-04-16 -- Phase 15 human verification approved and phase completed
+Status: Milestone complete
+Last activity: 2026-04-16 -- v1.5 milestone archived after passed audit
 
 Progress: [██████████] 2/2 plans complete
 
@@ -35,19 +35,19 @@ Progress: [██████████] 2/2 plans complete
 
 **Velocity:**
 
-- Total plans completed: 1
-- Average duration: 7 min
+- Total plans completed: 2
+- Average duration: 6.5 min
 - Total execution time: 0.1 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 15 | 1 | 7 min | 7 min |
+| 15 | 2 | 13 min | 6.5 min |
 
 **Recent Trend:**
 
-- Last 5 plans: 7 min
+- Last 5 plans: 6.5 min avg
 - Trend: Stable
 
 | Phase 15-device-library-ui-parity P01 | 7 min | 1 tasks | 4 files |
@@ -55,9 +55,9 @@ Progress: [██████████] 2/2 plans complete
 
 ## Milestone Summary
 
-- Active milestone: `v1.5 Device Library UI Parity`
-- Latest archived milestone: `v1.4 Duration UI Polish`
-- Scope planned: Phase 15 only, focused on device-library list semantics, compact add/edit presentation, and semantic action styling
+- Active milestone: none
+- Latest archived milestone: `v1.5 Device Library UI Parity`
+- Scope shipped: Phase 15 only, focused on device-library list semantics, compact add/edit presentation, and semantic action styling
 - Active roadmap: `.planning/ROADMAP.md`
 - Working files:
   - `.planning/PROJECT.md`
@@ -98,10 +98,11 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Phase 15 is complete. Start the next milestone planning cycle when ready.
+- Start the next milestone planning cycle when ready.
+- Candidate themes: `CONV-04`, `AWAKE-12`, `AWAKE-13`, `DIST-01`.
 
 ## Session Continuity
 
-Last session: 2026-04-16T07:00:36Z
-Stopped at: Phase 15 complete
+Last session: 2026-04-16T08:02:32Z
+Stopped at: Milestone v1.5 archived
 Resume file: None

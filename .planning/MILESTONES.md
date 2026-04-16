@@ -1,5 +1,23 @@
 # Milestones
 
+## v1.5 Device Library UI Parity (Shipped: 2026-04-16)
+
+**Phases completed:** 1 phase, 2 plans, 2 tasks
+**Audit:** passed
+
+**Key accomplishments:**
+
+- Native device-library list browsing with retained-shell add/edit sheets over the existing manager window
+- Device-library rows now mirror the duration manager with accent edit semantics, destructive delete semantics, and a clean regression proof
+
+**Archive files:**
+
+- `.planning/milestones/v1.5-ROADMAP.md`
+- `.planning/milestones/v1.5-REQUIREMENTS.md`
+- `.planning/milestones/v1.5-MILESTONE-AUDIT.md`
+
+---
+
 ## v1.4 Duration UI Polish (Shipped: 2026-04-16)
 
 **Phases completed:** 1 phase, 2 plans, 2 tasks

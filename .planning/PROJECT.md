@@ -10,30 +10,28 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 
 ## Current State
 
-- Shipped: `v1.4 Duration UI Polish` on 2026-04-16
+- Shipped: `v1.5 Device Library UI Parity` on 2026-04-16
 - Live product identity: `Tools Cat`
-- Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, a native duration-manager list presentation, semantic edit/delete affordances, and a stabilized direct-launch duration-manager smoke path
-- Planning state: `v1.5 Device Library UI Parity` has completed execution, automated verification, and human UAT approval
+- Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, and stabilized direct-launch manager smokes
+- Planning state: `v1.5 Device Library UI Parity` is archived after a passed milestone audit; the next milestone is not planned yet
 
 ## Next Milestone Goals
 
-- Align the WOL device-library management surface with the shipped duration-manager visual language.
-- Keep add, edit, and delete affordances semantically obvious and visually consistent across both management windows.
-- Preserve saved-device CRUD, reorder behavior, and direct-launch management coverage while polishing the device-library presentation.
+- Decide whether the next milestone should prioritize repeat-wake convenience, one-off keep-awake flexibility, managed-duration metadata, or distribution hardening.
+- Preserve the shipped verification seams and native management-surface parity while expanding scope.
+- Keep future milestone scope narrow enough that product truth, planning docs, and verification evidence can stay aligned.
 
-## Current Milestone: v1.5 Device Library UI Parity
+## Latest Shipped Milestone: v1.5 Device Library UI Parity
 
-**Goal:** Make the WOL device-library manager feel visually and behaviorally consistent with the shipped duration-management surface without reopening saved-device truth or menu behavior.
+**Result:** The `设备库` manager now reads like the shipped `常亮时长` manager: native list-first browsing, compact retained add/edit sheets, semantic edit/delete actions, and preserved saved-device truth.
 
-**Status:** Completed on 2026-04-16 after automated verification and approved human UAT.
+**Delivered:**
+- Replaced the normal populated device-library stack with a native SwiftUI `List` while preserving reorder mode and the dedicated management shell.
+- Moved add/edit presentation onto a retained shared sheet so the list context stays visible during management flows.
+- Matched the duration manager's semantic affordances by tinting `编辑` with the app accent color and keeping `删除` destructive, then reran the focused regression slice cleanly.
 
-**Target features:**
-- Replace the populated device-library custom stacked list surface with a native list-first presentation that matches the duration manager's current visual contract.
-- Present device-library add/edit flows through the same compact manager-shell pattern used in the duration manager instead of a visually separate full-screen mode.
-- Style device-row edit and delete controls with the same accent/destructive semantics used in the duration manager.
-- Keep add, edit, delete, reorder, and direct-launch device-library behavior stable while tightening UI smoke coverage around the polished surface.
-
-## Latest Shipped Milestone: v1.4 Duration UI Polish
+<details>
+<summary>Previous shipped milestone: v1.4 Duration UI Polish</summary>
 
 **Result:** The `常亮时长` manager now reads as a native macOS list, the row actions communicate edit versus delete intent immediately, and the shipped CRUD and keep-awake menu truth remain intact.
 
@@ -67,6 +65,7 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 
 </details>
 </details>
+</details>
 
 ## Requirements
 
@@ -96,12 +95,17 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 - ✓ User can scan managed keep-awake durations inside a clearly native macOS list surface instead of rows blending into the window background — validated in Phase 14
 - ✓ User can distinguish edit versus delete actions immediately through semantic styling, with edit in the app theme color and delete in destructive red — validated in Phase 14
 - ✓ User can use the polished list UI without regressing existing add, edit, delete, sorting, or live root-menu sync behavior — validated in Phase 14
+- ✓ User sees saved WOL devices inside a clearly native macOS list surface instead of the prior custom stacked treatment — validated in Phase 15
+- ✓ User can add or edit a saved WOL device through a compact in-place management presentation that keeps the device list visible — validated in Phase 15
+- ✓ User sees device-library edit and delete affordances styled consistently with the duration manager's accent/destructive semantics — validated in Phase 15
+- ✓ User can use the polished device-library manager without regressing saved-device add, edit, delete, reorder, or direct-launch behavior — validated in Phase 15
 
 ### Active
 
-- [ ] User sees saved WOL devices inside a clearly native list surface that matches the duration manager's shipped list treatment
-- [ ] User sees device-library add/edit presentation and edit/delete affordances styled consistently with the duration manager's current add/edit/delete semantics
-- [ ] User can use the polished device-library UI without regressing saved-device add, edit, delete, reorder, or direct-launch management behavior
+- [ ] User can access a short recent-devices list for faster repeat wake actions
+- [ ] User can create a one-off timed keep-awake duration without saving it into the managed list
+- [ ] User can assign custom labels or notes to managed keep-awake durations
+- [ ] App can move toward packaging hardening such as signing or notarization once the maintenance baseline is stable
 
 ### Out of Scope
 
@@ -109,7 +113,7 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 - Cloud sync, accounts, or shared device management — unnecessary complexity for a self-use utility
 - Broad marketplace-style device discovery or fleet management — the goal is quick access to a small personal set of devices
 - Restoring root-level recent-device wake shortcuts outside the shipped `快速 WOL` / `发送 WOL …` structure during the completed hardening cycle — deferred and tracked as `CONV-04`
-- Reopening the duration data model, validation rules, or root-menu behavior in this milestone — v1.3 already shipped those contracts; this pass is UI polish only
+- Reopening shipped duration data-model or wake-menu truth without a dedicated future milestone — those contracts already shipped and should stay closed by default
 - Pulling in a third-party component library before exhausting the native macOS list/table components — native consistency and lower maintenance take priority
 - Public-distribution polish as the primary milestone — signing/notarization matters later, but current scope is daily-use quality first
 
@@ -134,6 +138,8 @@ The v1.2 milestone kept scope intentionally narrow: it fixed a keep-awake truth 
 The v1.3 milestone then converted timed keep-awake from fixed presets into managed persisted data. Phase 12 established the canonical duration store and fixed-row bridge, Phase 12.1 restored the real macOS 14 compatibility baseline, and Phase 13 shipped the native duration-management flow plus live root-menu synchronization and final visual polish.
 
 The v1.4 milestone is intentionally narrower again: it does not reopen duration persistence or keep-awake behavior. It only revisits the `常亮时长` manager presentation so the timed list can lean harder on native list semantics and clearer edit/delete affordances.
+
+The v1.5 milestone then brought the `设备库` manager up to that same native-management bar: device browsing now uses a real list surface, add/edit stays in a retained shared sheet, row actions communicate edit versus delete semantics immediately, and the existing saved-device CRUD, reorder, and direct-launch flows stayed truthful.
 
 Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, module, bundle IDs, regression scripts, release packaging defaults, and active docs now agree on one product identity. Historical workflow-stability exception: the planning artifact directory remains `.planning/phases/09-mac-os-swiss-knife-tools-cat/`.
 
@@ -167,6 +173,7 @@ Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, mo
 | Keep duration CRUD in a dedicated native management window while `无限常亮` stays outside the managed list | Timed-duration editing needs validation, list clarity, and confirmation flows that do not fit a compact root menu | Validated in Phase 13 |
 | Pull live managed-duration root-menu sync into Phase 13 and remove standalone Phase 14 | The milestone needed shipped CRUD truth in the root menu, and verification proved the separate follow-on phase was redundant | Validated in v1.3 |
 | Prefer native macOS list components and semantic button colors for duration-manager polish | This milestone is visual refinement of an existing native surface, so platform-consistent affordances beat extra UI-library complexity | Validated in Phase 14 |
+| Keep device-library polish presentation-only by deriving add/edit presentation from `currentFormMode` and reusing the duration-manager's list and action semantics | The milestone only needed cross-surface parity, not a new saved-device data or routing model | Validated in Phase 15 |
 
 ## Evolution
 
@@ -186,4 +193,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-16 after Phase 15 human verification approval*
+*Last updated: 2026-04-16 after v1.5 milestone archival*
