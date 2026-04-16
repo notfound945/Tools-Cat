@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Distribution Hardening
-status: requirements
-stopped_at: Defining v1.6 requirements
-last_updated: "2026-04-16T08:12:00Z"
-last_activity: 2026-04-16 -- Started milestone v1.6 Distribution Hardening
+status: roadmap
+stopped_at: Roadmap created for Phase 16
+last_updated: "2026-04-16T08:24:00Z"
+last_activity: 2026-04-16 -- Created milestone v1.6 roadmap and mapped requirements to phases
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -20,14 +20,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-16)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Milestone v1.6 — Distribution Hardening
+**Current focus:** Phase 16 — release-signing-readiness
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 16 (release-signing-readiness) — NOT STARTED
 Plan: -
-Status: Defining requirements
-Last activity: 2026-04-16 -- Started milestone v1.6 Distribution Hardening
+Status: Roadmap created, ready for discussion
+Last activity: 2026-04-16 -- Created milestone v1.6 roadmap and mapped requirements to phases
 
 Progress: [░░░░░░░░░░] 0/0 plans complete
 
@@ -43,20 +43,21 @@ Progress: [░░░░░░░░░░] 0/0 plans complete
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 16 | 0 | - | - |
+| 17 | 0 | - | - |
+| 18 | 0 | - | - |
 
 **Recent Trend:**
 
 - Last 5 plans: -
 - Trend: N/A
-
-No v1.6 plans yet.
+- No v1.6 plans yet.
 
 ## Milestone Summary
 
 - Active milestone: `v1.6 Distribution Hardening`
 - Latest archived milestone: `v1.5 Device Library UI Parity`
-- Scope being defined: friend-installable signed/notarized distribution without manual Gatekeeper overrides
+- Scope planned: friend-installable signed/notarized distribution without manual Gatekeeper overrides
 - Active roadmap: `.planning/ROADMAP.md`
 - Working files:
   - `.planning/PROJECT.md`
@@ -103,5 +104,5 @@ The latest completed milestone established these durable decisions:
 ## Session Continuity
 
 Last session: 2026-04-16T08:12:00Z
-Stopped at: Defining v1.6 requirements
+Stopped at: Roadmap created for Phase 16
 Resume file: None

@@ -50,19 +50,19 @@ Phase mapping assigned during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DIST-01 | Unmapped | Pending |
-| DIST-02 | Unmapped | Pending |
-| DIST-03 | Unmapped | Pending |
-| DIST-04 | Unmapped | Pending |
-| DIST-05 | Unmapped | Pending |
-| DIST-06 | Unmapped | Pending |
-| DIST-07 | Unmapped | Pending |
+| DIST-01 | Phase 16 | Pending |
+| DIST-02 | Phase 17 | Pending |
+| DIST-03 | Phase 17 | Pending |
+| DIST-04 | Phase 17 | Pending |
+| DIST-05 | Phase 16 | Pending |
+| DIST-06 | Phase 18 | Pending |
+| DIST-07 | Phase 18 | Pending |
 
 **Coverage:**
 - v1 requirements: 7 total
-- Mapped to phases: 0
-- Unmapped: 7 ⚠️
+- Mapped to phases: 7
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-04-16*
-*Last updated: 2026-04-16 after confirming v1.6 milestone requirements*
+*Last updated: 2026-04-16 after creating the v1.6 roadmap*
