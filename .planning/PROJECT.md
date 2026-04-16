@@ -13,13 +13,22 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 - Shipped: `v1.4 Duration UI Polish` on 2026-04-16
 - Live product identity: `Tools Cat`
 - Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, a native duration-manager list presentation, semantic edit/delete affordances, and a stabilized direct-launch duration-manager smoke path
-- Planning state: no active milestone is defined; the repo is ready for `$gsd-new-milestone`
+- Planning state: `v1.5 Device Library UI Parity` is active and scoped for requirements and roadmap definition
 
 ## Next Milestone Goals
 
-- Decide which deferred convenience or distribution item should anchor the next milestone after `v1.4` shipped.
-- Preserve the newly shipped native list semantics and semantic edit/delete affordances as the baseline for any future duration-manager work.
-- Avoid reopening duration persistence or root-menu truth unless a new milestone explicitly requires it.
+- Align the WOL device-library management surface with the shipped duration-manager visual language.
+- Keep add, edit, and delete affordances semantically obvious and visually consistent across both management windows.
+- Preserve saved-device CRUD, reorder behavior, and direct-launch management coverage while polishing the device-library presentation.
+
+## Current Milestone: v1.5 Device Library UI Parity
+
+**Goal:** Make the WOL device-library manager feel visually and behaviorally consistent with the shipped duration-management surface without reopening saved-device truth or menu behavior.
+
+**Target features:**
+- Replace the populated device-library custom stacked list surface with a native list-first presentation that matches the duration manager's current visual contract.
+- Style device-row edit and delete controls with the same accent/destructive semantics used in the duration manager.
+- Keep add, edit, delete, reorder, and direct-launch device-library behavior stable while tightening UI smoke coverage around the polished surface.
 
 ## Latest Shipped Milestone: v1.4 Duration UI Polish
 
@@ -87,7 +96,9 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 
 ### Active
 
-None. The current milestone's active requirements are all validated; the next milestone will define new active scope.
+- [ ] User sees saved WOL devices inside a clearly native list surface that matches the duration manager's shipped list treatment
+- [ ] User sees device-library add, edit, and delete affordances styled consistently with the duration manager's current add/edit/delete semantics
+- [ ] User can use the polished device-library UI without regressing saved-device add, edit, delete, reorder, or direct-launch management behavior
 
 ### Out of Scope
 
@@ -172,4 +183,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-16 after archiving the v1.4 milestone*
+*Last updated: 2026-04-16 after starting milestone v1.5 Device Library UI Parity*

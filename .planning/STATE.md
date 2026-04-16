@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.4
-milestone_name: Duration UI Polish
-status: completed
-stopped_at: Archived milestone v1.4 and prepared for next milestone planning
-last_updated: "2026-04-16T04:18:00.000Z"
-last_activity: 2026-04-16 -- Archived milestone v1.4 and prepared for next milestone planning
+milestone: v1.5
+milestone_name: Device Library UI Parity
+status: defining_requirements
+stopped_at: Milestone v1.5 initialized
+last_updated: "2026-04-16T04:30:00.000Z"
+last_activity: 2026-04-16 -- Milestone v1.5 started
 progress:
   total_phases: 1
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -20,25 +20,26 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-16)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Planning the next milestone
+**Current focus:** Milestone v1.5 requirements and roadmap definition
 
 ## Current Position
 
-Phase: None active
-Plan: None active
-Status: Milestone archived
-Last activity: 2026-04-16 -- Archived milestone v1.4 and prepared for next milestone planning
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-16 -- Milestone v1.5 started
 
-Progress: [██████████] v1.4 shipped
+Progress: [░░░░░░░░░░] 0/0 plans complete
 
 ## Milestone Summary
 
-- Active milestone: none
+- Active milestone: `v1.5 Device Library UI Parity`
 - Latest archived milestone: `v1.4 Duration UI Polish`
-- Scope planned: next milestone not defined yet
+- Scope planned: align the device-library manager with the shipped duration-manager visual semantics
 - Active roadmap: `.planning/ROADMAP.md`
 - Working files:
   - `.planning/PROJECT.md`
+  - `.planning/REQUIREMENTS.md`
   - `.planning/ROADMAP.md`
   - `.planning/MILESTONES.md`
 - Latest shipped summary: `.planning/MILESTONES.md`
@@ -71,10 +72,10 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Run `$gsd-new-milestone` to define the next shipped scope and create a fresh `.planning/REQUIREMENTS.md`.
+- Define v1.5 requirements and roadmap for device-library UI parity, then start Phase 15 discussion/planning.
 
 ## Session Continuity
 
 Last session: 2026-04-16T02:39:19.532Z
-Stopped at: Archived milestone v1.4 and prepared for next milestone planning
-Resume file: None
+Stopped at: Milestone v1.5 initialized
+Resume file: .planning/PROJECT.md
