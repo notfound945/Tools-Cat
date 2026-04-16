@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Duration UI Polish
-status: phase_complete
-stopped_at: Phase 14 verified and marked complete
-last_updated: "2026-04-16T04:08:36.000Z"
-last_activity: 2026-04-16 -- Phase 14 verified and marked complete
+status: completed
+stopped_at: Archived milestone v1.4 and prepared for next milestone planning
+last_updated: "2026-04-16T04:18:00.000Z"
+last_activity: 2026-04-16 -- Archived milestone v1.4 and prepared for next milestone planning
 progress:
   total_phases: 1
   completed_phases: 1
@@ -20,27 +20,27 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-16)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Milestone v1.4 ready for completion
+**Current focus:** Planning the next milestone
 
 ## Current Position
 
-Phase: 14 (duration-management-ui-polish) — COMPLETE
-Plan: 2 of 2
-Status: Phase complete
-Last activity: 2026-04-16 -- Phase 14 verified and marked complete
+Phase: None active
+Plan: None active
+Status: Milestone archived
+Last activity: 2026-04-16 -- Archived milestone v1.4 and prepared for next milestone planning
 
-Progress: [██████████] 2/2 plans complete
+Progress: [██████████] v1.4 shipped
 
 ## Milestone Summary
 
-- Active milestone: `v1.4 Duration UI Polish`
-- Latest archived milestone: `v1.3 Duration Management`
-- Scope planned: Phase 14 only, focused on native list semantics and semantic action styling for the duration manager
+- Active milestone: none
+- Latest archived milestone: `v1.4 Duration UI Polish`
+- Scope planned: next milestone not defined yet
 - Active roadmap: `.planning/ROADMAP.md`
 - Working files:
   - `.planning/PROJECT.md`
-  - `.planning/REQUIREMENTS.md`
   - `.planning/ROADMAP.md`
+  - `.planning/MILESTONES.md`
 - Latest shipped summary: `.planning/MILESTONES.md`
 
 ## Accumulated Context
@@ -71,10 +71,10 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Run `$gsd-complete-milestone` to archive `v1.4 Duration UI Polish` and prepare the next milestone.
+- Run `$gsd-new-milestone` to define the next shipped scope and create a fresh `.planning/REQUIREMENTS.md`.
 
 ## Session Continuity
 
 Last session: 2026-04-16T02:39:19.532Z
-Stopped at: Phase 14 verified and marked complete
-Resume file: .planning/phases/14-duration-management-ui-polish/14-VERIFICATION.md
+Stopped at: Archived milestone v1.4 and prepared for next milestone planning
+Resume file: None

@@ -1,5 +1,26 @@
 # Milestones
 
+## v1.4 Duration UI Polish (Shipped: 2026-04-16)
+
+**Phases completed:** 1 phase, 2 plans, 2 tasks
+**Audit:** not run before archival
+
+**Key accomplishments:**
+
+- Native SwiftUI `List` presentation for managed keep-awake durations with a smoke test that still proves the live add sheet overlays on top of the manager window
+- The native duration list now makes edit and delete intent obvious at a glance while the shipped CRUD and keep-awake menu behavior remain unchanged
+
+**Archive files:**
+
+- `.planning/milestones/v1.4-ROADMAP.md`
+- `.planning/milestones/v1.4-REQUIREMENTS.md`
+
+**Known caveat:**
+
+- This milestone was archived from a passed phase verification report, but no separate `v1.4-MILESTONE-AUDIT.md` was created first.
+
+---
+
 ## v1.3 Duration Management (Shipped: 2026-04-16)
 
 **Phases completed:** 3 phases, 7 plans, 11 tasks

@@ -10,29 +10,28 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 
 ## Current State
 
-- Shipped: `v1.3 Duration Management` on 2026-04-16
+- Shipped: `v1.4 Duration UI Polish` on 2026-04-16
 - Live product identity: `Tools Cat`
-- Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, and user-managed keep-awake durations with live root-menu synchronization
-- Planning state: `v1.4 Duration UI Polish` is phase-complete and verified; the milestone is ready for archive via `$gsd-complete-milestone`
+- Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, a native duration-manager list presentation, semantic edit/delete affordances, and a stabilized direct-launch duration-manager smoke path
+- Planning state: no active milestone is defined; the repo is ready for `$gsd-new-milestone`
 
 ## Next Milestone Goals
 
-- Decide which deferred convenience or distribution item should anchor the next milestone after `v1.4` is archived.
+- Decide which deferred convenience or distribution item should anchor the next milestone after `v1.4` shipped.
 - Preserve the newly shipped native list semantics and semantic edit/delete affordances as the baseline for any future duration-manager work.
 - Avoid reopening duration persistence or root-menu truth unless a new milestone explicitly requires it.
 
-## Current Milestone: v1.4 Duration UI Polish
+## Latest Shipped Milestone: v1.4 Duration UI Polish
 
-**Goal:** Tighten the `常亮时长` management UI so the timed-duration list feels unmistakably native and the row actions communicate edit versus delete semantics immediately.
+**Result:** The `常亮时长` manager now reads as a native macOS list, the row actions communicate edit versus delete intent immediately, and the shipped CRUD and keep-awake menu truth remain intact.
 
-**Status:** Phase 14 complete and verified on 2026-04-16. Milestone archive is the next workflow step.
+**Delivered:**
+- Replaced the custom populated timed-duration stack with a native SwiftUI `List` while preserving the manager shell and accessibility seams.
+- Styled `编辑` with the app accent color and kept `删除` destructive so the row actions are semantically obvious without adding decorative chrome.
+- Stabilized the direct-launch duration-manager smoke and reran the full Phase 14 regression slice cleanly.
 
-**Target features:**
-- Prefer built-in macOS list/table presentation over introducing a third-party UI library.
-- Make edit affordances use the app accent/theme color and destructive actions use red semantic styling.
-- Keep the current CRUD behavior compact and truthful while improving row structure, spacing, and affordance clarity.
-
-## Latest Shipped Milestone: v1.3 Duration Management
+<details>
+<summary>Previous shipped milestone: v1.3 Duration Management</summary>
 
 **Result:** The app now treats timed keep-awake durations as managed user data instead of fixed presets, and the shipped native management flow keeps the root menu truthful without reopening the broader wake surface.
 
@@ -54,6 +53,7 @@ It delivered:
 
 The shipped baseline became easier to trust and maintain: current-facing planning docs matched shipped behavior, verification boundaries became explicit, validation debt closed for Phases 01-04, and the live app / automation / documentation surface all aligned on `Tools Cat`.
 
+</details>
 </details>
 
 ## Requirements
@@ -172,4 +172,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-16 after Phase 14 completed and verified*
+*Last updated: 2026-04-16 after archiving the v1.4 milestone*
