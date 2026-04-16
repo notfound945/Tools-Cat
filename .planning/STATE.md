@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Duration UI Polish
-status: defining_requirements
-stopped_at: Milestone v1.4 started; requirements and roadmap are being defined
-last_updated: "2026-04-16T10:05:00+08:00"
-last_activity: 2026-04-16 -- started v1.4 to polish the duration-management list UI and semantic action colors
+status: ready_for_phase_discussion
+stopped_at: Roadmap created for Phase 14; ready for phase discussion
+last_updated: "2026-04-16T10:12:00+08:00"
+last_activity: 2026-04-16 -- created the v1.4 roadmap and mapped AWAKE-14 through AWAKE-16 to Phase 14
 progress:
   total_phases: 1
   completed_phases: 0
@@ -20,14 +20,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-16)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Milestone v1.4 — define requirements and roadmap for duration UI polish
+**Current focus:** Phase 14 — discuss and plan the duration-management UI polish work
 
 ## Current Position
 
-Phase: not started (defining requirements)
+Phase: 14 (duration-management-ui-polish) — NOT STARTED
 Plan: —
-Status: Defining requirements
-Last activity: 2026-04-16 -- milestone v1.4 started for duration-manager UI polish
+Status: Ready to discuss Phase 14
+Last activity: 2026-04-16 -- created the v1.4 roadmap and mapped AWAKE-14 through AWAKE-16 to Phase 14
 
 Progress: [░░░░░░░░░░] 0/0 plans complete
 
@@ -35,8 +35,8 @@ Progress: [░░░░░░░░░░] 0/0 plans complete
 
 - Active milestone: `v1.4 Duration UI Polish`
 - Latest archived milestone: `v1.3 Duration Management`
-- Scope planned: phase numbering continues after Phase 13 with a narrow duration-manager UI polish slice
-- Active roadmap: `.planning/ROADMAP.md` (to be created in this milestone setup flow)
+- Scope planned: Phase 14 only, focused on native list semantics and semantic action styling for the duration manager
+- Active roadmap: `.planning/ROADMAP.md`
 - Working files:
   - `.planning/PROJECT.md`
   - `.planning/REQUIREMENTS.md`
@@ -67,13 +67,14 @@ The latest completed milestone established these durable decisions:
 - Phase 12.1 inserted after Phase 12: macOS 14.8.3 compatibility support (URGENT)
 - Phase 12.1 planned as a single compatibility-truth fix covering deployment target, doc alignment, and explicit Sonoma verification boundary
 - Milestone v1.4 started: refine the duration-management list using native list semantics and semantic edit/delete action colors
+- Phase 14 added: duration-management UI polish with native list presentation and semantic edit/delete actions
 
 ### Open Follow-Up Themes
 
-- Define v1.4 requirements and create the new roadmap.
+- Run `$gsd-discuss-phase 14` to lock approach details before planning.
 
 ## Session Continuity
 
-Last session: 2026-04-16T10:05:00+08:00
-Stopped at: Milestone v1.4 started; requirements and roadmap are being defined
-Resume file: .planning/PROJECT.md
+Last session: 2026-04-16T10:12:00+08:00
+Stopped at: Roadmap created for Phase 14; ready for phase discussion
+Resume file: .planning/ROADMAP.md
