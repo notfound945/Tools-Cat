@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-# Simple DMG packer using hdiutil (no notarization)
+# Simple DMG packer using hdiutil
 # Usage:
 #   ./build_dmg.sh "/absolute/path/to/Tools Cat.app" [DMG_NAME] [VOLUME_NAME]
 #
@@ -45,5 +45,3 @@ hdiutil create \
   "$OUT_PATH"
 
 echo "[DMG] Done: $OUT_PATH"
-echo "Note: DMG 未公证，用户首次安装需在系统隐私与安全中手动允许或使用右键-打开。"
-

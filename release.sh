@@ -10,13 +10,14 @@ EXPORT_OPTIONS_TEMPLATE="$ROOT_DIR/scripts/release/export-options-developer-id.p
 EXPORT_OPTIONS_PATH="$ROOT_DIR/build/export-options/developer-id.plist"
 EXPORT_PATH="$ROOT_DIR/dist/export"
 SIGNED_APP_PATH="$EXPORT_PATH/Tools Cat.app"
+DMG_PATH="$ROOT_DIR/dist/Tools-Cat.dmg"
 
 cd "$ROOT_DIR"
 
 bash "$ROOT_DIR/scripts/release/preflight-signing.sh"
 
 mkdir -p "$ROOT_DIR/build/archive" "$ROOT_DIR/build/export-options" "$ROOT_DIR/dist"
-rm -rf "$ARCHIVE_PATH" "$EXPORT_PATH"
+rm -rf "$ARCHIVE_PATH" "$EXPORT_PATH" "$DMG_PATH"
 
 sed "s/__TEAM_ID__/$RELEASE_TEAM_ID/g" "$EXPORT_OPTIONS_TEMPLATE" >"$EXPORT_OPTIONS_PATH"
 plutil -lint "$EXPORT_OPTIONS_PATH" >/dev/null
@@ -42,4 +43,13 @@ xcodebuild -exportArchive \
 
 bash "$ROOT_DIR/scripts/release/inspect-signature.sh" "$SIGNED_APP_PATH"
 
+echo "[BUILD] Packaging signed DMG to $DMG_PATH"
+bash "$ROOT_DIR/build_dmg.sh" "$SIGNED_APP_PATH" "Tools-Cat.dmg" "Tools Cat"
+
+echo "[BUILD] Signing DMG at $DMG_PATH"
+codesign --force --sign "$RELEASE_SIGNING_IDENTITY" --timestamp "$DMG_PATH"
+
+bash "$ROOT_DIR/scripts/release/inspect-dmg-signature.sh" "$DMG_PATH"
+
 echo "[DONE] Signed app exported to $SIGNED_APP_PATH"
+echo "[DONE] Signed DMG created at $DMG_PATH"
