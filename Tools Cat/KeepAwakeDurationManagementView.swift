@@ -255,6 +255,7 @@ private struct KeepAwakeDurationRow: View {
             HStack(spacing: 8) {
                 Button("编辑", action: onEdit)
                     .buttonStyle(.borderless)
+                    .foregroundStyle(Color.accentColor)
 
                 Button("删除", role: .destructive, action: onDelete)
                     .buttonStyle(.borderless)
