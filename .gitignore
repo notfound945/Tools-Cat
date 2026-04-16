@@ -12,6 +12,7 @@ Carthage/Build/
 
 # Build
 build/
+build-test-phase*/
 
 # Other
 *.pbxuser
@@ -20,4 +21,3 @@ build/
 *.perspectivev3
 
 dist/
-
