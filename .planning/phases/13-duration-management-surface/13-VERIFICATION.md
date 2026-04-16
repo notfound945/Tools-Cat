@@ -1,7 +1,7 @@
 ---
 phase: 13-duration-management-surface
-verified: 2026-04-15T18:24:30+08:00
-status: human_needed
+verified: 2026-04-15T18:41:19+08:00
+status: passed
 score: 5/5 must-haves verified
 human_verification:
   - test: "Visually confirm the `常亮时长` timed-duration area now reads as an obvious native list"
@@ -12,9 +12,9 @@ human_verification:
 # Phase 13: Duration Management Surface Verification Report
 
 **Phase Goal:** Users can manage timed keep-awake durations themselves through a small native management flow.
-**Verified:** 2026-04-15T18:24:30+08:00
-**Status:** human_needed
-**Re-verification:** Yes - this verification reruns after the Phase 13 cosmetic gap-closure plan `13-04`
+**Verified:** 2026-04-15T18:41:19+08:00
+**Status:** passed
+**Re-verification:** Yes - the final visual approval for the Phase 13 cosmetic gap-closure plan `13-04` is now recorded in `13-HUMAN-UAT.md`
 
 ## Goal Achievement
 
@@ -26,9 +26,9 @@ human_verification:
 | 2 | User can add or edit a managed duration through the shared in-place sheet and keep the list visible. | ✓ VERIFIED | `13-03-SUMMARY.md` records the shared add/edit sheet, and `KeepAwakeDurationManagementSessionModelTests` plus the focused UI smoke cover add/edit flow and live list visibility. |
 | 3 | User can delete a managed duration while `无限常亮` remains fixed outside the managed list. | ✓ VERIFIED | `KeepAwakeDurationManagementSessionModelTests` cover delete confirmation and persistence, and the manager view still renders timed rows only. |
 | 4 | The root keep-awake menu reflects managed-duration CRUD truth in sorted order, with `管理常亮时长…` grouped at the bottom of the keep-awake section. | ✓ VERIFIED | `13-03-SUMMARY.md` records the live menu refresh work, and `StatusBarControllerKeepAwakeMenuTests` plus `StatusBarControllerMenuPolishTests` passed in the regression gate on 2026-04-15. |
-| 5 | The cosmetic list-surface gap is implemented in code and automated structure checks, but final visual acceptance still requires human approval. | ⚠ HUMAN CHECK | `13-04-SUMMARY.md` records the grouped panel and row-surface changes, and the UI smoke now asserts the `keep-awake-duration-list-surface` accessibility seam. Final judgment is visual rather than structural. |
+| 5 | The cosmetic list-surface gap is implemented in code and now also approved visually on the native surface. | ✓ VERIFIED | `13-04-SUMMARY.md` records the grouped panel and row-surface changes, the UI smoke asserts the `keep-awake-duration-list-surface` accessibility seam, and `13-HUMAN-UAT.md` records the final visual approval. |
 
-**Score:** 5/5 must-haves verified in code and automation; final visual approval still pending
+**Score:** 5/5 must-haves verified
 
 ### Required Artifacts
 
@@ -55,7 +55,7 @@ human_verification:
 | Requirement | Source Plan | Description | Status | Evidence |
 | --- | --- | --- | --- | --- |
 | `AWAKE-05` | `13-03` | User sees `无限常亮` fixed first, followed by timed rows sorted shortest-to-longest | ✓ SATISFIED | `13-03-SUMMARY.md` plus the passing keep-awake menu/controller regression tests confirm fixed-first ordering and live updates. |
-| `AWAKE-06` | `13-02`, `13-04` | User can open a duration-management surface seeded with the default timed durations | ⚠ HUMAN CHECK | The direct-launch UI smoke proves the seeded surface exists, and `13-04` adds the grouped list surface; final visual acceptance of the list readability still needs human approval. |
+| `AWAKE-06` | `13-02`, `13-04` | User can open a duration-management surface seeded with the default timed durations | ✓ SATISFIED | The direct-launch UI smoke proves the seeded surface exists, `13-04` adds the grouped list surface, and `13-HUMAN-UAT.md` records that the list now reads clearly as a native utility panel. |
 | `AWAKE-07` | `13-01`, `13-03` | User can add a custom managed keep-awake duration | ✓ SATISFIED | `KeepAwakeDurationManagementSessionModelTests` cover add-and-sort behavior, and the shared sheet flow is recorded in `13-03-SUMMARY.md`. |
 | `AWAKE-08` | `13-01`, `13-03` | User can edit an existing managed keep-awake duration | ✓ SATISFIED | `KeepAwakeDurationManagementSessionModelTests` cover edit-and-resort behavior with preserved identity, and `13-03-SUMMARY.md` records the shared edit sheet. |
 | `AWAKE-09` | `13-01`, `13-03` | User can delete a managed duration while `无限常亮` remains undeletable | ✓ SATISFIED | Delete confirmation and persistence remain covered in `KeepAwakeDurationManagementSessionModelTests`, and the manager view continues to expose timed rows only. |
@@ -68,17 +68,13 @@ human_verification:
 
 ### Human Verification Required
 
-### 1. Visual approval of the timed-duration list surface
-
-**Test:** Launch the app, open `管理常亮时长…`, and inspect the timed-duration area in the `常亮时长` window.
-**Expected:** The timed rows clearly read as a native list or grouped utility panel at a glance, distinct from the window background, while the add/edit sheet, delete confirmation, and root-menu sync still feel unchanged.
-**Why human:** Automation can prove structure, rows, and interaction seams, but it cannot decide whether the cosmetic gap is genuinely closed or whether the panel still blends into the background.
+Resolved. `13-HUMAN-UAT.md` records visual approval for the refreshed timed-duration list surface.
 
 ### Gaps Summary
 
-No code or behavior gaps remain in the Phase 13 implementation. The only remaining boundary is human visual approval for the cosmetic list-surface fix introduced in `13-04`.
+No code or behavior gaps remain in the Phase 13 implementation. The cosmetic list-surface fix introduced in `13-04` is now approved both structurally and visually.
 
 ---
 
-_Verified: 2026-04-15T18:24:30+08:00_
+_Verified: 2026-04-15T18:41:19+08:00_
 _Verifier: Codex_

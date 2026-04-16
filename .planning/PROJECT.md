@@ -2,7 +2,7 @@
 
 ## What This Is
 
-Tools Cat is a personal macOS menu bar utility for two everyday jobs: keeping the display awake and waking devices on the local network with Wake-on-LAN. It now has a hardened native baseline with saved-device management, truthful status feedback, explicit verification boundaries, and a consistent shipped identity across the app, automation, and planning surface.
+Tools Cat is a personal macOS menu bar utility for two everyday jobs: keeping the display awake and waking devices on the local network with Wake-on-LAN. It now has a hardened native baseline with saved-device management, truthful status feedback, explicit verification boundaries, user-managed timed keep-awake durations, and a consistent shipped identity across the app, automation, and planning surface.
 
 ## Core Value
 
@@ -10,38 +10,36 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 
 ## Current State
 
-- Shipped: `v1.2 Menu Truth` on 2026-04-15
+- Shipped: `v1.3 Duration Management` on 2026-04-16
 - Live product identity: `Tools Cat`
-- Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, and the final keep-awake menu-truth fix plus verification closure
-- Planning state: `v1.3 Duration Management` is active and queued for phase planning
+- Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, and user-managed keep-awake durations with live root-menu synchronization
+- Planning state: between milestones; ready to define the next roadmap
 
 ## Next Milestone Goals
 
-- Replace the fixed timed keep-awake presets with a user-managed duration list.
-- Keep `无限常亮` fixed and undeletable while all timed rows come from managed data.
-- Add a native duration-management flow that supports add, edit, delete, validation, persistence, and duration-based sorting.
+- Decide whether `CONV-04` recent-device shortcuts still earn their way back into the shipped wake surface.
+- Decide whether keep-awake should support one-off unsaved durations or custom labels (`AWAKE-12`, `AWAKE-13`).
+- Decide whether distribution hardening (`DIST-01`) is worth pulling forward before any broader feature expansion.
 
-## Current Milestone: v1.3 Duration Management
+## Latest Shipped Milestone: v1.3 Duration Management
 
-**Goal:** Let users manage timed keep-awake durations themselves while keeping `无限常亮` fixed as the first menu action.
-
-**Target features:**
-- A duration-management entry point seeded with `15 分钟` / `30 分钟` / `1 小时` / `2 小时`
-- Add, edit, and delete for managed timed durations
-- Menu rows sourced from the managed duration list and sorted by duration
-- Validation and persistence so invalid or duplicate durations cannot be saved and the list survives relaunch
-
-## Latest Shipped Milestone: v1.2 Menu Truth
-
-**Result:** The shipped baseline now keeps the keep-awake action group truthful in idle and active states, and the evidence chain for that behavior is fully closed from implementation through milestone audit.
+**Result:** The app now treats timed keep-awake durations as managed user data instead of fixed presets, and the shipped native management flow keeps the root menu truthful without reopening the broader wake surface.
 
 **Delivered:**
+- Persist and validate managed durations with exact-once default seeding.
+- Ship a dedicated native duration-management window with add, edit, delete, and confirmation flows.
+- Keep `无限常亮` fixed first while timed keep-awake rows stay live-synchronized and sorted shortest-to-longest in the root menu.
+- Restore macOS 14 deployment-target truth and keep the real 14.8.3 launch check as an explicit manual verification boundary.
+
+<details>
+<summary>Previous shipped milestone: v1.2 Menu Truth</summary>
+
+The shipped baseline now keeps the keep-awake action group truthful in idle and active states, and the evidence chain for that behavior is fully closed from implementation through milestone audit.
+
+It delivered:
 - Hide `关闭常亮` whenever keep-awake is already off and no stop transition is running
 - Preserve one direct `关闭常亮` action for active or stopping keep-awake sessions
 - Lock the idle/active keep-awake truth boundary with focused controller regressions, a formal Phase 10 verification report, and closed milestone traceability
-
-<details>
-<summary>Previous shipped milestone: v1.1 Hardening</summary>
 
 The shipped baseline became easier to trust and maintain: current-facing planning docs matched shipped behavior, verification boundaries became explicit, validation debt closed for Phases 01-04, and the live app / automation / documentation surface all aligned on `Tools Cat`.
 
@@ -69,12 +67,16 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 - ✓ Keep-awake idle menus no longer show `关闭常亮` when there is no active session to stop — validated in Phase 10 and closed through Phase 11 verification
 - ✓ Active or stopping keep-awake sessions still expose one clear `关闭常亮` action from the menu — validated in Phase 10 and closed through Phase 11 verification
 - ✓ The keep-awake menu-truth contract is now locked by focused regression coverage and formal traceability — validated in Phase 10 and closed through Phase 11 verification
+- ✓ User can manage timed keep-awake durations without affecting the fixed `无限常亮` action — validated in v1.3
+- ✓ The keep-awake menu now renders timed rows from the managed duration list in ascending duration order — validated in v1.3
+- ✓ Managed durations are validated, persisted, and reflected correctly after add/edit/delete operations — validated in v1.3
 
 ### Active
 
-- [ ] User can manage timed keep-awake durations without affecting the fixed `无限常亮` action
-- [ ] The keep-awake menu renders timed rows from the managed duration list in ascending duration order
-- [ ] Managed durations are validated, persisted, and reflected correctly after add/edit/delete operations
+- [ ] User can access a short recent-devices list for faster repeat wake actions (`CONV-04`)
+- [ ] User can create a one-off timed keep-awake duration without saving it into the managed list (`AWAKE-12`)
+- [ ] User can assign custom labels or notes to managed keep-awake durations (`AWAKE-13`)
+- [ ] App can move toward packaging hardening such as signing or notarization once the maintenance baseline is stable (`DIST-01`)
 
 ### Out of Scope
 
@@ -100,7 +102,9 @@ The v1.0 roadmap work is archived. A follow-on idea to restore root-level recent
 
 The v1.1 hardening work made the verification boundary explicit instead of implying stronger automation than the repo has. Controller tests cover menu grouping and root entry dispatch, direct-launch UI smoke covers the retained `WOL 发送器` and `设备库` windows through launch arguments, and manual tray-entry checks still own the real live `NSStatusItem` click path.
 
-The new v1.2 milestone is intentionally narrower: it does not reopen the whole menu architecture. It only fixes a keep-awake truth leak inside the already-shipped menu contract, where the idle menu still shows `关闭常亮` even though there is nothing to stop.
+The v1.2 milestone kept scope intentionally narrow: it fixed a keep-awake truth leak inside the already-shipped menu contract, where the idle menu still showed `关闭常亮` even though there was nothing to stop.
+
+The v1.3 milestone then converted timed keep-awake from fixed presets into managed persisted data. Phase 12 established the canonical duration store and fixed-row bridge, Phase 12.1 restored the real macOS 14 compatibility baseline, and Phase 13 shipped the native duration-management flow plus live root-menu synchronization and final visual polish.
 
 Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, module, bundle IDs, regression scripts, release packaging defaults, and active docs now agree on one product identity. Historical workflow-stability exception: the planning artifact directory remains `.planning/phases/09-mac-os-swiss-knife-tools-cat/`.
 
@@ -130,6 +134,9 @@ Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, mo
 | Keep runtime storage on `UserDefaults.standard` and treat the legacy bundle-ID suite only as a one-time migration source | Using the app bundle identifier as a custom defaults suite causes macOS warnings and breaks the intended storage model | Validated in Phase 9 |
 | Pass `-project "Tools Cat.xcodeproj"` through release automation | Rename residue can temporarily leave multiple project directories in the worktree, so the release path must be explicit | Validated in Phase 9 |
 | Keep MENU traceability anchored to the phase that shipped the behavior, even when a later closure phase only fixes verification debt | Phase 11 closes documentation truth without pretending it shipped the runtime keep-awake change | Validated in Phase 11 |
+| Keep timed keep-awake durations as persisted user data instead of fixed menu presets | Users need duration customization and persistence without turning the root menu into a CRUD surface | Validated in Phases 12-13 |
+| Keep duration CRUD in a dedicated native management window while `无限常亮` stays outside the managed list | Timed-duration editing needs validation, list clarity, and confirmation flows that do not fit a compact root menu | Validated in Phase 13 |
+| Pull live managed-duration root-menu sync into Phase 13 and remove standalone Phase 14 | The milestone needed shipped CRUD truth in the root menu, and verification proved the separate follow-on phase was redundant | Validated in v1.3 |
 
 ## Evolution
 
@@ -149,4 +156,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-15 after starting the v1.3 Duration Management milestone*
+*Last updated: 2026-04-16 after completing the v1.3 Duration Management milestone*

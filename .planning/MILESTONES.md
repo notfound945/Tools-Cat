@@ -1,5 +1,28 @@
 # Milestones
 
+## v1.3 Duration Management (Shipped: 2026-04-16)
+
+**Phases completed:** 3 phases, 7 plans, 11 tasks
+**Audit:** passed
+
+**Key accomplishments:**
+
+- Managed keep-awake durations now persist as normalized UserDefaults data with exact-once default seeding, derived menu titles, and a validated observable store
+- The keep-awake session and fixed root menu now run on managed duration values and a shared duration store, while preserving the current shipped menu structure
+- The app now builds against a macOS 14.0 deployment baseline, and the repo guidance plus validation boundary all agree on what is automated proof versus what still needs a real macOS 14.8.3 launch smoke
+- The keep-awake duration manager now has a real store-backed state machine for timed CRUD, validation, and delete confirmation
+- The app now exposes a real native duration-management window from both direct launch and the status menu, with the live managed-duration root-menu sync folded into Phase 13
+- Keep-awake menu rows now follow managed durations live, and add/edit happen in one compact in-place modal instead of replacing the management surface
+- The keep-awake duration manager now presents timed durations inside a clearly grouped native list surface instead of letting them disappear into the window background
+
+**Archive files:**
+
+- `.planning/milestones/v1.3-ROADMAP.md`
+- `.planning/milestones/v1.3-REQUIREMENTS.md`
+- `.planning/milestones/v1.3-MILESTONE-AUDIT.md`
+
+---
+
 ## v1.2 Menu Truth (Shipped: 2026-04-15)
 
 **Phases completed:** 2 phases, 3 plans, 5 tasks

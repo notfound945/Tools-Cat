@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Duration Management
-status: awaiting_human_verification
-stopped_at: Awaiting visual approval for the Phase 13 duration list surface
-last_updated: "2026-04-15T18:24:30+0800"
-last_activity: 2026-04-15 -- executed Phase 13 gap plan 13-04, passed automated checks, and persisted a visual approval checkpoint
+status: completed
+stopped_at: v1.3 archived; ready to define the next milestone
+last_updated: "2026-04-16T09:35:00+08:00"
+last_activity: 2026-04-16 -- archived v1.3 and tagged the milestone for release history
 progress:
-  total_phases: 4
-  completed_phases: 2
+  total_phases: 3
+  completed_phases: 3
   total_plans: 7
   completed_plans: 7
 ---
@@ -17,29 +17,30 @@ progress:
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-04-15)
+See: `.planning/PROJECT.md` (updated 2026-04-16)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Phase 13 — visual approval for the duration list surface
+**Current focus:** Between milestones — define the next roadmap
 
 ## Current Position
 
-Phase: 13 (duration-management-surface) — HUMAN VERIFICATION NEEDED
-Plan: 4 of 4
-Status: Awaiting approval of `13-HUMAN-UAT.md`
-Last activity: 2026-04-15 -- executed Phase 13 gap plan 13-04, passed automated checks, and persisted a visual approval checkpoint
+Phase: none active
+Plan: archived
+Status: v1.3 milestone complete
+Last activity: 2026-04-16 -- archived v1.3 and tagged the milestone for release history
 
 Progress: [██████████] 7/7 plans complete
 
 ## Milestone Summary
 
-- Active milestone: `v1.3 Duration Management`
-- Latest archived milestone: `v1.2 Menu Truth`
-- Scope planned: Phase 12 plus urgent inserted Phase 12.1
+- Active milestone: none
+- Latest archived milestone: `v1.3 Duration Management`
+- Scope shipped: Phase 12, Phase 12.1, and Phase 13
+- Active roadmap: none
 - Working files:
   - `.planning/PROJECT.md`
-  - `.planning/REQUIREMENTS.md`
-  - `.planning/ROADMAP.md`
+  - `.planning/MILESTONES.md`
+  - `.planning/milestones/v1.3-ROADMAP.md`
 - Latest shipped summary: `.planning/MILESTONES.md`
 
 ## Accumulated Context
@@ -68,11 +69,10 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Review `13-HUMAN-UAT.md` and approve or report issues with the refreshed `常亮时长` list surface.
-- Re-evaluate whether Phase 14 still needs independent scope after Phase 13 visual approval closes, since live menu integration now ships in the earlier gap closure.
+- Start the next planning cycle with `$gsd-new-milestone`.
 
 ## Session Continuity
 
-Last session: 2026-04-15T18:24:30+08:00
-Stopped at: Awaiting visual approval for the Phase 13 duration list surface
-Resume file: .planning/phases/13-duration-management-surface/13-HUMAN-UAT.md
+Last session: 2026-04-16T09:35:00+08:00
+Stopped at: v1.3 archived; next step is new milestone definition
+Resume file: .planning/PROJECT.md

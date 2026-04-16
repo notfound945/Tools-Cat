@@ -1,12 +1,12 @@
 ---
-status: diagnosed
+status: resolved
 phase: 13-duration-management-surface
 source:
   - 13-01-SUMMARY.md
   - 13-02-SUMMARY.md
   - 13-03-SUMMARY.md
 started: 2026-04-15T17:58:27+08:00
-updated: 2026-04-15T18:08:36+08:00
+updated: 2026-04-15T18:41:19+08:00
 ---
 
 ## Current Test
@@ -63,3 +63,4 @@ blocked: 0
     - "缺少一个与窗口背景区分开的原生列表容器样式，例如圆角面板、描边、次级背景色或 inset 分组视觉。"
     - "缺少行级视觉层次，当前各时长项只有文字和分隔线，没有让用户一眼识别为列表项的表面或间距设计。"
   debug_session: "local-diagnosis"
+  resolution: "Plan 13-04 added a grouped native list surface and subtle row hierarchy, and the follow-up visual approval in 13-HUMAN-UAT.md confirmed the cosmetic gap is closed."
