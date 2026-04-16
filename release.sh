@@ -1,50 +1,45 @@
 #!/bin/bash
 set -euo pipefail
 
-# Build Release with xcodebuild, then package DMG using build_dmg.sh
-# Uses wildcard to locate the only .app under build/Build/Products/Release
-#
-# Env overrides (optional):
-#   PROJECT  - default: "Tools Cat.xcodeproj"
-#   SCHEME   - default: "Tools Cat"
-#   CONFIG   - default: "Release"
-#   DERIVED  - default: "build"
-#   DMG_NAME - default: "Tools-Cat.dmg"
-#   VOL_NAME - default: "Tools Cat"
-#   OUT_DIR  - default: "$(pwd)/dist" (used by build_dmg.sh)
-
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT="Tools Cat.xcodeproj"
+SCHEME="Tools Cat"
+CONFIGURATION="Release"
+ARCHIVE_PATH="$ROOT_DIR/build/archive/Tools Cat.xcarchive"
+EXPORT_OPTIONS_TEMPLATE="$ROOT_DIR/scripts/release/export-options-developer-id.plist.template"
+EXPORT_OPTIONS_PATH="$ROOT_DIR/build/export-options/developer-id.plist"
+EXPORT_PATH="$ROOT_DIR/dist/export"
+SIGNED_APP_PATH="$EXPORT_PATH/Tools Cat.app"
+
 cd "$ROOT_DIR"
 
-PROJECT=${PROJECT:-"Tools Cat.xcodeproj"}
-SCHEME=${SCHEME:-"Tools Cat"}
-CONFIG=${CONFIG:-Release}
-DERIVED=${DERIVED:-build}
+bash "$ROOT_DIR/scripts/release/preflight-signing.sh"
 
-echo "[BUILD] xcodebuild project=$PROJECT scheme=$SCHEME config=$CONFIG derived=$DERIVED"
-xcodebuild -project "$PROJECT" -scheme "$SCHEME" -configuration "$CONFIG" -derivedDataPath "$DERIVED" clean build
+mkdir -p "$ROOT_DIR/build/archive" "$ROOT_DIR/build/export-options" "$ROOT_DIR/dist"
+rm -rf "$ARCHIVE_PATH" "$EXPORT_PATH"
 
-# Locate app using wildcard; ensure exactly one match
-shopt -s nullglob
-apps=("$DERIVED/Build/Products/$CONFIG"/*.app)
-shopt -u nullglob
+sed "s/__TEAM_ID__/$RELEASE_TEAM_ID/g" "$EXPORT_OPTIONS_TEMPLATE" >"$EXPORT_OPTIONS_PATH"
+plutil -lint "$EXPORT_OPTIONS_PATH" >/dev/null
 
-if [[ ${#apps[@]} -eq 0 ]]; then
-  echo "[ERROR] No .app found in $DERIVED/Build/Products/$CONFIG" >&2
-  exit 1
-fi
-if [[ ${#apps[@]} -gt 1 ]]; then
-  echo "[ERROR] Multiple .app bundles found; please disambiguate:" >&2
-  printf ' - %s\n' "${apps[@]}" >&2
-  exit 1
-fi
+echo "[BUILD] Release team: $RELEASE_TEAM_ID"
+echo "[BUILD] Release identity: $RELEASE_SIGNING_IDENTITY"
+echo "[BUILD] Notary profile: $RELEASE_NOTARY_PROFILE"
+echo "[BUILD] Archiving signed app to $ARCHIVE_PATH"
+xcodebuild archive \
+    -project "$PROJECT" \
+    -scheme "$SCHEME" \
+    -configuration "$CONFIGURATION" \
+    -destination "generic/platform=macOS" \
+    -archivePath "$ARCHIVE_PATH" \
+    DEVELOPMENT_TEAM="$RELEASE_TEAM_ID" \
+    CODE_SIGN_IDENTITY="$RELEASE_SIGNING_IDENTITY"
 
-APP_PATH="${apps[0]}"
-echo "[BUILD] Found app: $APP_PATH"
+echo "[BUILD] Exporting signed app to $EXPORT_PATH"
+xcodebuild -exportArchive \
+    -archivePath "$ARCHIVE_PATH" \
+    -exportPath "$EXPORT_PATH" \
+    -exportOptionsPlist "$EXPORT_OPTIONS_PATH"
 
-chmod +x "$ROOT_DIR/build_dmg.sh"
-"$ROOT_DIR/build_dmg.sh" "$APP_PATH" "${DMG_NAME:-Tools-Cat.dmg}" "${VOL_NAME:-Tools Cat}"
+bash "$ROOT_DIR/scripts/release/inspect-signature.sh" "$SIGNED_APP_PATH"
 
-DEFAULT_OUT_DIR="$ROOT_DIR/dist"
-FINAL_OUT_DIR="${OUT_DIR:-$DEFAULT_OUT_DIR}"
-echo "[DONE] DMG generated in $FINAL_OUT_DIR"
+echo "[DONE] Signed app exported to $SIGNED_APP_PATH"
