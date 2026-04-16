@@ -13,17 +13,19 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 - Shipped: `v1.3 Duration Management` on 2026-04-16
 - Live product identity: `Tools Cat`
 - Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, and user-managed keep-awake durations with live root-menu synchronization
-- Planning state: `v1.4 Duration UI Polish` is active and scoped for roadmap creation
+- Planning state: `v1.4 Duration UI Polish` is phase-complete and verified; the milestone is ready for archive via `$gsd-complete-milestone`
 
 ## Next Milestone Goals
 
-- Rework the `常亮时长` timed-duration area to read as a clearly native macOS list instead of a lightly skinned custom stack.
-- Make row actions semantically obvious: edit uses the app accent/theme color, and delete uses destructive red.
-- Preserve the shipped add/edit/delete flow, sorting, and root-menu synchronization while improving visual clarity.
+- Decide which deferred convenience or distribution item should anchor the next milestone after `v1.4` is archived.
+- Preserve the newly shipped native list semantics and semantic edit/delete affordances as the baseline for any future duration-manager work.
+- Avoid reopening duration persistence or root-menu truth unless a new milestone explicitly requires it.
 
 ## Current Milestone: v1.4 Duration UI Polish
 
 **Goal:** Tighten the `常亮时长` management UI so the timed-duration list feels unmistakably native and the row actions communicate edit versus delete semantics immediately.
+
+**Status:** Phase 14 complete and verified on 2026-04-16. Milestone archive is the next workflow step.
 
 **Target features:**
 - Prefer built-in macOS list/table presentation over introducing a third-party UI library.
@@ -79,12 +81,13 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 - ✓ User can manage timed keep-awake durations without affecting the fixed `无限常亮` action — validated in v1.3
 - ✓ The keep-awake menu now renders timed rows from the managed duration list in ascending duration order — validated in v1.3
 - ✓ Managed durations are validated, persisted, and reflected correctly after add/edit/delete operations — validated in v1.3
+- ✓ User can scan managed keep-awake durations inside a clearly native macOS list surface instead of rows blending into the window background — validated in Phase 14
+- ✓ User can distinguish edit versus delete actions immediately through semantic styling, with edit in the app theme color and delete in destructive red — validated in Phase 14
+- ✓ User can use the polished list UI without regressing existing add, edit, delete, sorting, or live root-menu sync behavior — validated in Phase 14
 
 ### Active
 
-- [ ] User can scan managed keep-awake durations inside a clearly native macOS list surface instead of rows blending into the window background
-- [ ] User can distinguish edit versus delete actions immediately through semantic styling, with edit in the app theme color and delete in destructive red
-- [ ] User can use the polished list UI without regressing existing add, edit, delete, sorting, or live root-menu sync behavior
+None. The current milestone's active requirements are all validated; the next milestone will define new active scope.
 
 ### Out of Scope
 
@@ -149,7 +152,7 @@ Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, mo
 | Keep timed keep-awake durations as persisted user data instead of fixed menu presets | Users need duration customization and persistence without turning the root menu into a CRUD surface | Validated in Phases 12-13 |
 | Keep duration CRUD in a dedicated native management window while `无限常亮` stays outside the managed list | Timed-duration editing needs validation, list clarity, and confirmation flows that do not fit a compact root menu | Validated in Phase 13 |
 | Pull live managed-duration root-menu sync into Phase 13 and remove standalone Phase 14 | The milestone needed shipped CRUD truth in the root menu, and verification proved the separate follow-on phase was redundant | Validated in v1.3 |
-| Prefer native macOS list components and semantic button colors for duration-manager polish | This milestone is visual refinement of an existing native surface, so platform-consistent affordances beat extra UI-library complexity | Pending |
+| Prefer native macOS list components and semantic button colors for duration-manager polish | This milestone is visual refinement of an existing native surface, so platform-consistent affordances beat extra UI-library complexity | Validated in Phase 14 |
 
 ## Evolution
 
@@ -169,4 +172,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-16 after starting the v1.4 Duration UI Polish milestone*
+*Last updated: 2026-04-16 after Phase 14 completed and verified*
