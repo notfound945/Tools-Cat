@@ -21,7 +21,7 @@ This milestone is intentionally operational rather than product-facing. `Tools C
 - v1.6 therefore starts at Phase 16
 
 - [x] **Phase 16: Release Signing Readiness** - Make the project and release flow produce a distribution-signed app with clear signing/notary prerequisites. (completed 2026-04-16)
-- [ ] **Phase 17: Signed DMG Notarization Pipeline** - Upgrade packaging so the shipped DMG is signed, notarized, stapled, and release-scripted.
+- [ ] **Phase 17: Signed DMG Notarization Pipeline** - Upgrade packaging so the shipped DMG is signed, notarized, stapled, and release-scripted. (human verification pending)
 - [ ] **Phase 18: Distribution Verification Closure** - Close the milestone with repeatable verification and regression proof that release hardening did not change shipped app behavior.
 
 ## Phase Details
@@ -67,5 +67,5 @@ Phases execute in numeric order: 16, 17, 18
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 16. Release Signing Readiness | 2/2 | Complete    | 2026-04-16 |
-| 17. Signed DMG Notarization Pipeline | 1/2 | In Progress|  |
+| 17. Signed DMG Notarization Pipeline | 2/2 | Verification Pending | - |
 | 18. Distribution Verification Closure | 0/0 | Not started | - |

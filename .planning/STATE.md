@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Distribution Hardening
-status: executing
-stopped_at: Completed 17-01-PLAN.md
-last_updated: "2026-04-16T10:21:18.536Z"
+status: verifying
+stopped_at: Awaiting credentialed notarization UAT for Phase 17
+last_updated: "2026-04-16T10:28:37.234Z"
 last_activity: 2026-04-16
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 4
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -24,9 +24,9 @@ See: `.planning/PROJECT.md` (updated 2026-04-16)
 
 ## Current Position
 
-Phase: 17 (signed-dmg-notarization-pipeline) — EXECUTING
+Phase: 17 (signed-dmg-notarization-pipeline) — VERIFYING
 Plan: 2 of 2
-Status: Ready to execute
+Status: Awaiting credentialed notarization UAT
 Last activity: 2026-04-16
 
 Progress: [██████████] 2/2 currently planned plans complete
@@ -57,6 +57,7 @@ Progress: [██████████] 2/2 currently planned plans complete
 | Phase 16-release-signing-readiness P01 | 3min | 2 tasks | 6 files |
 | Phase 16-release-signing-readiness P02 | 2min | 2 tasks | 3 files |
 | Phase 17 P01 | 8 min | 2 tasks | 4 files |
+| Phase 17 P02 | 3 min | 2 tasks | 7 files |
 
 ## Milestone Summary
 
@@ -97,6 +98,8 @@ The latest completed milestone established these durable decisions:
 - [Phase 16-release-signing-readiness]: Keep automatic signing for daily Xcode use but make Release hardened runtime and Team ID explicit for distribution readiness.
 - [Phase 17]: Keep release.sh as the sole public release command while extending it to emit the final signed DMG. — Wave 2 notarization can extend one trusted release entrypoint instead of introducing a second maintainer flow.
 - [Phase 17]: Keep build_dmg.sh limited to deterministic staging plus hdiutil create, leaving signing and notarization orchestration to release.sh. — This keeps packaging deterministic and makes the signed artifact boundary explicit for later notary and assessment steps.
+- [Phase 17]: Persist notary submission metadata and rejection logs under build/notary so Apple failures are actionable without rerunning uploads. — Phase 17 depends on deterministic failure evidence, not transient terminal output.
+- [Phase 17]: Keep notarization submission and post-staple assessment in separate helpers so the release flow stays readable and statically verifiable. — The repo now verifies the notarization seam via shell gates, so each concern needs a small, grepable boundary.
 
 ### Roadmap Evolution
 
@@ -112,6 +115,6 @@ The latest completed milestone established these durable decisions:
 
 ## Session Continuity
 
-Last session: 2026-04-16T10:21:18.534Z
-Stopped at: Completed 17-01-PLAN.md
+Last session: 2026-04-16T10:28:37.232Z
+Stopped at: Awaiting credentialed notarization UAT for Phase 17
 Resume file: None

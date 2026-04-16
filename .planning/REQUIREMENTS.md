@@ -14,8 +14,8 @@ Requirements for the v1.6 distribution-hardening milestone. This milestone stays
 
 ### Notarization
 
-- [ ] **DIST-03**: Maintainer can submit the final DMG to Apple with `notarytool`, wait for completion, and get actionable failure information when notarization is rejected
-- [ ] **DIST-04**: The DMG sent to friends is stapled with a successful notarization ticket and passes local Gatekeeper assessment
+- [x] **DIST-03**: Maintainer can submit the final DMG to Apple with `notarytool`, wait for completion, and get actionable failure information when notarization is rejected
+- [x] **DIST-04**: The DMG sent to friends is stapled with a successful notarization ticket and passes local Gatekeeper assessment
 
 ### Release Operations
 
@@ -52,8 +52,8 @@ Phase mapping assigned during roadmap creation.
 |-------------|-------|--------|
 | DIST-01 | Phase 16 | Complete |
 | DIST-02 | Phase 17 | Complete |
-| DIST-03 | Phase 17 | Pending |
-| DIST-04 | Phase 17 | Pending |
+| DIST-03 | Phase 17 | Complete |
+| DIST-04 | Phase 17 | Complete |
 | DIST-05 | Phase 16 | Complete |
 | DIST-06 | Phase 18 | Pending |
 | DIST-07 | Phase 18 | Pending |
