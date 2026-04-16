@@ -21,7 +21,7 @@ created: 2026-04-16
 | **Config file** | `Tools Cat.xcodeproj/project.pbxproj` |
 | **Quick run command** | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/KeepAwakeDurationManagementSessionModelTests' -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithSeededKeepAwakeDurationsShowsManagementSurface'` |
 | **Full suite command** | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/KeepAwakeDurationManagementSessionModelTests' -only-testing:'Tools CatTests/StatusBarControllerKeepAwakeMenuTests' -only-testing:'Tools CatTests/StatusBarControllerMenuPolishTests' -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithSeededKeepAwakeDurationsShowsManagementSurface'` |
-| **Estimated runtime** | ~25-45 seconds |
+| **Estimated runtime** | ~20-30 seconds |
 
 ---
 
@@ -30,7 +30,7 @@ created: 2026-04-16
 - **After every task commit:** Run the quick command above
 - **After every plan wave:** Run the full suite command above
 - **Before `$gsd-verify-work`:** Full suite must be green
-- **Max feedback latency:** 45 seconds
+- **Max feedback latency:** 30 seconds
 
 ---
 
@@ -39,7 +39,9 @@ created: 2026-04-16
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
 | 14-01-01 | 01 | 1 | AWAKE-14 | ui | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithSeededKeepAwakeDurationsShowsManagementSurface'` | ✅ | ⬜ pending |
-| 14-02-01 | 02 | 1 | AWAKE-15, AWAKE-16 | ui + regression | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/KeepAwakeDurationManagementSessionModelTests' -only-testing:'Tools CatTests/StatusBarControllerKeepAwakeMenuTests' -only-testing:'Tools CatTests/StatusBarControllerMenuPolishTests' -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithSeededKeepAwakeDurationsShowsManagementSurface'` | ✅ | ⬜ pending |
+| 14-02-01 | 02 | 2 | AWAKE-15, AWAKE-16 | ui + regression | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/KeepAwakeDurationManagementSessionModelTests' -only-testing:'Tools CatTests/StatusBarControllerKeepAwakeMenuTests' -only-testing:'Tools CatTests/StatusBarControllerMenuPolishTests' -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithSeededKeepAwakeDurationsShowsManagementSurface'` | ✅ | ⬜ pending |
+
+Phase 14 intentionally uses the full regression slice for task `14-02-01` because `AWAKE-16` is explicitly about preserving already-shipped CRUD and root-menu truth while the view polish lands.
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
