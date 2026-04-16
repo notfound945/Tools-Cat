@@ -97,6 +97,7 @@ struct KeepAwakeDurationManagementView: View {
             .listStyle(.inset)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .accessibilityIdentifier("keep-awake-duration-list")
+            .roundedManagementListChrome()
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("keep-awake-duration-list-surface")
@@ -259,6 +260,7 @@ private struct KeepAwakeDurationRow: View {
 
                 Button("删除", role: .destructive, action: onDelete)
                     .buttonStyle(.borderless)
+                    .foregroundStyle(.red)
             }
         }
         .padding(.vertical, 4)
@@ -293,5 +295,15 @@ private struct KeepAwakeDurationAccessibilityMarker: NSViewRepresentable {
         nsView.setAccessibilityRole(.group)
         nsView.setAccessibilityLabel(label)
         nsView.setAccessibilityIdentifier(identifier)
+    }
+}
+
+private extension View {
+    func roundedManagementListChrome() -> some View {
+        clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .stroke(Color(nsColor: .separatorColor), lineWidth: 1)
+            }
     }
 }

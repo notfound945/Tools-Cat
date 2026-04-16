@@ -92,8 +92,16 @@ final class Tools_CatUITests: XCTestCase {
             formSheet.waitForExistence(timeout: 2.0) || formActions.waitForExistence(timeout: 2.0)
         )
         XCTAssertTrue(populatedList.exists)
-        XCTAssertTrue(app.buttons["保存设备"].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(app.buttons["取消"].waitForExistence(timeout: 2.0))
+        let saveButton = formActions.descendants(matching: .button)["保存设备"]
+        let cancelButton = formActions.descendants(matching: .button)["取消"]
+        XCTAssertTrue(
+            saveButton.waitForExistence(timeout: 2.0)
+                || app.descendants(matching: .button)["保存设备"].waitForExistence(timeout: 2.0)
+        )
+        XCTAssertTrue(
+            cancelButton.waitForExistence(timeout: 2.0)
+                || app.descendants(matching: .button)["取消"].waitForExistence(timeout: 2.0)
+        )
     }
 
     @MainActor
@@ -236,11 +244,20 @@ final class Tools_CatUITests: XCTestCase {
             app.textFields["keep-awake-duration-minutes-field"].waitForExistence(timeout: 2.0)
                 || app.textFields["请输入分钟数"].waitForExistence(timeout: 2.0)
         )
-        XCTAssertTrue(app.buttons["保存时长"].waitForExistence(timeout: 2.0))
+        let saveButton = formActions.descendants(matching: .button)["保存时长"]
+        XCTAssertTrue(
+            saveButton.waitForExistence(timeout: 2.0)
+                || app.descendants(matching: .button)["保存时长"].waitForExistence(timeout: 2.0)
+        )
 
-        let cancelButton = app.buttons["取消"]
+        let cancelButton = formActions.descendants(matching: .button)["取消"]
         if cancelButton.waitForExistence(timeout: 2.0) {
             clickElementAfterActivatingApp(cancelButton, in: app)
+        } else {
+            let fallbackCancelButton = app.descendants(matching: .button)["取消"]
+            if fallbackCancelButton.waitForExistence(timeout: 2.0) {
+                clickElementAfterActivatingApp(fallbackCancelButton, in: app)
+            }
         }
     }
 }

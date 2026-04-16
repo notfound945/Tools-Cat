@@ -81,6 +81,7 @@ struct DeviceLibraryView: View {
                     .onMove(perform: session.moveDevices)
                 }
                 .listStyle(.inset)
+                .roundedManagementListChrome()
             } else {
                 List {
                     ForEach(session.devices) { device in
@@ -96,6 +97,7 @@ struct DeviceLibraryView: View {
                 .listStyle(.inset)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .accessibilityElement(children: .contain)
+                .roundedManagementListChrome()
             }
         }
         .accessibilityIdentifier("device-library-list")
@@ -282,6 +284,7 @@ private struct DeviceRow: View {
 
                     Button("删除", role: .destructive, action: onDelete)
                         .buttonStyle(.borderless)
+                        .foregroundStyle(.red)
                 }
             }
         }
@@ -316,5 +319,15 @@ private struct AccessibilityMarker: NSViewRepresentable {
         nsView.setAccessibilityRole(.group)
         nsView.setAccessibilityLabel(label)
         nsView.setAccessibilityIdentifier(identifier)
+    }
+}
+
+private extension View {
+    func roundedManagementListChrome() -> some View {
+        clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .stroke(Color(nsColor: .separatorColor), lineWidth: 1)
+            }
     }
 }
