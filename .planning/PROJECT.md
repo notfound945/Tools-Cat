@@ -10,10 +10,10 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 
 ## Current State
 
-- Shipped: `v1.5 Device Library UI Parity` on 2026-04-16
+- Shipped: `v1.6 Distribution Hardening` is in progress after Phase 16 completed on 2026-04-16
 - Live product identity: `Tools Cat`
-- Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, and stabilized direct-launch manager smokes
-- Planning state: `v1.6 Distribution Hardening` is being defined to make friend-to-friend installation work without manual Gatekeeper overrides
+- Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, stabilized direct-launch manager smokes, and a Phase 16 release-signing boundary that now exports a Developer ID signed `.app` with matching maintainer docs
+- Planning state: `v1.6 Distribution Hardening` has completed Phase 16 and is ready to move into Phase 17 signed-DMG notarization work
 
 ## Next Milestone Goals
 
@@ -109,6 +109,8 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 - ✓ User can add or edit a saved WOL device through a compact in-place management presentation that keeps the device list visible — validated in Phase 15
 - ✓ User sees device-library edit and delete affordances styled consistently with the duration manager's accent/destructive semantics — validated in Phase 15
 - ✓ User can use the polished device-library manager without regressing saved-device add, edit, delete, reorder, or direct-launch behavior — validated in Phase 15
+- ✓ Maintainer can produce a Developer ID signed `Tools Cat.app` through the archive/export release seam with explicit signing prerequisites — validated in Phase 16
+- ✓ Repo docs now explain the signing identity, notary profile bootstrap, and release preflight without storing sensitive credentials — validated in Phase 16
 
 ### Active
 
@@ -206,4 +208,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-16 after starting v1.6 milestone definition*
+*Last updated: 2026-04-16 after completing Phase 16*
