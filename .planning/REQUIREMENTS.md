@@ -9,7 +9,7 @@ Requirements for the v1.6 distribution-hardening milestone. This milestone stays
 
 ### Distribution Signing
 
-- [ ] **DIST-01**: Maintainer can produce a Developer ID signed `Tools Cat.app` that is suitable for direct distribution outside the Mac App Store
+- [x] **DIST-01**: Maintainer can produce a Developer ID signed `Tools Cat.app` that is suitable for direct distribution outside the Mac App Store
 - [ ] **DIST-02**: Maintainer can produce a Developer ID signed `Tools-Cat.dmg` that contains the distributable app bundle
 
 ### Notarization
@@ -50,7 +50,7 @@ Phase mapping assigned during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DIST-01 | Phase 16 | Pending |
+| DIST-01 | Phase 16 | Complete |
 | DIST-02 | Phase 17 | Pending |
 | DIST-03 | Phase 17 | Pending |
 | DIST-04 | Phase 17 | Pending |

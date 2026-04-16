@@ -30,9 +30,9 @@ This milestone is intentionally operational rather than product-facing. `Tools C
 **Goal**: The maintainer can build a Developer ID signed `Tools Cat.app` through a release flow that clearly surfaces the required signing identity and notarization prerequisites.
 **Depends on**: Phase 15
 **Requirements**: DIST-01, DIST-05
-**Plans**: 0/2 plans complete
+**Plans**: 1/2 plans complete
 Plans:
-- [ ] `16-01-PLAN.md` — Replace the local DerivedData release path with fail-fast preflight plus Developer ID archive/export signing readiness.
+- [x] `16-01-PLAN.md` — Replace the local DerivedData release path with fail-fast preflight plus Developer ID archive/export signing readiness.
 - [ ] `16-02-PLAN.md` — Rewrite maintainer release docs around the explicit signing bootstrap and signed-app export contract.
 **Success Criteria** (what must be TRUE):
   1. The release path can produce a distribution-signed `Tools Cat.app` that is suitable for direct distribution outside the Mac App Store.
@@ -66,6 +66,6 @@ Phases execute in numeric order: 16, 17, 18
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 16. Release Signing Readiness | 0/2 | Not started | - |
+| 16. Release Signing Readiness | 1/2 | In Progress | - |
 | 17. Signed DMG Notarization Pipeline | 0/0 | Not started | - |
 | 18. Distribution Verification Closure | 0/0 | Not started | - |

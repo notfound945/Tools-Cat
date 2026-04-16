@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Distribution Hardening
-status: roadmap
-stopped_at: Roadmap created for Phase 16
-last_updated: "2026-04-16T08:24:00Z"
-last_activity: 2026-04-16 -- Created milestone v1.6 roadmap and mapped requirements to phases
+status: executing
+stopped_at: Completed 16-01-PLAN.md
+last_updated: "2026-04-16T09:41:38.358Z"
+last_activity: 2026-04-16
 progress:
   total_phases: 3
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 2
+  completed_plans: 1
 ---
 
 # Project State
@@ -24,34 +24,37 @@ See: `.planning/PROJECT.md` (updated 2026-04-16)
 
 ## Current Position
 
-Phase: 16 (release-signing-readiness) — NOT STARTED
-Plan: -
-Status: Roadmap created, ready for discussion
-Last activity: 2026-04-16 -- Created milestone v1.6 roadmap and mapped requirements to phases
+Phase: 16 (release-signing-readiness) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
+Last activity: 2026-04-16 -- Completed 16-01 and advanced to plan 2
 
-Progress: [░░░░░░░░░░] 0/0 plans complete
+Progress: [█████░░░░░] 1/2 plans complete
 
 ## Performance Metrics
 
 **Velocity:**
 
 - Total plans completed: 0
-- Average duration: -
-- Total execution time: 0 hours
+- Average duration: 3 min
+- Total execution time: 0.05 hours
+- Current milestone plans completed: 1
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 16 | 0 | - | - |
+| 16 | 1 | 3min | 3min |
 | 17 | 0 | - | - |
 | 18 | 0 | - | - |
 
 **Recent Trend:**
 
-- Last 5 plans: -
-- Trend: N/A
-- No v1.6 plans yet.
+- Last 5 plans: Phase 16-release-signing-readiness Plan 01 (3min)
+- Trend: Baseline established
+- v1.6 execution is underway.
+
+| Phase 16-release-signing-readiness P01 | 3min | 2 tasks | 6 files |
 
 ## Milestone Summary
 
@@ -88,6 +91,8 @@ The latest completed milestone established these durable decisions:
 - [Phase 15-device-library-ui-parity]: Keep reorder mode on its existing dedicated List path while moving only the normal browse path to native list semantics.
 - [Phase 15-device-library-ui-parity]: Apply device-library row semantics directly on the existing borderless actions so the polish stays presentation-only.
 - [Phase 15-device-library-ui-parity]: Keep semantic-polish verification limited to the established session, presentation, and direct-launch device-library regression slice.
+- [Phase 16-release-signing-readiness]: Keep release.sh as the only maintainer-facing release command while moving the build seam to archive/export.
+- [Phase 16-release-signing-readiness]: Keep automatic signing for daily Xcode use but make Release hardened runtime and Team ID explicit for distribution readiness.
 
 ### Roadmap Evolution
 
@@ -103,6 +108,6 @@ The latest completed milestone established these durable decisions:
 
 ## Session Continuity
 
-Last session: 2026-04-16T08:12:00Z
-Stopped at: Roadmap created for Phase 16
+Last session: 2026-04-16T09:41:38.356Z
+Stopped at: Completed 16-01-PLAN.md
 Resume file: None
