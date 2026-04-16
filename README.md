@@ -17,31 +17,26 @@
 1) 使用 Xcode 打开工程，选择 Scheme“Tools Cat”
 2) 直接 Run 即可（应用以菜单栏图标运行，无主窗口）
 
-## 构建 Release（二选一）
-方法 A：脚本一键构建（推荐）
+## Release
+Phase 16 的维护者发布入口只有一个：
 ```bash
 sh ./release.sh
 ```
 
-方法 B：命令行构建
+运行前需要提供以下环境变量：
 ```bash
-xcodebuild -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -configuration Release -derivedDataPath build clean build
+export RELEASE_TEAM_ID=Y2YJ48R9GL
+export RELEASE_SIGNING_IDENTITY='Developer ID Application: <Common Name> (Y2YJ48R9GL)'
+export RELEASE_NOTARY_PROFILE=TOOLS_CAT_NOTARY
 ```
 
-## 打包 DMG（不公证）
-- 先构建出 Release .app，再使用脚本打包到 dist/
-```bash
-# 若已通过脚本或 Xcode 生成了 Release .app：
-chmod +x ./build_dmg.sh
-./build_dmg.sh "./build/Build/Products/Release/Tools Cat.app"
-# 可选：自定义文件名/卷名/输出目录
-# OUT_DIR="$(pwd)/dist" ./build_dmg.sh "./build/Build/Products/Release/Tools Cat.app" "MyApp.dmg" "My App"
-```
+当前脚本会执行签名预检、归档并导出已签名应用，输出路径为：
+- `dist/export/Tools Cat.app`
 
-生成产物：
-- dist/Tools-Cat.dmg
+完整的证书准备、`notarytool` profile 初始化、预检失败说明与 Phase 16 runbook 见：
+- `docs/release/signing-readiness.md`
 
-说明：未做公证，用户首次安装需在“系统设置 → 隐私与安全”允许，或右键-打开。
+Phase 16 只覆盖已签名 `.app` 导出。DMG 签名、公证提交、stapling 和 Gatekeeper 安装验证明确延后到 Phase 17+。
 
 ## 更名后的可选清理
 - 只建议在你确认 `Tools Cat` 首次启动成功、历史保存设备也已经迁移后，再做旧标识清理。
