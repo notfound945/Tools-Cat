@@ -20,7 +20,7 @@ This milestone is intentionally operational rather than product-facing. `Tools C
 - Integer phases continue from the last shipped milestone
 - v1.6 therefore starts at Phase 16
 
-- [ ] **Phase 16: Release Signing Readiness** - Make the project and release flow produce a distribution-signed app with clear signing/notary prerequisites.
+- [x] **Phase 16: Release Signing Readiness** - Make the project and release flow produce a distribution-signed app with clear signing/notary prerequisites. (completed 2026-04-16)
 - [ ] **Phase 17: Signed DMG Notarization Pipeline** - Upgrade packaging so the shipped DMG is signed, notarized, stapled, and release-scripted.
 - [ ] **Phase 18: Distribution Verification Closure** - Close the milestone with repeatable verification and regression proof that release hardening did not change shipped app behavior.
 
@@ -30,10 +30,10 @@ This milestone is intentionally operational rather than product-facing. `Tools C
 **Goal**: The maintainer can build a Developer ID signed `Tools Cat.app` through a release flow that clearly surfaces the required signing identity and notarization prerequisites.
 **Depends on**: Phase 15
 **Requirements**: DIST-01, DIST-05
-**Plans**: 1/2 plans complete
+**Plans**: 2/2 plans complete
 Plans:
 - [x] `16-01-PLAN.md` — Replace the local DerivedData release path with fail-fast preflight plus Developer ID archive/export signing readiness.
-- [ ] `16-02-PLAN.md` — Rewrite maintainer release docs around the explicit signing bootstrap and signed-app export contract.
+- [x] `16-02-PLAN.md` — Rewrite maintainer release docs around the explicit signing bootstrap and signed-app export contract.
 **Success Criteria** (what must be TRUE):
   1. The release path can produce a distribution-signed `Tools Cat.app` that is suitable for direct distribution outside the Mac App Store.
   2. The project/release configuration makes hardened-runtime and signing readiness explicit enough to support later notarization work.
@@ -66,6 +66,6 @@ Phases execute in numeric order: 16, 17, 18
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 16. Release Signing Readiness | 1/2 | In Progress | - |
+| 16. Release Signing Readiness | 2/2 | Complete    | 2026-04-16 |
 | 17. Signed DMG Notarization Pipeline | 0/0 | Not started | - |
 | 18. Distribution Verification Closure | 0/0 | Not started | - |

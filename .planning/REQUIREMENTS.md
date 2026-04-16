@@ -19,7 +19,7 @@ Requirements for the v1.6 distribution-hardening milestone. This milestone stays
 
 ### Release Operations
 
-- [ ] **DIST-05**: Repo documentation explains the required signing identity, notarization credential setup, and release preflight without storing sensitive credentials in the repo
+- [x] **DIST-05**: Repo documentation explains the required signing identity, notarization credential setup, and release preflight without storing sensitive credentials in the repo
 - [ ] **DIST-06**: Repo provides a repeatable local verification path that proves the shipped artifact is ready for friend installation without manual `隐私与安全性` overrides
 - [ ] **DIST-07**: Distribution hardening does not change the shipped WOL and keep-awake behavior beyond the release-chain work required for signing and notarization
 
@@ -54,7 +54,7 @@ Phase mapping assigned during roadmap creation.
 | DIST-02 | Phase 17 | Pending |
 | DIST-03 | Phase 17 | Pending |
 | DIST-04 | Phase 17 | Pending |
-| DIST-05 | Phase 16 | Pending |
+| DIST-05 | Phase 16 | Complete |
 | DIST-06 | Phase 18 | Pending |
 | DIST-07 | Phase 18 | Pending |
 
@@ -65,4 +65,4 @@ Phase mapping assigned during roadmap creation.
 
 ---
 *Requirements defined: 2026-04-16*
-*Last updated: 2026-04-16 after creating the v1.6 roadmap*
+*Last updated: 2026-04-16 after completing Phase 16*

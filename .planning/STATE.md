@@ -4,13 +4,13 @@ milestone: v1.6
 milestone_name: Distribution Hardening
 status: executing
 stopped_at: Completed 16-01-PLAN.md
-last_updated: "2026-04-16T09:41:38.358Z"
+last_updated: "2026-04-16T10:02:25.699Z"
 last_activity: 2026-04-16
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -20,41 +20,42 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-16)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Phase 16 — release-signing-readiness
+**Current focus:** Phase 17 — signed-dmg-notarization-pipeline
 
 ## Current Position
 
-Phase: 16 (release-signing-readiness) — EXECUTING
-Plan: 2 of 2
-Status: Ready to execute
-Last activity: 2026-04-16 -- Completed 16-01 and advanced to plan 2
+Phase: 17
+Plan: Not started
+Status: Ready for planning/execution
+Last activity: 2026-04-16 -- Completed Phase 16 and advanced to Phase 17
 
-Progress: [█████░░░░░] 1/2 plans complete
+Progress: [██████████] 2/2 currently planned plans complete
 
 ## Performance Metrics
 
 **Velocity:**
 
 - Total plans completed: 0
-- Average duration: 3 min
-- Total execution time: 0.05 hours
-- Current milestone plans completed: 1
+- Average duration: 2.5 min
+- Total execution time: 0.08 hours
+- Current milestone plans completed: 2
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 16 | 1 | 3min | 3min |
+| 16 | 2 | 5min | 2.5min |
 | 17 | 0 | - | - |
 | 18 | 0 | - | - |
 
 **Recent Trend:**
 
-- Last 5 plans: Phase 16-release-signing-readiness Plan 01 (3min)
-- Trend: Baseline established
-- v1.6 execution is underway.
+- Last 5 plans: Phase 16-release-signing-readiness Plan 01 (3min), Plan 02 (2min)
+- Trend: Phase 16 completed
+- v1.6 is ready to move into Phase 17 planning/execution.
 
 | Phase 16-release-signing-readiness P01 | 3min | 2 tasks | 6 files |
+| Phase 16-release-signing-readiness P02 | 2min | 2 tasks | 3 files |
 
 ## Milestone Summary
 
