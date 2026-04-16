@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Duration UI Polish
-status: Ready to discuss Phase 14
+status: ready_for_planning
 stopped_at: Phase 14 context gathered
 last_updated: "2026-04-16T02:39:19.534Z"
-last_activity: 2026-04-16 -- created the v1.4 roadmap and mapped AWAKE-14 through AWAKE-16 to Phase 14
+last_activity: 2026-04-16 -- captured Phase 14 context for native list semantics and semantic action styling
 progress:
   total_phases: 1
   completed_phases: 0
@@ -20,14 +20,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-16)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Phase 14 — discuss and plan the duration-management UI polish work
+**Current focus:** Phase 14 — ready to plan the duration-management UI polish work
 
 ## Current Position
 
 Phase: 14 (duration-management-ui-polish) — NOT STARTED
 Plan: —
-Status: Ready to discuss Phase 14
-Last activity: 2026-04-16 -- created the v1.4 roadmap and mapped AWAKE-14 through AWAKE-16 to Phase 14
+Status: Ready to plan Phase 14
+Last activity: 2026-04-16 -- captured Phase 14 context for native list semantics and semantic action styling
 
 Progress: [░░░░░░░░░░] 0/0 plans complete
 
@@ -71,7 +71,7 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Run `$gsd-discuss-phase 14` to lock approach details before planning.
+- Run `$gsd-plan-phase 14` to turn the captured Phase 14 context into executable plans.
 
 ## Session Continuity
 
