@@ -1,146 +1,77 @@
 # Stack Research
 
-**Domain:** Native macOS menu bar Wake-on-LAN utility evolution
-**Researched:** 2026-04-11
+**Domain:** macOS direct distribution hardening for `Tools Cat`
+**Researched:** 2026-04-16
 **Confidence:** HIGH
 
 ## Recommended Stack
 
-This milestone should stay fully Apple-native and intentionally small. The right move is not a new app stack; it is a cleanup of the existing one so persistence, status, and device management stop fighting the menu bar architecture.
+This milestone should stay fully Apple-native. The stack change is not about app runtime features; it is about moving the existing release flow from "local build + unsigned/not-unnotarized DMG" to a repeatable Developer ID distribution pipeline.
 
 ### Core Technologies
 
-| Technology | Version | Purpose | Why Recommended |
-|------------|---------|---------|-----------------|
-| SwiftUI app scenes: `MenuBarExtra`, `Settings`, optional `Window` | macOS 15.6+ target already in repo | Primary app UI, menu bar presentation, preferences UI | `MenuBarExtra` is now the native SwiftUI scene for persistent menu bar controls, and the repo already targets a modern macOS where it is available. Moving the status item and WOL surface to scenes removes custom `NSStatusItem` and `NSWindowController` plumbing, which is the current source of lifecycle fragility. Use `.window` style only if the menu surface needs richer grouped content; otherwise keep it menu-like. |
-| Observation framework: `@Observable`, `@Bindable`, environment-driven model injection | macOS 15.6+ | App state for saved devices, recent devices, send status, and keep-awake state | The current target is well above the Observation baseline, so there is no reason to keep adding `ObservableObject`/Combine-style glue for new state. Observation gives a smaller, more direct model for a utility app: a few shared models, bound directly into SwiftUI, with less ceremony and fewer publisher edge cases. |
-| Foundation persistence: `UserDefaults` + `@AppStorage` for scalars, `Codable` + `Data` in `UserDefaults` for device arrays | macOS 15.6+ | Persistent device list, recent-device memory, preferences, last-used device ID | This app stores a small amount of local configuration, not relational data. `@AppStorage` and `defaultAppStorage(_:)` fit booleans and small preference values, while a tiny `Codable` store in `UserDefaults` is enough for `[SavedDevice]`, notes, and recents. This keeps persistence simple, synchronous, migration-light, and fully native. |
-| Existing low-level services kept, but wrapped: `IOKit.pwr_mgt` and `Darwin` sockets behind protocols | Existing repo implementation | Keep-awake assertions and WOL packet sending | The current core side effects are already on the right OS APIs. The problem is direct coupling, not wrong technology. Keep the transport and power-management primitives, but hide them behind `PowerService` and `WakeService` protocols so view state, logging, and tests do not depend on raw system calls. Confidence: MEDIUM-HIGH, because this is an implementation recommendation derived from repo evidence plus current Apple-native app patterns. |
-| `OSLog` / `Logger` | Current Apple logging stack | Privacy-aware diagnostics and operational feedback | Replace raw `print` calls with categorized `Logger` instances. This gives privacy controls for MAC addresses and broadcast details, makes Console output usable during debugging, and avoids leaking local-network identifiers in normal logs. |
+| Technology | Purpose | Why Recommended |
+|------------|---------|-----------------|
+| Apple Developer Program + Developer ID Application certificate | Distribution signing identity for the `.app` and `.dmg` | Apple’s direct-distribution guidance is built around Developer ID signing for software distributed outside the Mac App Store. |
+| Xcode archive/export flow or equivalent distribution-signed build | Produce release artifacts intended for distribution instead of only local build products | Apple’s distribution docs center on archive/export for outside-the-store releases; it creates a clearer seam between local debug builds and distributable artifacts. |
+| `notarytool` + Keychain profile | Submit and authenticate notarization requests without embedding secrets into scripts | Apple’s notarization workflow has standardized on `notarytool`, and its credential storage flow fits local release automation safely. |
+| `codesign` | Sign the app bundle and the final DMG | Apple’s packaging docs explicitly call out signing the app and signing any signable nested containers, including disk images. |
+| `stapler` | Attach notarization tickets to shipped artifacts | Stapling lets the final deliverable carry notarization proof, which improves first-run and offline verification behavior. |
+| `spctl` + `codesign --verify` | Local release verification on a fresh machine or fresh environment | Gatekeeper-facing verification should be part of the release flow rather than assumed from a successful build. |
+| Existing `hdiutil` + `ditto` packaging flow | Keep DMG creation native and simple | The repo already uses the correct Apple-native primitives for DMG creation; they only need to be upgraded with signing and notarization. |
 
-### Supporting Libraries
+### Current Repo State
 
-No third-party runtime libraries are recommended for this milestone. The app is too small to justify dependency churn.
+| Area | Current State | Implication |
+|------|---------------|------------|
+| Xcode signing | `CODE_SIGN_STYLE = Automatic`, fixed bundle ID, sandbox enabled in the app target | The project already has a signing baseline, but the release flow still depends on local Xcode account state and doesn’t yet describe a distribution-grade signing path. |
+| Entitlements | `Tools Cat/Tools_Cat.entitlements` only enables App Sandbox and outbound network client access | The entitlement surface is small, which is good for notarization; hardened runtime still needs explicit verification in the distribution path. |
+| Release build | `release.sh` runs `xcodebuild clean build` and picks the `.app` from DerivedData | This is enough for local packaging, but it does not yet encode a clear distribution/export boundary. |
+| DMG packaging | `build_dmg.sh` stages the app with `ditto` and creates a `UDZO` DMG with `hdiutil` | The DMG format is compatible with Apple guidance, but the script currently leaves the DMG unsigned and unnotarized. |
+| Documentation | `README.md` and `build_dmg.sh` both explicitly say the DMG is not notarized and requires manual security approval | This is the exact user-facing gap the milestone needs to close. |
 
-| Library | Version | Purpose | When to Use |
-|---------|---------|---------|-------------|
-| Swift Concurrency (`Task`, `async` boundaries) | Built into current Swift toolchain | Replace ad hoc `DispatchQueue` hops in send/status flows | Use for the WOL send path and status reset timing so cancellation and main-actor updates are explicit. Do not rewrite every service as heavily async if the underlying operation stays synchronous. |
-| XCTest | Current Xcode toolchain | Unit-test persistence, validation, and service-boundary behavior | Use once `DeviceStore`, `WakeService`, and `PowerService` are protocol-backed. This is the lowest-cost path to regression coverage. |
-| XCUITest | Current Xcode toolchain | Verify menu bar interactions, settings edits, and status feedback | Use sparingly for end-to-end checks around the menu bar surface and settings flow. Keep most logic testing in XCTest. |
-| AppKit interop | macOS SDK | Escape hatch for menu bar behavior gaps or activation quirks | Keep only where SwiftUI scenes still need bridging. Do not keep AppKit as the primary UI architecture for new work. |
+### Recommended Additions
 
-### Development Tools
+| Addition | Purpose | Notes |
+|----------|---------|-------|
+| Release-time identity configuration | Choose the correct Developer ID identity and Team context deterministically | Avoid relying on whichever local signing account Xcode happens to pick. |
+| Notarization credential bootstrap | Store credentials once via `notarytool store-credentials` and reuse a keychain profile | Safer than hardcoding Apple ID or app-specific passwords into scripts. |
+| Signed DMG step | Protect the final delivered container from tampering | Apple docs explicitly recommend signing the disk image with a Developer ID Application identity. |
+| Notarization submit/wait/log step | Make the release script fail fast on notarization problems | The notary log is the primary debugging source for rejected uploads. |
+| Staple + verify step | Ensure the shipped artifact is ready for friend installs | Verification should be scripted, not left as a manual memory task. |
 
-| Tool | Purpose | Notes |
-|------|---------|-------|
-| Xcode project + Swift Package Manager-free repo | Build and edit the native app | Keep it this way for now. Adding package management without external dependencies adds ceremony with no payoff. |
-| `xcodebuild` | Local build and test automation | Use it for repeatable validation of the new persistence and settings flows; no new build tooling is needed. |
-| Console.app / Instruments as needed | Inspect `Logger` output and diagnose runtime behavior | Useful after switching from `print` to structured logging, especially for networking failures and menu scene lifecycle checks. |
+## Recommended Build Shape
 
-## Recommended Architecture Shape
+The strongest fit for this repo is:
 
-Use a small scene-first architecture:
+1. Build or export a distribution-signed `.app`
+2. Stage the app into a DMG source directory with `ditto`
+3. Create a `UDZO` DMG with `hdiutil`
+4. Sign the DMG with `codesign --timestamp`
+5. Submit the outermost DMG to Apple with `notarytool submit --wait`
+6. On success, staple the notarization ticket to the DMG
+7. Verify the app and DMG with `codesign` and `spctl`
+8. Document the release prerequisites and verification commands
 
-1. `App`
-   - Owns `MenuBarExtra`
-   - Owns `Settings`
-   - Injects shared models/services
-2. `AppModel` (`@Observable`)
-   - Holds keep-awake status, last action result, current UI state
-3. `DeviceStore` (`@Observable`)
-   - Loads/saves `[SavedDevice]`
-   - Tracks `recentDeviceIDs`
-   - Exposes simple CRUD and recents APIs
-4. `WakeService`
-   - Wraps existing `WOLSender`
-   - Returns typed success/failure for UI status
-5. `PowerService`
-   - Wraps existing `PowerAssertionManager`
-   - Returns real success/failure instead of mutating menu state optimistically
+This keeps the current native packaging shape but makes the artifact distributable.
 
-This is the lowest-complexity way to fix the current codebase problems:
-- Hardcoded device data moves into one local store.
-- Recent-device memory becomes a store concern, not view-local state.
-- Status feedback becomes model state, not `NotificationCenter` side effects.
-- AppKit lifecycle code shrinks to the minimum needed for any remaining bridge points.
-
-## Installation
-
-```bash
-# No new third-party runtime packages recommended for this milestone.
-
-# Open in Xcode
-open "Mac OS Swiss Knife.xcodeproj"
-
-# Build locally
-xcodebuild -scheme "Mac OS Swiss Knife" -configuration Debug build
-```
-
-## Alternatives Considered
-
-| Recommended | Alternative | When to Use Alternative |
-|-------------|-------------|-------------------------|
-| `UserDefaults` + `Codable` device store | SwiftData | Use SwiftData only if device data becomes substantially richer: many related entities, filtering/search across larger datasets, sync, or future cross-window editing complexity. For a small personal device list, SwiftData adds migration and model-container overhead without solving the real problem. |
-| `MenuBarExtra` scene | Existing `NSStatusItem` + custom `NSMenu`/`NSWindowController` | Keep the AppKit path only if a required menu bar behavior is impossible in SwiftUI scenes. The repo's current pain points come from this custom lifecycle code, so it should not remain the default architecture. |
-| Observation (`@Observable`) | `ObservableObject` + Combine for new state | Use the older pattern only if the deployment target drops below macOS 14 or if a specific integration already depends on Combine publishers. Neither is true for this milestone. |
-| `Settings` scene for device management | Dedicated editor window first | Add a separate `Window` scene only if device editing genuinely outgrows settings layout. The current scope fits a restrained settings screen better than another custom window controller. |
-
-## What NOT to Use
+## What NOT to Add
 
 | Avoid | Why | Use Instead |
 |-------|-----|-------------|
-| SwiftData or Core Data for this milestone | Overbuilt for a short local device list and recent-device memory; adds model container, migration, and more moving parts than the app needs | `UserDefaults` + `Codable` device store |
-| `NotificationCenter` as the primary UI coordination mechanism | The current duplicate-observer and window-reset issues come from lifecycle state living outside typed models | Scene state + `@Observable` models + direct bindings |
-| New third-party persistence, DI, or logging frameworks | Adds maintenance surface and packaging complexity to a personal utility without meaningfully improving the result | Apple frameworks already in the SDK |
-| Leaving raw `print` logging in networking code | It leaks local identifiers and makes runtime diagnostics noisy and unstructured | `Logger` with privacy annotations |
-| Rewriting WOL networking onto a new transport stack just for modernity | The current issue is architecture and feedback, not that BSD UDP broadcast is inherently the wrong primitive | Keep the sender logic, wrap it cleanly, and improve results/errors |
-
-## Stack Patterns by Variant
-
-**If the menu bar surface stays compact:**
-- Use `MenuBarExtra` with the default menu presentation.
-- Put device CRUD in `Settings`.
-- Keep the menu focused on: keep-awake toggle, recent devices, send action, last status.
-
-**If the menu bar surface needs richer inline status and grouped controls:**
-- Use `MenuBarExtra` with `.window` style.
-- Still keep full device management in `Settings`.
-- Do not reintroduce a custom `NSWindowController` unless SwiftUI scene behavior proves insufficient.
-
-**If future milestones add many devices, tags, or sync:**
-- Re-evaluate SwiftData in that milestone.
-- Do not introduce it preemptively now.
-
-## Version Compatibility
-
-| Package A | Compatible With | Notes |
-|-----------|-----------------|-------|
-| Repo deployment target: `macOS 15.6+` | `MenuBarExtra`, `Settings`, `@AppStorage`, `defaultAppStorage(_:)`, `Logger` | Strong fit. No compatibility shim needed for the scene and logging recommendations. |
-| `@Observable` (Observation) | `macOS 14+` | Safe on the current repo target. If the deployment target is later lowered below macOS 14, fall back to `ObservableObject` for shared models. |
-| `UserDefaults` + `@AppStorage` | `Settings` scene bindings | Best for scalar preferences and small local state. Device arrays should still be encoded explicitly instead of trying to force complex data directly through `@AppStorage`. |
-| Existing `IOKit` + `Darwin` code | Protocol-wrapped services + XCTest mocks | Keeps system-specific code isolated while preserving behavior already proven in the repo. |
-
-## Confidence Notes
-
-- HIGH: `MenuBarExtra` + `Settings` as the primary UI direction for this repo's target OS.
-- HIGH: `UserDefaults`/`@AppStorage` + a tiny `Codable` store as the right persistence level for saved devices and recents.
-- HIGH: `Logger` should replace raw `print` for runtime diagnostics.
-- MEDIUM-HIGH: Keep the current WOL transport and improve seams instead of rewriting it; this is strongly supported by repo evidence, but still depends on real-network validation once refactored.
+| App Store distribution work | The milestone goal is friend-to-friend installability, not App Store release | Developer ID direct distribution |
+| New runtime features | This milestone should not mix release hardening with product scope | Keep the milestone release-only |
+| Hardcoded notarization secrets in shell scripts | Unsafe and brittle | `notarytool` keychain profile |
+| Third-party DMG/notarization wrappers as the primary path | Unnecessary abstraction over Apple’s own tooling for a small repo | `xcodebuild`, `codesign`, `hdiutil`, `notarytool`, `stapler`, `spctl` |
 
 ## Sources
 
-- Repo evidence: [.planning/PROJECT.md](/Users/hailinpan/Documents/GitHub/Mac%20OS%20Swiss%20Knife/.planning/PROJECT.md), [.planning/codebase/STACK.md](/Users/hailinpan/Documents/GitHub/Mac%20OS%20Swiss%20Knife/.planning/codebase/STACK.md), [.planning/codebase/ARCHITECTURE.md](/Users/hailinpan/Documents/GitHub/Mac%20OS%20Swiss%20Knife/.planning/codebase/ARCHITECTURE.md), [.planning/codebase/CONCERNS.md](/Users/hailinpan/Documents/GitHub/Mac%20OS%20Swiss%20Knife/.planning/codebase/CONCERNS.md)
-- Repo evidence: [Mac_OS_Swiss_KnifeApp.swift](/Users/hailinpan/Documents/GitHub/Mac%20OS%20Swiss%20Knife/Mac%20OS%20Swiss%20Knife/Mac_OS_Swiss_KnifeApp.swift), [StatusBarController.swift](/Users/hailinpan/Documents/GitHub/Mac%20OS%20Swiss%20Knife/Mac%20OS%20Swiss%20Knife/StatusBarController.swift), [WOLView.swift](/Users/hailinpan/Documents/GitHub/Mac%20OS%20Swiss%20Knife/Mac%20OS%20Swiss%20Knife/WOLView.swift), [WOLWindow.swift](/Users/hailinpan/Documents/GitHub/Mac%20OS%20Swiss%20Knife/Mac%20OS%20Swiss%20Knife/WOLWindow.swift), [WOLSender.swift](/Users/hailinpan/Documents/GitHub/Mac%20OS%20Swiss%20Knife/Mac%20OS%20Swiss%20Knife/WOLSender.swift), [PowerAssertionManager.swift](/Users/hailinpan/Documents/GitHub/Mac%20OS%20Swiss%20Knife/Mac%20OS%20Swiss%20Knife/PowerAssertionManager.swift)
-- Apple Developer Documentation: https://developer.apple.com/documentation/swiftui/menubarextra
-- Apple Developer Documentation: https://developer.apple.com/documentation/swiftui/appstorage
-- Apple Developer Documentation: https://developer.apple.com/documentation/swiftui/view/defaultappstorage(_:)
-- Apple Developer Documentation: https://developer.apple.com/documentation/swiftui/settings
-- Apple Developer Documentation: https://developer.apple.com/documentation/observation
-- Apple Developer Documentation: https://developer.apple.com/documentation/foundation/userdefaults
-- Apple Developer Documentation: https://developer.apple.com/documentation/os/logger
-- Apple Developer Documentation: https://developer.apple.com/documentation/swift/task
-- Apple Developer Documentation: https://developer.apple.com/documentation/swiftdata
+- Apple Developer: Developer ID - https://developer.apple.com/developer-id/
+- Apple Developer Documentation: Packaging Mac software for distribution - https://developer.apple.com/documentation/xcode/packaging-mac-software-for-distribution
+- Apple Developer Documentation: Customizing the notarization workflow - https://developer.apple.com/documentation/security/customizing-the-notarization-workflow
+- Apple Developer Documentation: Distributing your app for beta testing and releases - https://developer.apple.com/documentation/xcode/distributing-your-app-for-beta-testing-and-releases
+- Apple Developer Documentation: Configuring the hardened runtime - https://developer.apple.com/documentation/xcode/configuring-the-hardened-runtime
+- Local repo: `release.sh`, `build_dmg.sh`, `README.md`, `Tools Cat.xcodeproj/project.pbxproj`, `Tools Cat/Tools_Cat.entitlements`
 
 ---
-*Stack research for: Native macOS menu bar Wake-on-LAN utility evolution*
-*Researched: 2026-04-11*
+*Stack research for: v1.6 Distribution Hardening*
