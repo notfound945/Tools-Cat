@@ -67,5 +67,5 @@ Phases execute in numeric order: 16, 17, 18
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 16. Release Signing Readiness | 2/2 | Complete    | 2026-04-16 |
-| 17. Signed DMG Notarization Pipeline | 0/0 | Not started | - |
+| 17. Signed DMG Notarization Pipeline | 1/2 | In Progress|  |
 | 18. Distribution Verification Closure | 0/0 | Not started | - |

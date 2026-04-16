@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Distribution Hardening
 status: executing
-stopped_at: Completed Phase 16; ready for Phase 17
-last_updated: "2026-04-16T10:18:03.242Z"
-last_activity: 2026-04-16 -- Phase 17 execution started
+stopped_at: Completed 17-01-PLAN.md
+last_updated: "2026-04-16T10:21:18.536Z"
+last_activity: 2026-04-16
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 4
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -25,9 +25,9 @@ See: `.planning/PROJECT.md` (updated 2026-04-16)
 ## Current Position
 
 Phase: 17 (signed-dmg-notarization-pipeline) — EXECUTING
-Plan: 1 of 2
-Status: Executing Phase 17
-Last activity: 2026-04-16 -- Phase 17 execution started
+Plan: 2 of 2
+Status: Ready to execute
+Last activity: 2026-04-16
 
 Progress: [██████████] 2/2 currently planned plans complete
 
@@ -56,6 +56,7 @@ Progress: [██████████] 2/2 currently planned plans complete
 
 | Phase 16-release-signing-readiness P01 | 3min | 2 tasks | 6 files |
 | Phase 16-release-signing-readiness P02 | 2min | 2 tasks | 3 files |
+| Phase 17 P01 | 8 min | 2 tasks | 4 files |
 
 ## Milestone Summary
 
@@ -94,6 +95,8 @@ The latest completed milestone established these durable decisions:
 - [Phase 15-device-library-ui-parity]: Keep semantic-polish verification limited to the established session, presentation, and direct-launch device-library regression slice.
 - [Phase 16-release-signing-readiness]: Keep release.sh as the only maintainer-facing release command while moving the build seam to archive/export.
 - [Phase 16-release-signing-readiness]: Keep automatic signing for daily Xcode use but make Release hardened runtime and Team ID explicit for distribution readiness.
+- [Phase 17]: Keep release.sh as the sole public release command while extending it to emit the final signed DMG. — Wave 2 notarization can extend one trusted release entrypoint instead of introducing a second maintainer flow.
+- [Phase 17]: Keep build_dmg.sh limited to deterministic staging plus hdiutil create, leaving signing and notarization orchestration to release.sh. — This keeps packaging deterministic and makes the signed artifact boundary explicit for later notary and assessment steps.
 
 ### Roadmap Evolution
 
@@ -109,6 +112,6 @@ The latest completed milestone established these durable decisions:
 
 ## Session Continuity
 
-Last session: 2026-04-16T10:04:28Z
-Stopped at: Completed Phase 16; ready for Phase 17
+Last session: 2026-04-16T10:21:18.534Z
+Stopped at: Completed 17-01-PLAN.md
 Resume file: None
