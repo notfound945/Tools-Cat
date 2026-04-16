@@ -27,7 +27,7 @@ This milestone keeps scope deliberately narrow. The saved-device CRUD and wake b
 **Goal**: The `设备库` manager feels visually and behaviorally aligned with the shipped `常亮时长` manager without changing saved-device truth.
 **Depends on**: Phase 14
 **Requirements**: DEVS-06, DEVS-07, DEVS-08, DEVS-09
-**Plans**: 0/0 plans complete
+**Plans**: 1/2 plans complete
 **Success Criteria** (what must be TRUE):
   1. Saved WOL devices render inside a clearly native list surface instead of the current custom stacked list treatment.
   2. Add/edit flows use a compact in-place management presentation that keeps the list context visible, matching the duration manager's current pattern.
@@ -41,4 +41,4 @@ Phases execute in numeric order: 15
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 15. Device Library UI Parity | 0/0 | Not started | - |
+| 15. Device Library UI Parity | 1/2 | In Progress |  |

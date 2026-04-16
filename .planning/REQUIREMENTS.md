@@ -9,8 +9,8 @@ Requirements for the v1.5 device-library UI parity milestone. This milestone kee
 
 ### Device Library UI
 
-- [ ] **DEVS-06**: User sees saved WOL devices inside a clearly native macOS list surface instead of the current custom stacked list treatment
-- [ ] **DEVS-07**: User can add or edit a saved WOL device through a compact in-place management presentation that matches the duration manager instead of replacing the entire device-library screen
+- [x] **DEVS-06**: User sees saved WOL devices inside a clearly native macOS list surface instead of the current custom stacked list treatment
+- [x] **DEVS-07**: User can add or edit a saved WOL device through a compact in-place management presentation that matches the duration manager instead of replacing the entire device-library screen
 - [ ] **DEVS-08**: User sees the device-library edit action styled with the app accent/theme color and the delete action styled with destructive red semantics to match the duration manager
 - [ ] **DEVS-09**: User can use the polished device-library manager without regressing saved-device add, edit, delete, reorder, or direct-launch management behavior
 
@@ -45,8 +45,8 @@ Phase mapping assigned during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DEVS-06 | Phase 15 | Pending |
-| DEVS-07 | Phase 15 | Pending |
+| DEVS-06 | Phase 15 | Complete |
+| DEVS-07 | Phase 15 | Complete |
 | DEVS-08 | Phase 15 | Pending |
 | DEVS-09 | Phase 15 | Pending |
 
