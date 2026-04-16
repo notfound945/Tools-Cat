@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Duration UI Polish
-status: ready_for_planning
-stopped_at: Phase 14 context gathered
-last_updated: "2026-04-16T02:39:19.534Z"
-last_activity: 2026-04-16 -- captured Phase 14 context for native list semantics and semantic action styling
+status: phase_complete
+stopped_at: Phase 14 verified and marked complete
+last_updated: "2026-04-16T04:08:36.000Z"
+last_activity: 2026-04-16 -- Phase 14 verified and marked complete
 progress:
   total_phases: 1
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  completed_phases: 1
+  total_plans: 2
+  completed_plans: 2
 ---
 
 # Project State
@@ -20,16 +20,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-16)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Phase 14 — ready to plan the duration-management UI polish work
+**Current focus:** Milestone v1.4 ready for completion
 
 ## Current Position
 
-Phase: 14 (duration-management-ui-polish) — NOT STARTED
-Plan: —
-Status: Ready to plan Phase 14
-Last activity: 2026-04-16 -- captured Phase 14 context for native list semantics and semantic action styling
+Phase: 14 (duration-management-ui-polish) — COMPLETE
+Plan: 2 of 2
+Status: Phase complete
+Last activity: 2026-04-16 -- Phase 14 verified and marked complete
 
-Progress: [░░░░░░░░░░] 0/0 plans complete
+Progress: [██████████] 2/2 plans complete
 
 ## Milestone Summary
 
@@ -71,10 +71,10 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Run `$gsd-plan-phase 14` to turn the captured Phase 14 context into executable plans.
+- Run `$gsd-complete-milestone` to archive `v1.4 Duration UI Polish` and prepare the next milestone.
 
 ## Session Continuity
 
 Last session: 2026-04-16T02:39:19.532Z
-Stopped at: Phase 14 context gathered
-Resume file: .planning/phases/14-duration-management-ui-polish/14-CONTEXT.md
+Stopped at: Phase 14 verified and marked complete
+Resume file: .planning/phases/14-duration-management-ui-polish/14-VERIFICATION.md

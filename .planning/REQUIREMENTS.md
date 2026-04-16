@@ -9,9 +9,9 @@ Requirements for the v1.4 duration UI polish milestone. This milestone keeps sco
 
 ### Keep-Awake Duration UI
 
-- [ ] **AWAKE-14**: User sees managed keep-awake durations inside a clearly native macOS list or table presentation instead of rows blending into the window background
-- [ ] **AWAKE-15**: User sees the edit action styled with the app accent/theme color and the delete action styled with destructive red semantics
-- [ ] **AWAKE-16**: User can use the polished duration list without regressing existing add, edit, delete, sorting, or live root-menu synchronization behavior
+- [x] **AWAKE-14**: User sees managed keep-awake durations inside a clearly native macOS list or table presentation instead of rows blending into the window background
+- [x] **AWAKE-15**: User sees the edit action styled with the app accent/theme color and the delete action styled with destructive red semantics
+- [x] **AWAKE-16**: User can use the polished duration list without regressing existing add, edit, delete, sorting, or live root-menu synchronization behavior
 
 ## v2 Requirements
 
@@ -44,9 +44,9 @@ Phase mapping assigned during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AWAKE-14 | Phase 14 | Pending |
-| AWAKE-15 | Phase 14 | Pending |
-| AWAKE-16 | Phase 14 | Pending |
+| AWAKE-14 | Phase 14 | Validated |
+| AWAKE-15 | Phase 14 | Validated |
+| AWAKE-16 | Phase 14 | Validated |
 
 **Coverage:**
 - v1 requirements: 3 total
@@ -55,4 +55,4 @@ Phase mapping assigned during roadmap creation.
 
 ---
 *Requirements defined: 2026-04-16*
-*Last updated: 2026-04-16 after defining the v1.4 duration UI polish scope*
+*Last updated: 2026-04-16 after Phase 14 verification passed*
