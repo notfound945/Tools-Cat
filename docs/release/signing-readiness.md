@@ -38,7 +38,6 @@ sh ./release.sh
 Expected outputs:
 
 - Built app: `build/DerivedData/Build/Products/Release/Tools Cat.app`
-- Shared app copy: `dist/Tools Cat.app`
 - Final DMG: `dist/Tools-Cat.dmg`
 
 Preflight failures you should expect:
@@ -49,9 +48,8 @@ Preflight failures you should expect:
 Successful friend-share flow:
 
 1. `release.sh` runs `xcodebuild build` with `CODE_SIGNING_ALLOWED=NO` and `CODE_SIGNING_REQUIRED=NO`.
-2. The built app is copied to `dist/Tools Cat.app`.
-3. `build_dmg.sh` packages that app into `dist/Tools-Cat.dmg`.
-4. The maintainer sends the DMG to a friend together with first-launch instructions.
+2. `build_dmg.sh` packages the built app directly into `dist/Tools-Cat.dmg`.
+3. The maintainer sends the DMG to a friend together with first-launch instructions.
 
 ## Friend-side first launch
 

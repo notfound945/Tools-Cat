@@ -7,7 +7,7 @@ SCHEME="Tools Cat"
 CONFIGURATION="Release"
 DERIVED_DATA_PATH="$ROOT_DIR/build/DerivedData"
 BUILD_APP_PATH="$DERIVED_DATA_PATH/Build/Products/$CONFIGURATION/Tools Cat.app"
-DIST_APP_PATH="$ROOT_DIR/dist/Tools Cat.app"
+LEGACY_DIST_APP_PATH="$ROOT_DIR/dist/Tools Cat.app"
 DMG_PATH="$ROOT_DIR/dist/Tools-Cat.dmg"
 
 cd "$ROOT_DIR"
@@ -15,7 +15,7 @@ cd "$ROOT_DIR"
 bash "$ROOT_DIR/scripts/release/preflight-signing.sh"
 
 mkdir -p "$ROOT_DIR/build" "$ROOT_DIR/dist"
-rm -rf "$DERIVED_DATA_PATH" "$DIST_APP_PATH" "$DMG_PATH"
+rm -rf "$DERIVED_DATA_PATH" "$LEGACY_DIST_APP_PATH" "$DMG_PATH"
 
 echo "[BUILD] Creating local Release app in $DERIVED_DATA_PATH"
 xcodebuild build \
@@ -32,12 +32,9 @@ if [[ ! -d "$BUILD_APP_PATH" ]]; then
     exit 1
 fi
 
-echo "[BUILD] Copying Release app to $DIST_APP_PATH"
-/usr/bin/ditto --noqtn "$BUILD_APP_PATH" "$DIST_APP_PATH"
-
 echo "[BUILD] Packaging DMG to $DMG_PATH"
-bash "$ROOT_DIR/build_dmg.sh" "$DIST_APP_PATH" "Tools-Cat.dmg" "Tools Cat"
+bash "$ROOT_DIR/build_dmg.sh" "$BUILD_APP_PATH" "Tools-Cat.dmg" "Tools Cat"
 
-echo "[DONE] Release app copied to $DIST_APP_PATH"
+echo "[DONE] Release app built at $BUILD_APP_PATH"
 echo "[DONE] Friend-share DMG created at $DMG_PATH"
 echo "[NOTE] This build is not notarized. Friends may need to right-click open the app or remove quarantine manually."

@@ -28,7 +28,6 @@ sh ./release.sh
 
 运行过程中还会保留：
 - `build/DerivedData/Build/Products/Release/Tools Cat.app`
-- `dist/Tools Cat.app`
 
 完整的运行说明、限制和朋友侧打开方式见：
 - `docs/release/signing-readiness.md`

@@ -10,7 +10,7 @@ rg -q 'CODE_SIGNING_ALLOWED=NO' release.sh
 rg -q 'CODE_SIGNING_REQUIRED=NO' release.sh
 rg -q 'build_dmg\.sh' release.sh
 rg -q 'Tools-Cat\.dmg' release.sh
-rg -q '/usr/bin/ditto --noqtn "\$BUILD_APP_PATH" "\$DIST_APP_PATH"' release.sh
+rg -q 'build_dmg\.sh" "\$BUILD_APP_PATH" "Tools-Cat\.dmg" "Tools Cat"' release.sh
 ! rg -q 'clean build' release.sh
 ! rg -q 'xcodebuild -exportArchive' release.sh
 ! rg -q 'notarize-dmg\.sh' release.sh
