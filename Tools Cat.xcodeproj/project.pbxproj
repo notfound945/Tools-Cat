@@ -32,38 +32,32 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F6E3B0E42EA4A159002D64F7 /* Tools Cat */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			explicitFileTypes = {
 				DeviceLibraryManagementPresentation.swift = sourcecode.swift;
+				DeviceLibrarySessionModel.swift = sourcecode.swift;
 				KeepAwakeCountdownScheduler.swift = sourcecode.swift;
 				KeepAwakeDurationManagementPresentation.swift = sourcecode.swift;
 				KeepAwakeDurationManagementSessionModel.swift = sourcecode.swift;
 				KeepAwakeDurationManagementView.swift = sourcecode.swift;
 				KeepAwakeDurationManagementWindow.swift = sourcecode.swift;
+				KeepAwakeDurationPreset.swift = sourcecode.swift;
 				KeepAwakeDurationRepository.swift = sourcecode.swift;
 				KeepAwakeDurationStore.swift = sourcecode.swift;
-				KeepAwakeDurationPreset.swift = sourcecode.swift;
-				ManagedKeepAwakeDuration.swift = sourcecode.swift;
 				KeepAwakePresentation.swift = sourcecode.swift;
 				KeepAwakeSessionModel.swift = sourcecode.swift;
+				ManagedKeepAwakeDuration.swift = sourcecode.swift;
 				ManualMACValidator.swift = sourcecode.swift;
 				SavedDevice.swift = sourcecode.swift;
 				SavedDeviceLibraryStore.swift = sourcecode.swift;
 				SavedDeviceRepository.swift = sourcecode.swift;
-				DeviceLibrarySessionModel.swift = sourcecode.swift;
 				WOLSessionModel.swift = sourcecode.swift;
 				WakeSendPresentation.swift = sourcecode.swift;
 			};
-			explicitFolders = (
-			);
 			path = "Tools Cat";
 			sourceTree = "<group>";
 		};
 		F6E3B0F22EA4A15A002D64F7 /* Tools CatTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			explicitFileTypes = {
 				DeviceLibraryManagementPresentationTests.swift = sourcecode.swift;
 				DeviceLibrarySessionModelTests.swift = sourcecode.swift;
@@ -74,15 +68,13 @@
 				KeepAwakeSessionModelTests.swift = sourcecode.swift;
 				MACAddressValidatorTests.swift = sourcecode.swift;
 				SavedDeviceRepositoryTests.swift = sourcecode.swift;
-				StatusBarControllerKeepAwakeMenuTests.swift = sourcecode.swift;
 				StatusBarControllerEntryFlowTests.swift = sourcecode.swift;
+				StatusBarControllerKeepAwakeMenuTests.swift = sourcecode.swift;
 				StatusBarControllerMenuPolishTests.swift = sourcecode.swift;
 				StatusBarControllerWakeMenuTests.swift = sourcecode.swift;
 				WOLSendPresentationTests.swift = sourcecode.swift;
 				WOLSessionModelTests.swift = sourcecode.swift;
 			};
-			explicitFolders = (
-			);
 			path = "Tools CatTests";
 			sourceTree = "<group>";
 		};
@@ -438,13 +430,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Tools Cat/Tools_Cat.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZHCR53V5HX;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
-				CODE_SIGN_ENTITLEMENTS = "Tools Cat/Tools_Cat.entitlements";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSUIElement = 1;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -453,8 +447,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_MODULE_NAME = Tools_Cat;
 				PRODUCT_BUNDLE_IDENTIFIER = "cn.notfound945.Tools-Cat";
+				PRODUCT_MODULE_NAME = Tools_Cat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -471,15 +465,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Tools Cat/Tools_Cat.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = Y2YJ48R9GL;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZHCR53V5HX;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
-				CODE_SIGN_ENTITLEMENTS = "Tools Cat/Tools_Cat.entitlements";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSUIElement = 1;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -488,8 +482,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_MODULE_NAME = Tools_Cat;
 				PRODUCT_BUNDLE_IDENTIFIER = "cn.notfound945.Tools-Cat";
+				PRODUCT_MODULE_NAME = Tools_Cat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
