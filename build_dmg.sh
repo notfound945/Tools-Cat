@@ -45,3 +45,4 @@ hdiutil create \
   "$OUT_PATH"
 
 echo "[DMG] Done: $OUT_PATH"
+echo "[DMG] Note: this DMG is for friend sharing without notarization. Users may need to right-click open the app or remove quarantine manually."

@@ -5,55 +5,39 @@ ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT="Tools Cat.xcodeproj"
 SCHEME="Tools Cat"
 CONFIGURATION="Release"
-ARCHIVE_PATH="$ROOT_DIR/build/archive/Tools Cat.xcarchive"
-EXPORT_OPTIONS_TEMPLATE="$ROOT_DIR/scripts/release/export-options-developer-id.plist.template"
-EXPORT_OPTIONS_PATH="$ROOT_DIR/build/export-options/developer-id.plist"
-EXPORT_PATH="$ROOT_DIR/dist/export"
-SIGNED_APP_PATH="$EXPORT_PATH/Tools Cat.app"
+DERIVED_DATA_PATH="$ROOT_DIR/build/DerivedData"
+BUILD_APP_PATH="$DERIVED_DATA_PATH/Build/Products/$CONFIGURATION/Tools Cat.app"
+DIST_APP_PATH="$ROOT_DIR/dist/Tools Cat.app"
 DMG_PATH="$ROOT_DIR/dist/Tools-Cat.dmg"
 
 cd "$ROOT_DIR"
 
 bash "$ROOT_DIR/scripts/release/preflight-signing.sh"
 
-mkdir -p "$ROOT_DIR/build/archive" "$ROOT_DIR/build/export-options" "$ROOT_DIR/dist"
-rm -rf "$ARCHIVE_PATH" "$EXPORT_PATH" "$DMG_PATH"
+mkdir -p "$ROOT_DIR/build" "$ROOT_DIR/dist"
+rm -rf "$DERIVED_DATA_PATH" "$DIST_APP_PATH" "$DMG_PATH"
 
-sed "s/__TEAM_ID__/$RELEASE_TEAM_ID/g" "$EXPORT_OPTIONS_TEMPLATE" >"$EXPORT_OPTIONS_PATH"
-plutil -lint "$EXPORT_OPTIONS_PATH" >/dev/null
-
-echo "[BUILD] Release team: $RELEASE_TEAM_ID"
-echo "[BUILD] Release identity: $RELEASE_SIGNING_IDENTITY"
-echo "[BUILD] Notary profile: $RELEASE_NOTARY_PROFILE"
-echo "[BUILD] Archiving signed app to $ARCHIVE_PATH"
-xcodebuild archive \
+echo "[BUILD] Creating local Release app in $DERIVED_DATA_PATH"
+xcodebuild build \
     -project "$PROJECT" \
     -scheme "$SCHEME" \
     -configuration "$CONFIGURATION" \
-    -destination "generic/platform=macOS" \
-    -archivePath "$ARCHIVE_PATH" \
-    DEVELOPMENT_TEAM="$RELEASE_TEAM_ID" \
-    CODE_SIGN_IDENTITY="$RELEASE_SIGNING_IDENTITY"
+    -destination "platform=macOS" \
+    -derivedDataPath "$DERIVED_DATA_PATH" \
+    CODE_SIGNING_ALLOWED=NO \
+    CODE_SIGNING_REQUIRED=NO
 
-echo "[BUILD] Exporting signed app to $EXPORT_PATH"
-xcodebuild -exportArchive \
-    -archivePath "$ARCHIVE_PATH" \
-    -exportPath "$EXPORT_PATH" \
-    -exportOptionsPlist "$EXPORT_OPTIONS_PATH"
+if [[ ! -d "$BUILD_APP_PATH" ]]; then
+    echo "[ERROR] Release app was not produced at $BUILD_APP_PATH" >&2
+    exit 1
+fi
 
-bash "$ROOT_DIR/scripts/release/inspect-signature.sh" "$SIGNED_APP_PATH"
+echo "[BUILD] Copying Release app to $DIST_APP_PATH"
+/usr/bin/ditto --noqtn "$BUILD_APP_PATH" "$DIST_APP_PATH"
 
-echo "[BUILD] Packaging signed DMG to $DMG_PATH"
-bash "$ROOT_DIR/build_dmg.sh" "$SIGNED_APP_PATH" "Tools-Cat.dmg" "Tools Cat"
+echo "[BUILD] Packaging DMG to $DMG_PATH"
+bash "$ROOT_DIR/build_dmg.sh" "$DIST_APP_PATH" "Tools-Cat.dmg" "Tools Cat"
 
-echo "[BUILD] Signing DMG at $DMG_PATH"
-codesign --force --sign "$RELEASE_SIGNING_IDENTITY" --timestamp "$DMG_PATH"
-
-bash "$ROOT_DIR/scripts/release/inspect-dmg-signature.sh" "$DMG_PATH"
-
-bash "$ROOT_DIR/scripts/release/notarize-dmg.sh" "$DMG_PATH"
-xcrun stapler staple "$DMG_PATH"
-bash "$ROOT_DIR/scripts/release/assess-notarized-dmg.sh" "$DMG_PATH"
-
-echo "[DONE] Signed app exported to $SIGNED_APP_PATH"
-echo "[DONE] Stapled DMG ready at $DMG_PATH"
+echo "[DONE] Release app copied to $DIST_APP_PATH"
+echo "[DONE] Friend-share DMG created at $DMG_PATH"
+echo "[NOTE] This build is not notarized. Friends may need to right-click open the app or remove quarantine manually."
