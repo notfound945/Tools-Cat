@@ -10,25 +10,25 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 
 ## Current State
 
-- Shipped: `v1.6 Distribution Hardening` is in progress after Phase 16 completed on 2026-04-16
+- Shipped: `v1.6 Distribution Hardening` is still active, but the milestone pivoted on 2026-04-17 away from Developer ID/notarized distribution toward explicit non-notarized friend sharing
 - Live product identity: `Tools Cat`
 - Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, stabilized direct-launch manager smokes, and a Phase 16 release-signing boundary that now exports a Developer ID signed `.app` with matching maintainer docs
-- Planning state: `v1.6 Distribution Hardening` has completed Phase 16 and is ready to move into Phase 17 signed-DMG notarization work
+- Planning state: the supported release contract is now a local Release app plus non-notarized DMG flow that friends may need to open manually
 
 ## Next Milestone Goals
 
-- Make `Tools Cat` installable for friends without requiring the user to visit macOS `隐私与安全性` to force-open the app.
-- Keep the milestone limited to release-chain hardening: signing, notarization, stapling, packaging, and verification.
+- Make `Tools Cat` easy to hand to friends even without Apple Developer Program membership.
+- Keep the milestone limited to release packaging, explicit first-launch instructions, and verification that distribution changes do not regress app behavior.
 - Preserve the current app behavior and avoid mixing new end-user features into the distribution milestone.
 
 ## Current Milestone: v1.6 Distribution Hardening
 
-**Goal:** Make `Tools Cat` distributable to friends as a DMG-backed macOS app they can install directly, without manual security-approval workarounds.
+**Goal:** Make `Tools Cat` distributable to friends as a DMG-backed macOS app, while explicitly accepting that first launch may require a manual Gatekeeper workaround.
 
 **Target features:**
-- Add the required signing chain for distributable release artifacts.
-- Notarize the shipped app and final DMG, then staple the notarization result to the deliverables.
-- Upgrade the current `release.sh` / `build_dmg.sh` flow so it produces a friend-installable release artifact and documents the verification steps clearly.
+- Keep one deterministic `release.sh` path that builds a local Release app and packages `dist/Tools-Cat.dmg`.
+- Document the friend-side first-launch steps honestly, including right-click open or quarantine removal if needed.
+- Upgrade the current `release.sh` / `build_dmg.sh` flow so it produces a shareable release artifact and documents the verification steps clearly.
 - Keep this milestone release-only; no product-surface expansion.
 
 ## Latest Shipped Milestone: v1.5 Device Library UI Parity
@@ -114,8 +114,8 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 
 ### Active
 
-- [ ] Friends can install `Tools Cat` directly from the distributed artifact without using `仍要打开` or similar manual security overrides
-- [ ] The release flow produces signed, notarized, and stapled deliverables with a repeatable local verification path
+- [ ] Friends can receive `Tools Cat` as a DMG-backed artifact together with accurate first-launch instructions, even if manual Gatekeeper approval is still required
+- [ ] The release flow produces a deterministic local Release app and DMG without requiring Apple Developer Program credentials
 - [ ] Distribution hardening does not change the shipped wake or keep-awake product behavior
 
 ### Out of Scope
@@ -125,7 +125,7 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 - Broad marketplace-style device discovery or fleet management — the goal is quick access to a small personal set of devices
 - Restoring root-level recent-device wake shortcuts outside the shipped `快速 WOL` / `发送 WOL …` structure during the completed hardening cycle — deferred and tracked as `CONV-04`
 - Reopening shipped duration data-model or wake-menu truth without a dedicated future milestone — those contracts already shipped and should stay closed by default
-- Adding new end-user features during the distribution milestone — this pass is only about release-chain hardening and installability
+- Adding new end-user features during the distribution milestone — this pass is only about release packaging and installability guidance
 - Pulling in a third-party component library before exhausting the native macOS list/table components — native consistency and lower maintenance take priority
 - Public-distribution polish as the primary milestone — signing/notarization matters later, but current scope is daily-use quality first
 
@@ -153,7 +153,7 @@ The v1.4 milestone is intentionally narrower again: it does not reopen duration 
 
 The v1.5 milestone then brought the `设备库` manager up to that same native-management bar: device browsing now uses a real list surface, add/edit stays in a retained shared sheet, row actions communicate edit versus delete semantics immediately, and the existing saved-device CRUD, reorder, and direct-launch flows stayed truthful.
 
-The v1.6 milestone is intentionally operational rather than product-facing: the app already works for daily use, but the release chain still stops at an unsigned, unnotarized DMG that friends must manually allow in macOS security settings. This milestone exists to close that distribution gap without reopening app behavior.
+The v1.6 milestone is intentionally operational rather than product-facing: the app already works for daily use, but the release chain still needs a deterministic friend-share artifact and truthful install guidance. On 2026-04-17, the milestone pivoted away from Developer ID/notarization because the maintainer chose not to join Apple Developer Program. The supported outcome is now a non-notarized DMG plus explicit first-launch instructions, not a fully Gatekeeper-approved release chain.
 
 Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, module, bundle IDs, regression scripts, release packaging defaults, and active docs now agree on one product identity. Historical workflow-stability exception: the planning artifact directory remains `.planning/phases/09-mac-os-swiss-knife-tools-cat/`.
 
@@ -189,6 +189,7 @@ Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, mo
 | Prefer native macOS list components and semantic button colors for duration-manager polish | This milestone is visual refinement of an existing native surface, so platform-consistent affordances beat extra UI-library complexity | Validated in Phase 14 |
 | Keep device-library polish presentation-only by deriving add/edit presentation from `currentFormMode` and reusing the duration-manager's list and action semantics | The milestone only needed cross-surface parity, not a new saved-device data or routing model | Validated in Phase 15 |
 | Keep v1.6 limited to release-chain hardening so installability improves without reopening shipped runtime behavior | The immediate user problem is distribution friction, not missing app capability | Active |
+| Pivot v1.6 away from Developer ID/notarization and toward explicit non-notarized friend sharing | The maintainer chose not to join Apple Developer Program, so the release flow must stay usable without paid Apple distribution features | Active |
 
 ## Evolution
 
@@ -208,4 +209,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-16 after completing Phase 16*
+*Last updated: 2026-04-17 after pivoting v1.6 to non-notarized friend distribution*

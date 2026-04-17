@@ -5,7 +5,7 @@
 
 ## v1 Requirements
 
-Requirements for the v1.6 distribution-hardening milestone. This milestone stays release-only: the goal is to make `Tools Cat` installable for friends through a signed, notarized DMG flow without reopening the shipped wake or keep-awake feature surface.
+Requirements for the v1.6 distribution-hardening milestone. This milestone stays release-only. On 2026-04-17, the maintainer chose not to join Apple Developer Program, so the current milestone truth pivoted from signed/notarized distribution to explicit non-notarized friend sharing without reopening the shipped wake or keep-awake feature surface.
 
 ### Distribution Signing
 
@@ -20,8 +20,8 @@ Requirements for the v1.6 distribution-hardening milestone. This milestone stays
 ### Release Operations
 
 - [x] **DIST-05**: Repo documentation explains the required signing identity, notarization credential setup, and release preflight without storing sensitive credentials in the repo
-- [ ] **DIST-06**: Repo provides a repeatable local verification path that proves the shipped artifact is ready for friend installation without manual `隐私与安全性` overrides
-- [ ] **DIST-07**: Distribution hardening does not change the shipped WOL and keep-awake behavior beyond the release-chain work required for signing and notarization
+- [ ] **DIST-06**: Repo provides a repeatable local verification path for the shipped non-notarized artifact, including the exact manual-open steps friends may need
+- [ ] **DIST-07**: Distribution hardening does not change the shipped WOL and keep-awake behavior beyond the release/share work needed for friend distribution
 
 ## v2 Requirements
 
@@ -41,6 +41,7 @@ Explicitly excluded to keep v1.6 focused on friend-installable direct distributi
 |---------|--------|
 | New end-user WOL or keep-awake features during the release-hardening pass | This milestone is only about distribution and installability |
 | Mac App Store submission or review preparation | The target outcome is direct friend-to-friend distribution, not App Store release |
+| Requiring Apple Developer Program membership for the default release flow | The current project goal explicitly accepts non-notarized friend sharing instead |
 | Auto-update framework integration | Useful later, but not required to solve manual install approval friction |
 | CI/CD-first release automation | A stable local signing/notarization flow should exist before remote automation is added |
 
@@ -65,4 +66,4 @@ Phase mapping assigned during roadmap creation.
 
 ---
 *Requirements defined: 2026-04-16*
-*Last updated: 2026-04-16 after completing Phase 16*
+*Last updated: 2026-04-17 after pivoting to non-notarized friend distribution*

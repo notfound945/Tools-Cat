@@ -12,7 +12,7 @@
 
 ## Overview
 
-This milestone is intentionally operational rather than product-facing. `Tools Cat` already ships the wake and keep-awake behavior it needs; the gap is that the current DMG is explicitly not notarized and still requires manual Gatekeeper approval. The milestone goal is to keep the existing DMG distribution shape, but harden it into a friend-installable release chain with Developer ID signing, notarization, stapling, and explicit verification.
+This milestone is intentionally operational rather than product-facing. `Tools Cat` already ships the wake and keep-awake behavior it needs; the gap is that friend distribution still needs one deterministic artifact and truthful first-launch guidance. On 2026-04-17, the milestone pivoted away from Developer ID signing and notarization because the maintainer chose not to join Apple Developer Program. The supported outcome is now a non-notarized DMG with explicit manual-open guidance, not a fully Gatekeeper-approved release chain.
 
 ## Phases
 
@@ -21,8 +21,8 @@ This milestone is intentionally operational rather than product-facing. `Tools C
 - v1.6 therefore starts at Phase 16
 
 - [x] **Phase 16: Release Signing Readiness** - Make the project and release flow produce a distribution-signed app with clear signing/notary prerequisites. (completed 2026-04-16)
-- [ ] **Phase 17: Signed DMG Notarization Pipeline** - Upgrade packaging so the shipped DMG is signed, notarized, stapled, and release-scripted. (human verification pending)
-- [ ] **Phase 18: Distribution Verification Closure** - Close the milestone with repeatable verification and regression proof that release hardening did not change shipped app behavior.
+- [ ] **Phase 17: Signed DMG Notarization Pipeline** - Historical notarization attempt; superseded by the 2026-04-17 milestone pivot to non-notarized friend sharing.
+- [ ] **Phase 18: Distribution Verification Closure** - Close the milestone with repeatable verification and regression proof for the non-notarized friend-share release flow.
 
 ## Phase Details
 
@@ -40,24 +40,24 @@ Plans:
   3. The repo documents the required signing identity, notarization credential bootstrap, and release preflight without storing sensitive credentials in source control.
 
 ### Phase 17: Signed DMG Notarization Pipeline
-**Goal**: The release flow produces the final signed `Tools-Cat.dmg`, notarizes it with `notarytool`, staples the result, and fails clearly on any notarization rejection.
+**Goal**: Historical goal only. This phase previously targeted a fully notarized DMG pipeline, but that path is no longer the supported release contract because the milestone pivoted away from Apple Developer Program dependencies.
 **Depends on**: Phase 16
 **Requirements**: DIST-02, DIST-03, DIST-04
 **Plans**: 0/0 plans complete
 **Success Criteria** (what must be TRUE):
-  1. The release process outputs a Developer ID signed `Tools-Cat.dmg` that contains the distributable app bundle.
-  2. The release process can submit the final DMG to Apple with `notarytool`, wait for completion, and surface actionable failure information when notarization is rejected.
-  3. A successful release staples the notarization ticket to the DMG and the final artifact passes local Gatekeeper assessment.
+  1. Historical phase artifacts remain available for reference, but they are no longer the current release truth.
+  2. The supported release contract is defined by the non-notarized friend-share flow in `release.sh` and the updated release docs.
+  3. Future work should not assume Apple Developer Program access unless the maintainer opts back into that path explicitly.
 
 ### Phase 18: Distribution Verification Closure
-**Goal**: The repo closes the milestone with a repeatable verification path that proves friend installability without regressing shipped WOL or keep-awake behavior.
+**Goal**: The repo closes the milestone with a repeatable verification path for the non-notarized friend-share artifact, while proving the release-flow pivot does not regress shipped WOL or keep-awake behavior.
 **Depends on**: Phase 17
 **Requirements**: DIST-06, DIST-07
 **Plans**: 0/0 plans complete
 **Success Criteria** (what must be TRUE):
-  1. The repo provides a repeatable local verification checklist that proves the shipped artifact is ready for friend installation without manual `隐私与安全性` overrides.
+  1. The repo provides a repeatable local verification checklist for the shipped non-notarized artifact, including the exact manual-open steps friends may need.
   2. The verification boundary includes a focused regression check showing that WOL and keep-awake behavior remain unchanged by the release hardening work.
-  3. Release-facing docs and validation artifacts agree on how to verify installability and what still requires a fresh-machine/manual smoke.
+  3. Release-facing docs and validation artifacts agree on the manual-install expectation and what still requires a fresh-machine/manual smoke.
 
 ## Progress
 
