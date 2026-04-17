@@ -43,7 +43,7 @@ Plans:
 **Goal**: Historical goal only. This phase previously targeted a fully notarized DMG pipeline, but that path is no longer the supported release contract because the milestone pivoted away from Apple Developer Program dependencies.
 **Depends on**: Phase 16
 **Requirements**: DIST-02, DIST-03, DIST-04
-**Plans**: 0/0 plans complete
+**Plans**: 2/2 plans complete (historical)
 **Success Criteria** (what must be TRUE):
   1. Historical phase artifacts remain available for reference, but they are no longer the current release truth.
   2. The supported release contract is defined by the non-notarized friend-share flow in `release.sh` and the updated release docs.
@@ -67,5 +67,5 @@ Phases execute in numeric order: 16, 17, 18
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 16. Release Signing Readiness | 2/2 | Complete    | 2026-04-16 |
-| 17. Signed DMG Notarization Pipeline | 2/2 | Verification Pending | - |
+| 17. Signed DMG Notarization Pipeline | 2/2 | Superseded | 2026-04-17 |
 | 18. Distribution Verification Closure | 0/0 | Not started | - |

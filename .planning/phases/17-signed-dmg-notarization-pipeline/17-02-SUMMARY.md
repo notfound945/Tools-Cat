@@ -79,7 +79,7 @@ None.
 None - no new external service configuration was added beyond the existing Keychain-backed notary profile bootstrap.
 
 ## Next Phase Readiness
-Phase 17 implementation is code-complete and all automated gates are green. Final phase verification still needs one credentialed maintainer run of `sh ./release.sh` because this machine does not currently expose `RELEASE_TEAM_ID`, `RELEASE_SIGNING_IDENTITY`, or `RELEASE_NOTARY_PROFILE`.
+Phase 17 is preserved as completed historical implementation work, but its original Apple-backed verification requirement was superseded on 2026-04-17 when v1.6 pivoted to non-notarized friend sharing. The active next step is Phase 18 verification for the friend-share DMG and its manual first-launch guidance, not a credentialed notarization rerun.
 
 ---
 *Phase: 17-signed-dmg-notarization-pipeline*

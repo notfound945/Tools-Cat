@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Distribution Hardening
 status: verifying
-stopped_at: Awaiting credentialed notarization UAT for Phase 17
-last_updated: "2026-04-16T10:28:37.234Z"
-last_activity: 2026-04-16
+stopped_at: Phase 17 notarization route superseded by 2026-04-17 friend-share pivot
+last_updated: "2026-04-17T02:20:00Z"
+last_activity: 2026-04-17 -- Pivoted v1.6 away from notarization to non-notarized friend sharing
 progress:
   total_phases: 3
   completed_phases: 1
@@ -17,19 +17,19 @@ progress:
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-04-16)
+See: `.planning/PROJECT.md` (updated 2026-04-17)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Phase 17 — signed-dmg-notarization-pipeline
+**Current focus:** Phase 18 — distribution-verification-closure
 
 ## Current Position
 
-Phase: 17 (signed-dmg-notarization-pipeline) — VERIFYING
-Plan: 2 of 2
-Status: Awaiting credentialed notarization UAT
-Last activity: 2026-04-16
+Phase: 18 (distribution-verification-closure) — NOT STARTED
+Plan: Not started
+Status: Ready for planning/execution after the 2026-04-17 friend-share pivot
+Last activity: 2026-04-17 -- Pivoted v1.6 away from notarization to non-notarized friend sharing
 
-Progress: [██████████] 2/2 currently planned plans complete
+Progress: [██████████] 4/4 historical/current plans complete before Phase 18 planning
 
 ## Performance Metrics
 
@@ -45,14 +45,14 @@ Progress: [██████████] 2/2 currently planned plans complete
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 16 | 2 | 5min | 2.5min |
-| 17 | 0 | - | - |
+| 17 | 2 | 11min | 5.5min |
 | 18 | 0 | - | - |
 
 **Recent Trend:**
 
-- Last 5 plans: Phase 16-release-signing-readiness Plan 01 (3min), Plan 02 (2min)
-- Trend: Phase 16 completed
-- v1.6 is ready to move into Phase 17 planning/execution.
+- Last 5 plans: Phase 16-release-signing-readiness Plan 01 (3min), Plan 02 (2min), Phase 17-signed-dmg-notarization-pipeline Plan 01 (8min), Plan 02 (3min)
+- Trend: Phase 17 completed historically, then superseded by the 2026-04-17 friend-share pivot
+- v1.6 is ready to move into Phase 18 planning/execution.
 
 | Phase 16-release-signing-readiness P01 | 3min | 2 tasks | 6 files |
 | Phase 16-release-signing-readiness P02 | 2min | 2 tasks | 3 files |
@@ -63,7 +63,7 @@ Progress: [██████████] 2/2 currently planned plans complete
 
 - Active milestone: `v1.6 Distribution Hardening`
 - Latest archived milestone: `v1.5 Device Library UI Parity`
-- Scope planned: friend-installable signed/notarized distribution without manual Gatekeeper overrides
+- Scope planned: deterministic non-notarized friend-share DMG plus explicit first-launch guidance and follow-up verification
 - Active roadmap: `.planning/ROADMAP.md`
 - Working files:
   - `.planning/PROJECT.md`
@@ -100,6 +100,7 @@ The latest completed milestone established these durable decisions:
 - [Phase 17]: Keep build_dmg.sh limited to deterministic staging plus hdiutil create, leaving signing and notarization orchestration to release.sh. — This keeps packaging deterministic and makes the signed artifact boundary explicit for later notary and assessment steps.
 - [Phase 17]: Persist notary submission metadata and rejection logs under build/notary so Apple failures are actionable without rerunning uploads. — Phase 17 depends on deterministic failure evidence, not transient terminal output.
 - [Phase 17]: Keep notarization submission and post-staple assessment in separate helpers so the release flow stays readable and statically verifiable. — The repo now verifies the notarization seam via shell gates, so each concern needs a small, grepable boundary.
+- [Phase 17/18 pivot]: Treat the notarized DMG path as historical work and make non-notarized friend sharing the current release truth because the maintainer chose not to join Apple Developer Program.
 
 ### Roadmap Evolution
 
@@ -115,6 +116,6 @@ The latest completed milestone established these durable decisions:
 
 ## Session Continuity
 
-Last session: 2026-04-16T10:28:37.232Z
-Stopped at: Awaiting credentialed notarization UAT for Phase 17
+Last session: 2026-04-17T02:20:00Z
+Stopped at: Phase 17 notarization route superseded by 2026-04-17 friend-share pivot
 Resume file: None

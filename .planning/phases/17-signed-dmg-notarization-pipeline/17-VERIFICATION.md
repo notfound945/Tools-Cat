@@ -1,7 +1,7 @@
 ---
 phase: 17-signed-dmg-notarization-pipeline
 verified: 2026-04-16T10:25:23Z
-status: human_needed
+status: superseded
 score: 3/3 must-haves verified
 ---
 
@@ -9,8 +9,12 @@ score: 3/3 must-haves verified
 
 **Phase Goal:** The release flow produces the final signed `Tools-Cat.dmg`, notarizes it with `notarytool`, staples the result, and fails clearly on any notarization rejection.
 **Verified:** 2026-04-16T10:25:23Z
-**Status:** human_needed
-**Re-verification:** No - automated checks passed on the first verification pass, but the real Apple notarization run is still pending because this machine has no `RELEASE_*` credentials loaded.
+**Status:** superseded
+**Re-verification:** No - this report records the 2026-04-16 notarization implementation attempt, but the pending Apple-backed verification was superseded on 2026-04-17 when the milestone pivoted to non-notarized friend sharing.
+
+## Superseded Note
+
+On 2026-04-17, the maintainer chose not to join Apple Developer Program. That decision replaced the notarized DMG path as the active milestone truth. This file is kept as a historical verification snapshot of the notarization work that was built, but its pending human verification is no longer the current blocker for v1.6.
 
 ## Goal Achievement
 
@@ -29,7 +33,7 @@ score: 3/3 must-haves verified
 | Artifact | Expected | Status | Details |
 | --- | --- | --- | --- |
 | `17-01-SUMMARY.md` | Signed DMG seam completion summary | ✓ VERIFIED | Exists and records the signed DMG packaging boundary that Wave 2 builds on. |
-| `17-02-SUMMARY.md` | Notarization/docs completion summary | ✓ VERIFIED | Exists and records the new helpers, docs contract, and pending credentialed verification boundary. |
+| `17-02-SUMMARY.md` | Notarization/docs completion summary | ✓ VERIFIED | Exists and records the new helpers, docs contract, and the later 2026-04-17 supersession of the credentialed verification boundary. |
 | `release.sh` | Canonical release orchestration through notarization and local assessment | ✓ VERIFIED | Exists and contains the expected DMG build, sign, notarize, staple, and assess flow. |
 | `scripts/release/notarize-dmg.sh` | Deterministic notary submit/wait/log helper | ✓ VERIFIED | Exists and contains `xcrun notarytool submit`, `plutil -extract id`, `plutil -extract status`, and `xcrun notarytool log`. |
 | `scripts/release/assess-notarized-dmg.sh` | Post-staple local assessment helper | ✓ VERIFIED | Exists and runs both `xcrun stapler validate` and `spctl --assess --type open -v`. |
@@ -43,7 +47,7 @@ score: 3/3 must-haves verified
 | Requirement | Source Plan | Description | Status | Evidence |
 | --- | --- | --- | --- | --- |
 | `DIST-02` | `17-01-PLAN.md` | Maintainer can produce a Developer ID signed `Tools-Cat.dmg` that contains the distributable app bundle | ✓ SATISFIED | [`release.sh`](../../../release.sh), [`build_dmg.sh`](../../../build_dmg.sh), [`scripts/release/inspect-dmg-signature.sh`](../../../scripts/release/inspect-dmg-signature.sh), and passing [`scripts/release/verify-release-readiness.sh`](../../../scripts/release/verify-release-readiness.sh). |
-| `DIST-03` | `17-02-PLAN.md` | Maintainer can submit the final DMG to Apple with `notarytool`, wait for completion, and get actionable failure information when notarization is rejected | ✓ SATISFIED | [`scripts/release/notarize-dmg.sh`](../../../scripts/release/notarize-dmg.sh) plus passing [`scripts/release/verify-release-notarization.sh`](../../../scripts/release/verify-release-notarization.sh); final live submission still requires the credentialed maintainer run tracked below. |
+| `DIST-03` | `17-02-PLAN.md` | Maintainer can submit the final DMG to Apple with `notarytool`, wait for completion, and get actionable failure information when notarization is rejected | ✓ SATISFIED | [`scripts/release/notarize-dmg.sh`](../../../scripts/release/notarize-dmg.sh) plus passing [`scripts/release/verify-release-notarization.sh`](../../../scripts/release/verify-release-notarization.sh); the former live credentialed submission boundary is now historical-only after the 2026-04-17 pivot. |
 | `DIST-04` | `17-02-PLAN.md` | The DMG sent to friends is stapled with a successful notarization ticket and passes local Gatekeeper assessment | ✓ SATISFIED | [`release.sh`](../../../release.sh) runs `xcrun stapler staple`, [`scripts/release/assess-notarized-dmg.sh`](../../../scripts/release/assess-notarized-dmg.sh) runs both post-success checks, and the docs/static gates align to the same contract. |
 
 Orphaned requirements: None. All Phase 17 requirement IDs claimed by plan frontmatter are accounted for above.
@@ -56,7 +60,7 @@ Orphaned requirements: None. All Phase 17 requirement IDs claimed by plan frontm
 | Notarization/stapling seam gate | `bash scripts/release/verify-release-notarization.sh` | Passed | ✓ PASS |
 | Public release docs gate | `bash scripts/release/verify-release-docs.sh` | Passed | ✓ PASS |
 | Focused regression slice | `bash scripts/release/verify-release-readiness.sh && bash scripts/release/verify-release-notarization.sh && bash scripts/release/verify-release-docs.sh && xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/DeviceLibrarySessionModelTests' -only-testing:'Tools CatTests/DeviceLibraryManagementPresentationTests' -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithEmptyDeviceLibraryShowsPolishedEmptyState' -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithSeededDeviceLibraryShowsManagementWindow' -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithSeededDeviceLibraryShowsManagementListSurface'` | 13 tests passed with 0 failures | ✓ PASS |
-| Credentialed notarized release run | `sh ./release.sh` with `RELEASE_TEAM_ID`, `RELEASE_SIGNING_IDENTITY`, and `RELEASE_NOTARY_PROFILE` exported | Not run here because all three environment variables are currently unset on this machine | HUMAN NEEDED |
+| Credentialed notarized release run | `sh ./release.sh` with `RELEASE_TEAM_ID`, `RELEASE_SIGNING_IDENTITY`, and `RELEASE_NOTARY_PROFILE` exported | Historical only. This check was not completed before the 2026-04-17 milestone pivot away from notarization. | SUPERSEDED |
 
 ### Anti-Patterns Found
 
@@ -66,17 +70,11 @@ Orphaned requirements: None. All Phase 17 requirement IDs claimed by plan frontm
 
 ### Human Verification Required
 
-One phase-owned manual boundary remains before this phase can be marked fully complete:
-
-1. Export `RELEASE_TEAM_ID`, `RELEASE_SIGNING_IDENTITY`, and `RELEASE_NOTARY_PROFILE`.
-2. Run `sh ./release.sh`.
-3. Confirm the notary submission is accepted, `xcrun stapler validate dist/Tools-Cat.dmg` passes, and `spctl --assess --type open -v dist/Tools-Cat.dmg` succeeds.
-
-This machine currently reports all three `RELEASE_*` variables as unset, so the real Apple-backed release proof could not be executed inside this run.
+None for the current milestone truth. The only outstanding item here was the credentialed Apple notarization run, and that requirement was superseded on 2026-04-17 when the release contract pivoted to non-notarized friend sharing.
 
 ### Gaps Summary
 
-No implementation gaps were found in the Phase 17 code or documentation. The only remaining closure item is the credentialed maintainer release run captured in `17-HUMAN-UAT.md`.
+No implementation gaps were found in the historical Phase 17 code or documentation. The former notarization UAT blocker no longer applies to the active milestone because the release contract was replaced by the non-notarized friend-share flow.
 
 ---
 

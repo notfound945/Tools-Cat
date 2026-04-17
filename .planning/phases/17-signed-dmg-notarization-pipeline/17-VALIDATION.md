@@ -1,7 +1,7 @@
 ---
 phase: 17
 slug: signed-dmg-notarization-pipeline
-status: draft
+status: superseded
 nyquist_compliant: false
 wave_0_complete: false
 created: 2026-04-16
@@ -10,6 +10,8 @@ created: 2026-04-16
 # Phase 17 — Validation Strategy
 
 > Per-phase validation contract for feedback sampling during execution.
+
+> Historical only: this validation plan was authored for the notarization path that was superseded on 2026-04-17 when v1.6 pivoted to non-notarized friend sharing. Pending boxes below are retained as execution history, not as current milestone work.
 
 ---
 
