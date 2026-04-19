@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.6
-milestone_name: Distribution Hardening
-status: milestone_archived
-stopped_at: v1.6 archived; next step is starting a new milestone
-last_updated: "2026-04-19T03:40:02.735Z"
-last_activity: 2026-04-19 -- Archived v1.6 Distribution Hardening
+milestone: v1.7
+milestone_name: Convenience Shortcuts
+status: defining_requirements
+stopped_at: Milestone v1.7 initialized; next step is defining requirements and phases
+last_updated: "2026-04-19T04:05:00Z"
+last_activity: 2026-04-19 -- Started v1.7 Convenience Shortcuts
 progress:
   total_phases: 3
-  completed_phases: 3
-  total_plans: 5
-  completed_plans: 5
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -20,16 +20,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-19)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Start the next milestone after archiving v1.6
+**Current focus:** Phase 19 — recent-wake-shortcuts
 
 ## Current Position
 
-Phase: None active
-Plan: None active
-Status: v1.6 archived; ready for `$gsd-new-milestone`
-Last activity: 2026-04-19 -- Archived v1.6 Distribution Hardening
+Phase: 19 (recent-wake-shortcuts) — NOT STARTED
+Plan: Not started
+Status: Defining requirements and roadmap for v1.7
+Last activity: 2026-04-19 -- Started v1.7 Convenience Shortcuts
 
-Progress: [██████████] 5/5 historical/current milestone plans complete
+Progress: [----------] 0/3 milestone phases complete
 
 ## Performance Metrics
 
@@ -38,7 +38,7 @@ Progress: [██████████] 5/5 historical/current milestone plan
 - Total plans completed: 5
 - Average duration: 3.8 min
 - Total execution time: 0.32 hours
-- Current milestone plans completed: 5
+- Current milestone plans completed: 0
 
 **By Phase:**
 
@@ -51,8 +51,8 @@ Progress: [██████████] 5/5 historical/current milestone plan
 **Recent Trend:**
 
 - Last 5 plans: Phase 16-release-signing-readiness Plan 01 (3min), Plan 02 (2min), Phase 17-signed-dmg-notarization-pipeline Plan 01 (8min), Plan 02 (3min), Phase 18-distribution-verification-closure Plan 01 (3min)
-- Trend: Phase 17 was superseded by the 2026-04-17 friend-share pivot, and Phase 18 closed the replacement verification contract in one plan.
-- v1.6 is archived and the project is ready for the next milestone definition cycle.
+- Trend: v1.6 closed with one focused verification phase, and v1.7 now shifts back to product-surface convenience work.
+- Next execution target: Phase 19 will restore compact recent wake shortcuts on top of the existing shared wake session.
 
 | Phase 16-release-signing-readiness P01 | 3min | 2 tasks | 6 files |
 | Phase 16-release-signing-readiness P02 | 2min | 2 tasks | 3 files |
@@ -62,12 +62,13 @@ Progress: [██████████] 5/5 historical/current milestone plan
 
 ## Milestone Summary
 
-- Active milestone: none
+- Active milestone: `v1.7 Convenience Shortcuts`
 - Latest archived milestone: `v1.6 Distribution Hardening`
-- Scope delivered: deterministic non-notarized friend-share DMG, explicit first-launch guidance, and repeatable Phase 18 verification closure
-- Active roadmap: `.planning/ROADMAP.md` (all current milestones archived; no future milestone started yet)
+- Scope planned: compact recent wake shortcuts, one-off timed keep-awake, and richer managed-duration recognition
+- Active roadmap: `.planning/ROADMAP.md`
 - Working files:
   - `.planning/PROJECT.md`
+  - `.planning/REQUIREMENTS.md`
   - `.planning/ROADMAP.md`
   - `.planning/MILESTONES.md`
 - Latest shipped summary: `.planning/MILESTONES.md`
@@ -112,11 +113,11 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Active milestone theme: `DIST-01` distribution hardening.
-- Deferred themes after v1.6: `CONV-04`, `AWAKE-12`, `AWAKE-13`.
+- Active milestone theme: `CONV-04`, `AWAKE-12`, `AWAKE-13`.
+- Deferred beyond v1.7: `CONV-01`, `CONV-02`, `CONV-03`.
 
 ## Session Continuity
 
-Last session: 2026-04-17T02:20:00Z
-Stopped at: v1.6 archived; next step is `$gsd-new-milestone`
+Last session: 2026-04-19T04:05:00Z
+Stopped at: Milestone v1.7 initialized; next step is defining requirements and phases
 Resume file: None
