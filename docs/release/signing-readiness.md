@@ -51,12 +51,29 @@ Successful friend-share flow:
 2. `build_dmg.sh` packages the built app directly into `dist/Tools-Cat.dmg`.
 3. The maintainer sends the DMG to a friend together with first-launch instructions.
 
+## Automated verification
+
+After `sh ./release.sh` succeeds, run:
+
+```bash
+bash scripts/release/verify-distribution-closure.sh
+```
+
+This Phase 18 verification command composes the repo-side checks that should stay repeatable:
+
+1. `scripts/release/verify-release-readiness.sh` confirms the friend-share release contract still matches the current non-notarized DMG flow.
+2. `scripts/release/verify-release-docs.sh` confirms `README.md` and this runbook still agree on the release and manual-open story.
+3. `scripts/release/verify-friend-share-artifact.sh` mounts `dist/Tools-Cat.dmg` and proves the shipped artifact contains `Tools Cat.app` plus the `/Applications` shortcut.
+4. A focused regression slice reruns `Tools CatTests/WOLSessionModelTests`, `Tools CatTests/KeepAwakeSessionModelTests`, `Tools CatTests/KeepAwakeMenuStateTests`, and `scripts/run_menu_bar_verification_slice.sh` so WOL and keep-awake behavior stay unchanged by distribution hardening.
+
 ## Friend-side first launch
 
 Because this build is not notarized, friends should expect one of these paths on first launch:
 
-1. Preferred: drag the app into `/Applications`, then use “右键打开”.
-2. If Gatekeeper still blocks launch, remove the quarantine attribute manually:
+1. Open `Tools-Cat.dmg`.
+2. Drag `Tools Cat.app` into `/Applications`.
+3. In `/Applications`, launch the app with “右键打开”.
+4. If Gatekeeper still blocks launch, remove the quarantine attribute manually:
 
 ```bash
 xattr -dr com.apple.quarantine "/Applications/Tools Cat.app"
@@ -66,4 +83,4 @@ xattr -dr com.apple.quarantine "/Applications/Tools Cat.app"
 
 - This flow only promises a deterministic Release app and DMG for friend sharing.
 - It does not promise notarization, stapling, or Gatekeeper approval.
-- Fresh-machine install verification still belongs in the follow-up distribution-validation work.
+- Fresh-machine install verification and real friend-side Gatekeeper proof remain manual.

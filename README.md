@@ -29,6 +29,13 @@ sh ./release.sh
 运行过程中还会保留：
 - `build/DerivedData/Build/Products/Release/Tools Cat.app`
 
+发布后可运行：
+```bash
+bash scripts/release/verify-distribution-closure.sh
+```
+
+这个验证会静态检查 release/docs 合同、挂载 `dist/Tools-Cat.dmg` 确认其中包含 `Tools Cat.app` 和 `/Applications` 快捷方式，并重跑聚焦的 WOL / 常亮回归测试。
+
 完整的运行说明、限制和朋友侧打开方式见：
 - `docs/release/signing-readiness.md`
 
@@ -39,6 +46,7 @@ sh ./release.sh
 ```bash
 xattr -dr com.apple.quarantine "/Applications/Tools Cat.app"
 ```
+- 上面的脚本验证不等于 fresh-machine / 真实朋友侧 Gatekeeper 验证；那部分仍需要手工烟雾确认。
 
 ## 更名后的可选清理
 - 只建议在你确认 `Tools Cat` 首次启动成功、历史保存设备也已经迁移后，再做旧标识清理。

@@ -2,43 +2,43 @@
 gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Distribution Hardening
-status: verifying
-stopped_at: Phase 17 notarization route superseded by 2026-04-17 friend-share pivot
-last_updated: "2026-04-17T02:20:00Z"
-last_activity: 2026-04-17 -- Pivoted v1.6 away from notarization to non-notarized friend sharing
+status: milestone_archived
+stopped_at: v1.6 archived; next step is starting a new milestone
+last_updated: "2026-04-19T03:40:02.735Z"
+last_activity: 2026-04-19 -- Archived v1.6 Distribution Hardening
 progress:
   total_phases: 3
-  completed_phases: 1
-  total_plans: 4
-  completed_plans: 4
+  completed_phases: 3
+  total_plans: 5
+  completed_plans: 5
 ---
 
 # Project State
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-04-17)
+See: `.planning/PROJECT.md` (updated 2026-04-19)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Phase 18 — distribution-verification-closure
+**Current focus:** Start the next milestone after archiving v1.6
 
 ## Current Position
 
-Phase: 18 (distribution-verification-closure) — NOT STARTED
-Plan: Not started
-Status: Ready for planning/execution after the 2026-04-17 friend-share pivot
-Last activity: 2026-04-17 -- Pivoted v1.6 away from notarization to non-notarized friend sharing
+Phase: None active
+Plan: None active
+Status: v1.6 archived; ready for `$gsd-new-milestone`
+Last activity: 2026-04-19 -- Archived v1.6 Distribution Hardening
 
-Progress: [██████████] 4/4 historical/current plans complete before Phase 18 planning
+Progress: [██████████] 5/5 historical/current milestone plans complete
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 2
-- Average duration: 2.5 min
-- Total execution time: 0.08 hours
-- Current milestone plans completed: 2
+- Total plans completed: 5
+- Average duration: 3.8 min
+- Total execution time: 0.32 hours
+- Current milestone plans completed: 5
 
 **By Phase:**
 
@@ -46,28 +46,28 @@ Progress: [██████████] 4/4 historical/current plans complete
 |-------|-------|-------|----------|
 | 16 | 2 | 5min | 2.5min |
 | 17 | 2 | 11min | 5.5min |
-| 18 | 0 | - | - |
+| 18 | 1 | 3min | 3min |
 
 **Recent Trend:**
 
-- Last 5 plans: Phase 16-release-signing-readiness Plan 01 (3min), Plan 02 (2min), Phase 17-signed-dmg-notarization-pipeline Plan 01 (8min), Plan 02 (3min)
-- Trend: Phase 17 completed historically, then superseded by the 2026-04-17 friend-share pivot
-- v1.6 is ready to move into Phase 18 planning/execution.
+- Last 5 plans: Phase 16-release-signing-readiness Plan 01 (3min), Plan 02 (2min), Phase 17-signed-dmg-notarization-pipeline Plan 01 (8min), Plan 02 (3min), Phase 18-distribution-verification-closure Plan 01 (3min)
+- Trend: Phase 17 was superseded by the 2026-04-17 friend-share pivot, and Phase 18 closed the replacement verification contract in one plan.
+- v1.6 is archived and the project is ready for the next milestone definition cycle.
 
 | Phase 16-release-signing-readiness P01 | 3min | 2 tasks | 6 files |
 | Phase 16-release-signing-readiness P02 | 2min | 2 tasks | 3 files |
 | Phase 17 P01 | 8 min | 2 tasks | 4 files |
 | Phase 17 P02 | 3 min | 2 tasks | 7 files |
+| Phase 18 P01 | 3 min | 2 tasks | 5 files |
 
 ## Milestone Summary
 
-- Active milestone: `v1.6 Distribution Hardening`
-- Latest archived milestone: `v1.5 Device Library UI Parity`
-- Scope planned: deterministic non-notarized friend-share DMG plus explicit first-launch guidance and follow-up verification
-- Active roadmap: `.planning/ROADMAP.md`
+- Active milestone: none
+- Latest archived milestone: `v1.6 Distribution Hardening`
+- Scope delivered: deterministic non-notarized friend-share DMG, explicit first-launch guidance, and repeatable Phase 18 verification closure
+- Active roadmap: `.planning/ROADMAP.md` (all current milestones archived; no future milestone started yet)
 - Working files:
   - `.planning/PROJECT.md`
-  - `.planning/REQUIREMENTS.md`
   - `.planning/ROADMAP.md`
   - `.planning/MILESTONES.md`
 - Latest shipped summary: `.planning/MILESTONES.md`
@@ -101,6 +101,7 @@ The latest completed milestone established these durable decisions:
 - [Phase 17]: Persist notary submission metadata and rejection logs under build/notary so Apple failures are actionable without rerunning uploads. — Phase 17 depends on deterministic failure evidence, not transient terminal output.
 - [Phase 17]: Keep notarization submission and post-staple assessment in separate helpers so the release flow stays readable and statically verifiable. — The repo now verifies the notarization seam via shell gates, so each concern needs a small, grepable boundary.
 - [Phase 17/18 pivot]: Treat the notarized DMG path as historical work and make non-notarized friend sharing the current release truth because the maintainer chose not to join Apple Developer Program.
+- [Phase 18]: Keep `release.sh` as the only public build command and add one separate post-release verification command that mounts the real DMG, reruns focused WOL/keep-awake regressions, and states the remaining manual boundary explicitly.
 
 ### Roadmap Evolution
 
@@ -117,5 +118,5 @@ The latest completed milestone established these durable decisions:
 ## Session Continuity
 
 Last session: 2026-04-17T02:20:00Z
-Stopped at: Phase 17 notarization route superseded by 2026-04-17 friend-share pivot
+Stopped at: v1.6 archived; next step is `$gsd-new-milestone`
 Resume file: None

@@ -1,5 +1,26 @@
 # Milestones
 
+## v1.6 Distribution Hardening (Shipped: 2026-04-19)
+
+**Phases completed:** 3 phases, 5 plans, 10 tasks
+**Audit:** passed
+
+**Key accomplishments:**
+
+- Developer ID archive/export release orchestration with fail-fast signing preflight and explicit Release hardened-runtime readiness
+- Maintainer-facing signing bootstrap, Phase 16 runbook, and release docs drift gate
+- Signed DMG packaging from the exported app with explicit DMG signature inspection and a static release-readiness gate
+- Notary submission, stapled DMG assessment, and maintainer docs aligned to the final `dist/Tools-Cat.dmg` release contract
+- Repeatable friend-share artifact verification and focused WOL/keep-awake regression proof now close the v1.6 release story
+
+**Archive files:**
+
+- `.planning/milestones/v1.6-ROADMAP.md`
+- `.planning/milestones/v1.6-REQUIREMENTS.md`
+- `.planning/milestones/v1.6-MILESTONE-AUDIT.md`
+
+---
+
 ## v1.5 Device Library UI Parity (Shipped: 2026-04-16)
 
 **Phases completed:** 1 phase, 2 plans, 2 tasks

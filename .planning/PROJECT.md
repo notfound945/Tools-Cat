@@ -10,28 +10,28 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 
 ## Current State
 
-- Shipped: `v1.6 Distribution Hardening` is still active, but the milestone pivoted on 2026-04-17 away from Developer ID/notarized distribution toward explicit non-notarized friend sharing
+- Shipped: `v1.6 Distribution Hardening` is complete and archived as the latest shipped milestone
 - Live product identity: `Tools Cat`
-- Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, stabilized direct-launch manager smokes, and a Phase 16 release-signing boundary that now exports a Developer ID signed `.app` with matching maintainer docs
-- Planning state: the supported release contract is now a local Release app plus non-notarized DMG flow that friends may need to open manually
+- Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, stabilized direct-launch manager smokes, and a non-notarized friend-share DMG flow with repeatable release verification
+- Planning state: no active future milestone is defined yet; the next step is scoping the post-v1.6 roadmap
 
 ## Next Milestone Goals
 
-- Make `Tools Cat` easy to hand to friends even without Apple Developer Program membership.
-- Keep the milestone limited to release packaging, explicit first-launch instructions, and verification that distribution changes do not regress app behavior.
-- Preserve the current app behavior and avoid mixing new end-user features into the distribution milestone.
+- Revisit end-user convenience work that was deferred during hardening, especially faster repeat wake actions (`CONV-04`).
+- Add one-off keep-awake convenience on top of the managed duration model without reopening the core truth contracts (`AWAKE-12`).
+- Explore richer duration metadata such as custom labels or notes once the current managed-duration surface is stable enough to expand (`AWAKE-13`).
 
-## Current Milestone: v1.6 Distribution Hardening
+## Latest Shipped Milestone: v1.6 Distribution Hardening
 
-**Goal:** Make `Tools Cat` distributable to friends as a DMG-backed macOS app, while explicitly accepting that first launch may require a manual Gatekeeper workaround.
+**Result:** `Tools Cat` now ships with a deterministic friend-share DMG flow, truthful first-launch guidance for non-notarized installs, and a repeatable verification command that rechecks the shipped artifact plus focused WOL/keep-awake regressions.
 
-**Target features:**
-- Keep one deterministic `release.sh` path that builds a local Release app and packages `dist/Tools-Cat.dmg`.
-- Document the friend-side first-launch steps honestly, including right-click open or quarantine removal if needed.
-- Upgrade the current `release.sh` / `build_dmg.sh` flow so it produces a shareable release artifact and documents the verification steps clearly.
-- Keep this milestone release-only; no product-surface expansion.
+**Delivered:**
+- Kept `release.sh` as one canonical release command that builds a local Release app and packages `dist/Tools-Cat.dmg`.
+- Updated maintainer and friend-facing docs around the real manual-open boundary: drag to `/Applications`, `右键打开`, then remove quarantine only if Gatekeeper still blocks launch.
+- Added `bash scripts/release/verify-distribution-closure.sh` so the repo can verify the mounted DMG layout and rerun the focused regression slice after each release build.
 
-## Latest Shipped Milestone: v1.5 Device Library UI Parity
+<details>
+<summary>Previous shipped milestone: v1.5 Device Library UI Parity</summary>
 
 **Result:** The `设备库` manager now reads like the shipped `常亮时长` manager: native list-first browsing, compact retained add/edit sheets, semantic edit/delete actions, and preserved saved-device truth.
 
@@ -76,6 +76,7 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 </details>
 </details>
 </details>
+</details>
 
 ## Requirements
 
@@ -111,12 +112,15 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 - ✓ User can use the polished device-library manager without regressing saved-device add, edit, delete, reorder, or direct-launch behavior — validated in Phase 15
 - ✓ Maintainer can produce a Developer ID signed `Tools Cat.app` through the archive/export release seam with explicit signing prerequisites — validated in Phase 16
 - ✓ Repo docs now explain the signing identity, notary profile bootstrap, and release preflight without storing sensitive credentials — validated in Phase 16
+- ✓ Friends can receive `Tools Cat` as a DMG-backed artifact together with accurate first-launch instructions, even if manual Gatekeeper approval is still required — validated in Phase 18
+- ✓ The release flow now produces a deterministic local Release app and DMG without requiring Apple Developer Program credentials — validated in Phase 18
+- ✓ Distribution hardening did not change the shipped wake or keep-awake product behavior — validated in Phase 18
 
 ### Active
 
-- [ ] Friends can receive `Tools Cat` as a DMG-backed artifact together with accurate first-launch instructions, even if manual Gatekeeper approval is still required
-- [ ] The release flow produces a deterministic local Release app and DMG without requiring Apple Developer Program credentials
-- [ ] Distribution hardening does not change the shipped wake or keep-awake product behavior
+- [ ] Add a short recent-devices shortcut surface for faster repeat wake actions without reopening the current root wake contract
+- [ ] Allow a one-off timed keep-awake action without forcing the duration into the managed list
+- [ ] Let managed keep-awake durations carry custom labels or notes for quicker recognition
 
 ### Out of Scope
 
@@ -153,7 +157,7 @@ The v1.4 milestone is intentionally narrower again: it does not reopen duration 
 
 The v1.5 milestone then brought the `设备库` manager up to that same native-management bar: device browsing now uses a real list surface, add/edit stays in a retained shared sheet, row actions communicate edit versus delete semantics immediately, and the existing saved-device CRUD, reorder, and direct-launch flows stayed truthful.
 
-The v1.6 milestone is intentionally operational rather than product-facing: the app already works for daily use, but the release chain still needs a deterministic friend-share artifact and truthful install guidance. On 2026-04-17, the milestone pivoted away from Developer ID/notarization because the maintainer chose not to join Apple Developer Program. The supported outcome is now a non-notarized DMG plus explicit first-launch instructions, not a fully Gatekeeper-approved release chain.
+The v1.6 milestone is now shipped and archived. It stayed intentionally operational rather than product-facing: the app already worked for daily use, but the release chain still needed a deterministic friend-share artifact and truthful install guidance. On 2026-04-17, the milestone pivoted away from Developer ID/notarization because the maintainer chose not to join Apple Developer Program. The shipped outcome is now a non-notarized DMG plus explicit first-launch instructions and repeatable release verification, not a fully Gatekeeper-approved release chain.
 
 Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, module, bundle IDs, regression scripts, release packaging defaults, and active docs now agree on one product identity. Historical workflow-stability exception: the planning artifact directory remains `.planning/phases/09-mac-os-swiss-knife-tools-cat/`.
 
@@ -188,8 +192,8 @@ Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, mo
 | Pull live managed-duration root-menu sync into Phase 13 and remove standalone Phase 14 | The milestone needed shipped CRUD truth in the root menu, and verification proved the separate follow-on phase was redundant | Validated in v1.3 |
 | Prefer native macOS list components and semantic button colors for duration-manager polish | This milestone is visual refinement of an existing native surface, so platform-consistent affordances beat extra UI-library complexity | Validated in Phase 14 |
 | Keep device-library polish presentation-only by deriving add/edit presentation from `currentFormMode` and reusing the duration-manager's list and action semantics | The milestone only needed cross-surface parity, not a new saved-device data or routing model | Validated in Phase 15 |
-| Keep v1.6 limited to release-chain hardening so installability improves without reopening shipped runtime behavior | The immediate user problem is distribution friction, not missing app capability | Active |
-| Pivot v1.6 away from Developer ID/notarization and toward explicit non-notarized friend sharing | The maintainer chose not to join Apple Developer Program, so the release flow must stay usable without paid Apple distribution features | Active |
+| Keep v1.6 limited to release-chain hardening so installability improves without reopening shipped runtime behavior | The immediate user problem is distribution friction, not missing app capability | Validated in v1.6 |
+| Pivot v1.6 away from Developer ID/notarization and toward explicit non-notarized friend sharing | The maintainer chose not to join Apple Developer Program, so the release flow must stay usable without paid Apple distribution features | Validated in v1.6 |
 
 ## Evolution
 
@@ -209,4 +213,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-17 after pivoting v1.6 to non-notarized friend distribution*
+*Last updated: 2026-04-19 after archiving v1.6 Distribution Hardening*
