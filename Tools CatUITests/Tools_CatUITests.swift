@@ -200,6 +200,65 @@ final class Tools_CatUITests: XCTestCase {
     }
 
     @MainActor
+    func testCustomMACModeKeepsContentWithinWOLWindow() throws {
+        let launchContext = try makeLaunchContext()
+        defer {
+            launchContext.defaults.removePersistentDomain(forName: launchContext.suiteName)
+        }
+
+        let app = makeApplication(
+            launchContext: launchContext,
+            additionalArguments: ["--ui-test-open-wol-window"]
+        )
+        app.launch()
+        defer { terminateIfRunning(app) }
+
+        let window = waitForWOLWindow(in: app)
+        let customModeButton = window.buttons["手动填写 MAC"]
+        let presetModeButton = window.buttons["保存设备列表"]
+        XCTAssertTrue(customModeButton.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(presetModeButton.waitForExistence(timeout: 2.0))
+
+        let savedDevicePicker = window.popUpButtons["wol-saved-device-picker"]
+        for _ in 0..<4 {
+            clickElementAfterActivatingApp(customModeButton, in: app)
+            XCTAssertTrue(
+                window.textFields["wol-custom-mac-field"].waitForExistence(timeout: 2.0)
+                    || window.textFields["请输入 MAC 地址"].waitForExistence(timeout: 2.0)
+            )
+
+            clickElementAfterActivatingApp(presetModeButton, in: app)
+            XCTAssertTrue(savedDevicePicker.waitForExistence(timeout: 2.0))
+        }
+
+        clickElementAfterActivatingApp(customModeButton, in: app)
+        RunLoop.current.run(until: Date().addingTimeInterval(0.35))
+
+        let identifiedCustomMACField = window.textFields["wol-custom-mac-field"]
+        let placeholderCustomMACField = window.textFields["请输入 MAC 地址"]
+        XCTAssertTrue(
+            identifiedCustomMACField.waitForExistence(timeout: 2.0)
+                || placeholderCustomMACField.waitForExistence(timeout: 2.0)
+        )
+        let customMACField = identifiedCustomMACField.exists ? identifiedCustomMACField : placeholderCustomMACField
+
+        let statusBlock = window.descendants(matching: .any)["wol-status-block"]
+        XCTAssertTrue(statusBlock.waitForExistence(timeout: 2.0))
+
+        let actionRow = window.descendants(matching: .any)["wol-action-row"].firstMatch
+        XCTAssertTrue(actionRow.waitForExistence(timeout: 2.0))
+        let cancelButton = window.buttons["wol-cancel-button"].firstMatch
+        let sendButton = window.buttons["wol-send-button"].firstMatch
+        XCTAssertTrue(cancelButton.waitForExistence(timeout: 2.0) || window.buttons["取消"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(sendButton.waitForExistence(timeout: 2.0) || window.buttons["发送唤醒包"].waitForExistence(timeout: 2.0))
+
+        assertElementFrameIsContained(customMACField, within: window)
+        assertElementFrameIsContained(statusBlock, within: window)
+        assertElementFrameIsContained(cancelButton.exists ? cancelButton : window.buttons["取消"], within: window, padding: 4)
+        assertElementFrameIsContained(sendButton.exists ? sendButton : window.buttons["发送唤醒包"], within: window, padding: 4)
+    }
+
+    @MainActor
     func testLaunchWithSeededKeepAwakeDurationsShowsManagementSurface() throws {
         let launchContext = try makeLaunchContext()
         defer {
@@ -289,6 +348,11 @@ private func waitForDeviceLibraryWindow(in app: XCUIApplication) -> XCUIElement 
 }
 
 private func waitForWOLWindow(in app: XCUIApplication) -> XCUIElement {
+    let titledWindow = app.windows["WOL 发送器"]
+    if titledWindow.waitForExistence(timeout: 5.0) {
+        return titledWindow
+    }
+
     XCTAssertTrue(
         waitForAnyElement(
             [
@@ -301,7 +365,6 @@ private func waitForWOLWindow(in app: XCUIApplication) -> XCUIElement {
         "Expected the WOL window surface to appear after direct launch."
     )
 
-    let titledWindow = app.windows["WOL 发送器"]
     if titledWindow.waitForExistence(timeout: 2.0) {
         return titledWindow
     }
@@ -348,6 +411,21 @@ private func waitForAnyElement(_ elements: [XCUIElement], timeout: TimeInterval)
     } while Date() < deadline
 
     return elements.contains(where: \.exists)
+}
+
+private func assertElementFrameIsContained(
+    _ element: XCUIElement,
+    within window: XCUIElement,
+    padding: CGFloat = 8
+) {
+    let windowFrame = window.frame
+    let elementFrame = element.frame
+    let description = "Expected \(element.debugDescription) frame \(NSStringFromRect(elementFrame)) to stay within \(NSStringFromRect(windowFrame))"
+
+    XCTAssertGreaterThanOrEqual(elementFrame.minX, windowFrame.minX + padding, description)
+    XCTAssertGreaterThanOrEqual(elementFrame.minY, windowFrame.minY + padding, description)
+    XCTAssertLessThanOrEqual(elementFrame.maxX, windowFrame.maxX - padding, description)
+    XCTAssertLessThanOrEqual(elementFrame.maxY, windowFrame.maxY - padding, description)
 }
 
 private func terminateIfRunning(_ app: XCUIApplication) {
@@ -419,8 +497,16 @@ private func makeApplication(
 private let toolsCatBundleIdentifier = "cn.notfound945.Tools-Cat"
 
 private func forceTerminateApplications(matchingBundleIdentifier bundleIdentifier: String) {
-    let runningApps = NSRunningApplication.runningApplications(withBundleIdentifier: bundleIdentifier)
-    runningApps.forEach { app in
-        _ = app.forceTerminate()
-    }
+    let deadline = Date().addingTimeInterval(5.0)
+
+    repeat {
+        let runningApps = NSRunningApplication.runningApplications(withBundleIdentifier: bundleIdentifier)
+        guard !runningApps.isEmpty else { return }
+
+        runningApps.forEach { app in
+            _ = app.forceTerminate()
+        }
+
+        RunLoop.current.run(until: Date().addingTimeInterval(0.1))
+    } while Date() < deadline
 }

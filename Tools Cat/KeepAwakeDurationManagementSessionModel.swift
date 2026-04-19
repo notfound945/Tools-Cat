@@ -12,10 +12,12 @@ final class KeepAwakeDurationManagementSessionModel: ObservableObject {
     @Published var currentFormMode: KeepAwakeDurationManagementFormMode?
     @Published var draftMinutesText: String
     @Published var pendingDeleteDuration: ManagedKeepAwakeDuration?
+    @Published var blockedDeleteDuration: ManagedKeepAwakeDuration?
     @Published var validationMessage: String?
     @Published var saveErrorMessage: String?
 
     private let durationStore: KeepAwakeDurationStore
+    private let keepAwakeSession: KeepAwakeSessionModel?
 
     var isPresentingForm: Bool {
         currentFormMode != nil
@@ -25,13 +27,18 @@ final class KeepAwakeDurationManagementSessionModel: ObservableObject {
         currentFormMode != nil && parsedDraftMinutes != nil
     }
 
-    init(durationStore: KeepAwakeDurationStore? = nil) {
+    init(
+        durationStore: KeepAwakeDurationStore? = nil,
+        keepAwakeSession: KeepAwakeSessionModel? = nil
+    ) {
         let resolvedStore = durationStore ?? KeepAwakeDurationStore()
         self.durationStore = resolvedStore
+        self.keepAwakeSession = keepAwakeSession
         durations = resolvedStore.durations
         currentFormMode = nil
         draftMinutesText = ""
         pendingDeleteDuration = nil
+        blockedDeleteDuration = nil
         validationMessage = nil
         saveErrorMessage = nil
     }
@@ -51,7 +58,7 @@ final class KeepAwakeDurationManagementSessionModel: ObservableObject {
     func beginAdd() {
         clearErrors()
         clearDraft()
-        pendingDeleteDuration = nil
+        clearDeleteState()
         currentFormMode = .add
     }
 
@@ -60,7 +67,7 @@ final class KeepAwakeDurationManagementSessionModel: ObservableObject {
 
         clearErrors()
         draftMinutesText = minutesText(for: duration)
-        pendingDeleteDuration = nil
+        clearDeleteState()
         currentFormMode = .edit(durationID: duration.id)
     }
 
@@ -98,13 +105,24 @@ final class KeepAwakeDurationManagementSessionModel: ObservableObject {
 
     func requestDelete(durationID: UUID) {
         guard let duration = durations.first(where: { $0.id == durationID }) else { return }
+        guard !isDeleteBlocked(durationID: durationID) else {
+            pendingDeleteDuration = nil
+            blockedDeleteDuration = duration
+            saveErrorMessage = nil
+            return
+        }
 
+        blockedDeleteDuration = nil
         pendingDeleteDuration = duration
         saveErrorMessage = nil
     }
 
     func cancelDelete() {
         pendingDeleteDuration = nil
+    }
+
+    func dismissBlockedDeleteAlert() {
+        blockedDeleteDuration = nil
     }
 
     func confirmDelete() {
@@ -162,9 +180,19 @@ final class KeepAwakeDurationManagementSessionModel: ObservableObject {
         draftMinutesText = ""
     }
 
+    private func clearDeleteState() {
+        pendingDeleteDuration = nil
+        blockedDeleteDuration = nil
+    }
+
     private func clearErrors() {
         validationMessage = nil
         saveErrorMessage = nil
+    }
+
+    func isDeleteBlocked(durationID: UUID) -> Bool {
+        guard case let .timed(duration, _) = keepAwakeSession?.confirmedMode else { return false }
+        return duration.id == durationID
     }
 
     private func syncDurationsFromStore() {

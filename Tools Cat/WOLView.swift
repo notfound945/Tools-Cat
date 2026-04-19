@@ -14,11 +14,12 @@ struct WOLView: View {
             Text("唤醒局域网设备 (WOL)")
                 .font(.system(size: 17, weight: .semibold))
 
-            HStack(spacing: 16) {
+            HStack(spacing: 20) {
                 RadioButton(selectedMode: $session.inputMode, mode: .custom, label: "手动填写 MAC")
                 RadioButton(selectedMode: $session.inputMode, mode: .preset, label: "保存设备列表")
                 Spacer()
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .accessibilityIdentifier("wol-mode-group")
 
             if session.inputMode == .custom {
@@ -71,6 +72,7 @@ struct WOLView: View {
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.large)
+                .accessibilityIdentifier("wol-cancel-button")
 
                 Button(action: session.sendCurrentSelection) {
                     if session.isSending {
@@ -90,7 +92,7 @@ struct WOLView: View {
         .padding(.top, 24)
         .padding(.horizontal, 16)
         .padding(.bottom, 24)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, alignment: .topLeading)
     }
 
     private var visibleStatusText: String? {
@@ -135,9 +137,11 @@ struct RadioButton: View {
                 Image(systemName: selectedMode == mode ? "largecircle.fill.circle" : "circle")
                     .foregroundColor(selectedMode == mode ? .accentColor : .secondary)
                 Text(label)
+                    .lineLimit(1)
                     .foregroundColor(.primary)
-                Spacer()
             }
+            .fixedSize(horizontal: true, vertical: false)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
     }

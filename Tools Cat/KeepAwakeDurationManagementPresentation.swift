@@ -12,6 +12,8 @@ enum KeepAwakeDurationManagementPresentation {
     static let loadErrorMessage = "无法加载时长，请稍后重试"
     static let saveErrorMessage = "无法保存时长，请稍后重试"
     static let deleteErrorMessage = "无法删除时长，请稍后重试"
+    static let activeDurationDeleteBlockedMessage = "当前正在生效的时长不能删除"
+    static let activeDurationDeleteBlockedAlertTitle = "无法删除当前生效时长"
     static let missingMinutesMessage = "请填写时长"
     static let invalidMinutesMessage = "请输入正整数分钟"
     static let duplicateDurationMessage = "该时长已存在"
@@ -27,5 +29,9 @@ enum KeepAwakeDurationManagementPresentation {
 
     static func deleteConfirmationMessage(durationTitle: String) -> String {
         "删除时长: 删除后不会恢复。确定删除“\(durationTitle)”吗？"
+    }
+
+    static func activeDurationDeleteBlockedAlertMessage(durationTitle: String) -> String {
+        "“\(durationTitle)”正在生效。请先停止常亮或等待本次计时结束后再删除。"
     }
 }

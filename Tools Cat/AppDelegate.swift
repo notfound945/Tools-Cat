@@ -101,7 +101,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         )
         keepAwakeDurationStore = KeepAwakeDurationStore(repository: keepAwakeDurationRepository)
         keepAwakeDurationManagementSession = KeepAwakeDurationManagementSessionModel(
-            durationStore: keepAwakeDurationStore
+            durationStore: keepAwakeDurationStore,
+            keepAwakeSession: keepAwakeSession
         )
         deviceLibrarySession = DeviceLibrarySessionModel(libraryStore: savedDeviceLibrary)
     }

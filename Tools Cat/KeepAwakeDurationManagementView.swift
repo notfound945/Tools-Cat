@@ -26,6 +26,23 @@ struct KeepAwakeDurationManagementView: View {
                 session.confirmDelete()
             }
         }
+        .alert(
+            KeepAwakeDurationManagementPresentation.activeDurationDeleteBlockedAlertTitle,
+            isPresented: blockedDeleteAlertIsPresented,
+            actions: {
+                Button("知道了", role: .cancel) {
+                    session.dismissBlockedDeleteAlert()
+                }
+            },
+            message: {
+                if let duration = session.blockedDeleteDuration {
+                    Text(
+                        KeepAwakeDurationManagementPresentation
+                            .activeDurationDeleteBlockedAlertMessage(durationTitle: duration.menuTitle)
+                    )
+                }
+            }
+        )
     }
 
     private var listContent: some View {
@@ -43,12 +60,6 @@ struct KeepAwakeDurationManagementView: View {
                 .accessibilityIdentifier("keep-awake-duration-add-button")
             }
             .accessibilityIdentifier("keep-awake-duration-top-actions")
-
-            if let saveErrorMessage = session.saveErrorMessage {
-                Text(saveErrorMessage)
-                    .font(.caption)
-                    .foregroundStyle(.red)
-            }
 
             if session.durations.isEmpty {
                 emptyState
@@ -216,6 +227,17 @@ struct KeepAwakeDurationManagementView: View {
             set: { isPresented in
                 if !isPresented {
                     session.cancelDelete()
+                }
+            }
+        )
+    }
+
+    private var blockedDeleteAlertIsPresented: Binding<Bool> {
+        Binding(
+            get: { session.blockedDeleteDuration != nil },
+            set: { isPresented in
+                if !isPresented {
+                    session.dismissBlockedDeleteAlert()
                 }
             }
         )

@@ -8,6 +8,9 @@ final class KeepAwakeDurationManagementSessionModelTests: XCTestCase {
     private var defaults: UserDefaults!
     private var repository: UserDefaultsKeepAwakeDurationRepository!
     private var store: KeepAwakeDurationStore!
+    private var keepAwakePowerController: FakeKeepAwakePowerController!
+    private var keepAwakeScheduler: FakeKeepAwakeCountdownScheduler!
+    private var keepAwakeSession: KeepAwakeSessionModel!
 
     override func setUp() {
         super.setUp()
@@ -17,10 +20,20 @@ final class KeepAwakeDurationManagementSessionModelTests: XCTestCase {
         defaults.removePersistentDomain(forName: suiteName)
         repository = UserDefaultsKeepAwakeDurationRepository(defaults: defaults)
         store = KeepAwakeDurationStore(repository: repository)
+        keepAwakePowerController = FakeKeepAwakePowerController(isEnabled: false)
+        keepAwakeScheduler = FakeKeepAwakeCountdownScheduler()
+        keepAwakeSession = KeepAwakeSessionModel(
+            powerController: keepAwakePowerController,
+            scheduler: keepAwakeScheduler,
+            nowProvider: { Date(timeIntervalSinceReferenceDate: 10_000) }
+        )
     }
 
     override func tearDown() {
         defaults.removePersistentDomain(forName: suiteName)
+        keepAwakeSession = nil
+        keepAwakeScheduler = nil
+        keepAwakePowerController = nil
         store = nil
         repository = nil
         defaults = nil
@@ -129,7 +142,91 @@ final class KeepAwakeDurationManagementSessionModelTests: XCTestCase {
         XCTAssertEqual(reloadedSession.durations.map(\.durationSeconds), [900, 3600, 7200])
     }
 
+    func testDeleteBlocksCurrentlyActiveTimedDuration() async {
+        let session = makeSession()
+        let activeDuration = try! XCTUnwrap(session.durations.first(where: { $0.durationSeconds == 1800 }))
+
+        keepAwakeSession.startTimed(activeDuration)
+        keepAwakePowerController.complete(with: .success(true))
+        await flushSessionModelUpdates()
+
+        session.requestDelete(durationID: activeDuration.id)
+
+        XCTAssertNil(session.pendingDeleteDuration)
+        XCTAssertEqual(session.blockedDeleteDuration?.id, activeDuration.id)
+        XCTAssertNil(session.saveErrorMessage)
+
+        session.confirmDelete()
+        XCTAssertEqual(session.durations.map(\.durationSeconds), [900, 1800, 3600, 7200])
+
+        session.dismissBlockedDeleteAlert()
+        XCTAssertNil(session.blockedDeleteDuration)
+    }
+
     private func makeSession() -> KeepAwakeDurationManagementSessionModel {
-        KeepAwakeDurationManagementSessionModel(durationStore: store)
+        KeepAwakeDurationManagementSessionModel(
+            durationStore: store,
+            keepAwakeSession: keepAwakeSession
+        )
+    }
+
+    private func flushSessionModelUpdates() async {
+        await Task.yield()
+        await Task.yield()
+    }
+}
+
+@MainActor
+private final class FakeKeepAwakePowerController: KeepAwakePowerControlling {
+    private(set) var isEnabled: Bool
+    private(set) var requestedStates: [Bool] = []
+    private var pendingCompletions: [(KeepAwakeToggleOutcome) -> Void] = []
+
+    init(isEnabled: Bool) {
+        self.isEnabled = isEnabled
+    }
+
+    func setKeepAwakeEnabled(
+        _ enabled: Bool,
+        completion: @escaping (KeepAwakeToggleOutcome) -> Void
+    ) {
+        requestedStates.append(enabled)
+        pendingCompletions.append(completion)
+    }
+
+    func complete(with outcome: KeepAwakeToggleOutcome) {
+        switch outcome {
+        case .success(let enabled), .unchanged(let enabled):
+            isEnabled = enabled
+        case .failure(let current, _):
+            isEnabled = current
+        }
+
+        let completion = pendingCompletions.removeFirst()
+        completion(outcome)
+    }
+}
+
+private final class FakeKeepAwakeCountdownScheduler: KeepAwakeCountdownScheduling {
+    func startRepeating(
+        interval: TimeInterval,
+        tolerance: TimeInterval,
+        handler: @escaping () -> Void
+    ) -> KeepAwakeCountdownToken {
+        FakeKeepAwakeCountdownToken(handler: handler)
+    }
+}
+
+private final class FakeKeepAwakeCountdownToken: KeepAwakeCountdownToken {
+    private let handler: () -> Void
+
+    init(handler: @escaping () -> Void) {
+        self.handler = handler
+    }
+
+    func cancel() {}
+
+    func fire() {
+        handler()
     }
 }
