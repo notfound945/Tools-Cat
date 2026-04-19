@@ -13,22 +13,12 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 - Shipped: `v1.6 Distribution Hardening` is complete and archived as the latest shipped milestone
 - Live product identity: `Tools Cat`
 - Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, stabilized direct-launch manager smokes, and a non-notarized friend-share DMG flow with repeatable release verification
-- Planning state: `v1.7 Convenience Shortcuts` is now the active milestone, with Phase 19 set up as the next execution entrypoint
+- Planning state: no active future milestone is defined yet; the next step is scoping the post-v1.6 roadmap
 
 ## Next Milestone Goals
 
-- Restore a compact recent-wake shortcut surface for faster repeat device wakes without reviving the older root-menu history model (`CONV-04`).
-- Add a one-off timed keep-awake action that layers on top of the managed-duration system instead of mutating it (`AWAKE-12`).
-- Expand managed durations with richer recognition metadata, such as custom labels or notes, while preserving current sort and menu truth (`AWAKE-13`).
-
-## Current Milestone: v1.7 Convenience Shortcuts
-
-**Goal:** Make the already-stable wake and keep-awake flows faster to use day to day, without reopening the shipped truth contracts or the completed distribution work.
-
-**Target features:**
-- Surface a short recent-devices shortcut area from the existing wake metadata while keeping `快速 WOL` and `发送 WOL …` as the core wake structure.
-- Let the user start a one-off timed keep-awake session without saving that duration into the managed list.
-- Let managed keep-awake durations carry richer user-facing recognition metadata, such as labels or notes, in the native management flow.
+- No deferred milestone themes are currently active.
+- Start the next milestone only when a new scoped goal is ready.
 
 ## Latest Shipped Milestone: v1.6 Distribution Hardening
 
@@ -127,16 +117,14 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 
 ### Active
 
-- [ ] User can access a short recent-devices list from the root menu for faster repeat wake actions without reopening the older shortcut-first wake model
-- [ ] User can start a one-off timed keep-awake session without saving that duration into the managed list
-- [ ] User can assign custom labels or notes to managed keep-awake durations for quicker recognition
+(None currently — define the next milestone before adding new active requirements)
 
 ### Out of Scope
 
 - Cross-platform support — this tool is intentionally optimized for personal macOS use
 - Cloud sync, accounts, or shared device management — unnecessary complexity for a self-use utility
 - Broad marketplace-style device discovery or fleet management — the goal is quick access to a small personal set of devices
-- Restoring root-level recent-device wake shortcuts outside the shipped `快速 WOL` / `发送 WOL …` structure during the completed hardening cycle — deferred and tracked as `CONV-04`
+- Restoring root-level recent-device wake shortcuts outside the shipped `快速 WOL` / `发送 WOL …` structure during the completed hardening cycle — intentionally left out of the shipped hardening work
 - Reopening shipped duration data-model or wake-menu truth without a dedicated future milestone — those contracts already shipped and should stay closed by default
 - Adding new end-user features during the distribution milestone — this pass is only about release packaging and installability guidance
 - Pulling in a third-party component library before exhausting the native macOS list/table components — native consistency and lower maintenance take priority
@@ -154,7 +142,7 @@ Phase 2 added a local saved-device library with native CRUD, notes, ordering, an
 
 Phase 4 completed timed keep-awake as a first-class menu feature: the root menu now offers explicit Chinese preset rows, one shared keep-awake session drives icon/status truth, countdown feedback stays confined to the disabled status row, and timed sessions can be replaced or expire back to off without extra banners.
 
-The v1.0 roadmap work is archived. A follow-on idea to restore root-level recent-device wake shortcuts was intentionally removed from the hardening cycle, so the shipped wake surface remains `快速 WOL` plus the dedicated `发送 WOL …` row. Any shortcut recovery work now belongs to a later planning cycle under `CONV-04`.
+The v1.0 roadmap work is archived. A follow-on idea to restore root-level recent-device wake shortcuts was intentionally removed from the hardening cycle, so the shipped wake surface remains `快速 WOL` plus the dedicated `发送 WOL …` row.
 
 The v1.1 hardening work made the verification boundary explicit instead of implying stronger automation than the repo has. Controller tests cover menu grouping and root entry dispatch, direct-launch UI smoke covers the retained `WOL 发送器` and `设备库` windows through launch arguments, and manual tray-entry checks still own the real live `NSStatusItem` click path.
 
@@ -167,8 +155,6 @@ The v1.4 milestone is intentionally narrower again: it does not reopen duration 
 The v1.5 milestone then brought the `设备库` manager up to that same native-management bar: device browsing now uses a real list surface, add/edit stays in a retained shared sheet, row actions communicate edit versus delete semantics immediately, and the existing saved-device CRUD, reorder, and direct-launch flows stayed truthful.
 
 The v1.6 milestone is now shipped and archived. It stayed intentionally operational rather than product-facing: the app already worked for daily use, but the release chain still needed a deterministic friend-share artifact and truthful install guidance. On 2026-04-17, the milestone pivoted away from Developer ID/notarization because the maintainer chose not to join Apple Developer Program. The shipped outcome is now a non-notarized DMG plus explicit first-launch instructions and repeatable release verification, not a fully Gatekeeper-approved release chain.
-
-The post-v1.6 convenience work now has two clear implementation seams. `SavedDeviceLibraryStore` already persists `recentDeviceIDs` and `lastUsedDeviceID`, but `StatusBarController` intentionally keeps the root menu free of recent shortcut rows. `ManagedKeepAwakeDuration` still stores only canonical duration seconds with derived menu copy, so one-off durations and richer managed-duration metadata both need to layer carefully on top of the shipped sorting, session, and countdown contracts.
 
 Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, module, bundle IDs, regression scripts, release packaging defaults, and active docs now agree on one product identity. Historical workflow-stability exception: the planning artifact directory remains `.planning/phases/09-mac-os-swiss-knife-tools-cat/`.
 
@@ -192,7 +178,6 @@ Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, mo
 | Keep shipped saved-device waking behind `快速 WOL` and preserve the dedicated `发送 WOL …` row | The current menu stays compact without presenting removed root-level recents / `所有设备` behavior as shipped truth | Validated in Phases 3-9 |
 | Share one retained `WOLSessionModel` across the menu and WOL window | Wake status and duplicate-send blocking must come from one source of truth across surfaces | Validated in Phase 3 |
 | Share one retained `KeepAwakeSessionModel` across app launch and render keep-awake UI from `KeepAwakePresentation` | Timed keep-awake must stay truthful across menu actions, countdown updates, replacement, and quit handling | Validated in Phase 4 |
-| Defer root-level recent-device tray recovery to a future milestone | Hardening closed without restoring shortcut rows, so any recovery now belongs to `CONV-04` | Decided 2026-04-13 |
 | Keep menu-bar verification layered instead of implying live tray automation | Controller seams and direct-launch UI smoke are automated; live tray-entry coverage remains manual | Validated in Phase 7 |
 | Treat validation debt closure as documentation-truth work, not new harness work | Phase 8 only needed validation contracts rewritten to match current evidence | Validated in Phase 8 |
 | Keep runtime storage on `UserDefaults.standard` and treat the legacy bundle-ID suite only as a one-time migration source | Using the app bundle identifier as a custom defaults suite causes macOS warnings and breaks the intended storage model | Validated in Phase 9 |
@@ -205,8 +190,6 @@ Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, mo
 | Keep device-library polish presentation-only by deriving add/edit presentation from `currentFormMode` and reusing the duration-manager's list and action semantics | The milestone only needed cross-surface parity, not a new saved-device data or routing model | Validated in Phase 15 |
 | Keep v1.6 limited to release-chain hardening so installability improves without reopening shipped runtime behavior | The immediate user problem is distribution friction, not missing app capability | Validated in v1.6 |
 | Pivot v1.6 away from Developer ID/notarization and toward explicit non-notarized friend sharing | The maintainer chose not to join Apple Developer Program, so the release flow must stay usable without paid Apple distribution features | Validated in v1.6 |
-| Keep v1.7 focused on convenience layering rather than another broad wake or keep-awake rewrite | The next value is faster daily use, and the shipped truth contracts should remain the foundation instead of moving targets | — Pending |
-| Reuse existing recent-device metadata and managed-duration seams as the v1.7 source of truth | The app already persists wake recents and canonical timed durations, so convenience work should compose with those seams rather than invent parallel state | — Pending |
 
 ## Evolution
 
@@ -226,4 +209,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-19 after starting v1.7 Convenience Shortcuts*
+*Last updated: 2026-04-19 after removing deferred milestone themes*

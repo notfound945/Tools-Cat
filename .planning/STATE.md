@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.7
-milestone_name: Convenience Shortcuts
-status: roadmap_ready
-stopped_at: Milestone v1.7 initialized; next step is discussing or planning Phase 19
-last_updated: "2026-04-19T04:12:00Z"
-last_activity: 2026-04-19 -- Created roadmap for v1.7 Convenience Shortcuts
+milestone: v1.6
+milestone_name: Distribution Hardening
+status: milestone_archived
+stopped_at: Deferred milestone themes removed; next step is starting a new milestone when needed
+last_updated: "2026-04-19T04:25:00Z"
+last_activity: 2026-04-19 -- Removed deferred milestone themes after v1.6 archival
 progress:
   total_phases: 3
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  completed_phases: 3
+  total_plans: 5
+  completed_plans: 5
 ---
 
 # Project State
@@ -20,16 +20,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-19)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Phase 19 — recent-wake-shortcuts
+**Current focus:** Start the next milestone only when a new scoped goal is ready
 
 ## Current Position
 
-Phase: 19 (recent-wake-shortcuts) — NOT STARTED
-Plan: Not started
-Status: Milestone initialized; roadmap ready for Phase 19 discussion or planning
-Last activity: 2026-04-19 -- Created roadmap for v1.7 Convenience Shortcuts
+Phase: None active
+Plan: None active
+Status: v1.6 archived; no deferred milestone themes are currently active
+Last activity: 2026-04-19 -- Removed deferred milestone themes after v1.6 archival
 
-Progress: [----------] 0/3 milestone phases complete
+Progress: [██████████] 5/5 historical/current milestone plans complete
 
 ## Performance Metrics
 
@@ -38,7 +38,7 @@ Progress: [----------] 0/3 milestone phases complete
 - Total plans completed: 5
 - Average duration: 3.8 min
 - Total execution time: 0.32 hours
-- Current milestone plans completed: 0
+- Current milestone plans completed: 5
 
 **By Phase:**
 
@@ -51,8 +51,8 @@ Progress: [----------] 0/3 milestone phases complete
 **Recent Trend:**
 
 - Last 5 plans: Phase 16-release-signing-readiness Plan 01 (3min), Plan 02 (2min), Phase 17-signed-dmg-notarization-pipeline Plan 01 (8min), Plan 02 (3min), Phase 18-distribution-verification-closure Plan 01 (3min)
-- Trend: v1.6 closed with one focused verification phase, and v1.7 now shifts back to product-surface convenience work.
-- Next execution target: Phase 19 will restore compact recent wake shortcuts on top of the existing shared wake session.
+- Trend: Phase 17 was superseded by the 2026-04-17 friend-share pivot, and Phase 18 closed the replacement verification contract in one plan.
+- v1.6 remains the latest archived milestone; no new follow-up milestone is currently defined.
 
 | Phase 16-release-signing-readiness P01 | 3min | 2 tasks | 6 files |
 | Phase 16-release-signing-readiness P02 | 2min | 2 tasks | 3 files |
@@ -62,13 +62,12 @@ Progress: [----------] 0/3 milestone phases complete
 
 ## Milestone Summary
 
-- Active milestone: `v1.7 Convenience Shortcuts`
+- Active milestone: none
 - Latest archived milestone: `v1.6 Distribution Hardening`
-- Scope planned: compact recent wake shortcuts, one-off timed keep-awake, and richer managed-duration recognition
-- Active roadmap: `.planning/ROADMAP.md`
+- Scope delivered: deterministic non-notarized friend-share DMG, explicit first-launch guidance, and repeatable Phase 18 verification closure
+- Active roadmap: `.planning/ROADMAP.md` (all current milestones archived; no future milestone started yet)
 - Working files:
   - `.planning/PROJECT.md`
-  - `.planning/REQUIREMENTS.md`
   - `.planning/ROADMAP.md`
   - `.planning/MILESTONES.md`
 - Latest shipped summary: `.planning/MILESTONES.md`
@@ -80,7 +79,7 @@ Progress: [----------] 0/3 milestone phases complete
 Decisions are logged in `PROJECT.md` under **Key Decisions**.
 The latest completed milestone established these durable decisions:
 
-- Keep the shipped wake surface as `快速 WOL` plus the dedicated `发送 WOL …` row, with shortcut recovery deferred to `CONV-04`.
+- Keep the shipped wake surface as `快速 WOL` plus the dedicated `发送 WOL …` row.
 - Keep menu-bar verification layered: controller seams and direct-launch UI smoke are automated, live tray entry remains manual.
 - Treat Phase 01-04 validation debt as documentation-truth work, not new harness work.
 - Keep runtime persistence on `UserDefaults.standard` and migrate legacy bundle-ID defaults only once.
@@ -113,11 +112,10 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Active milestone theme: `CONV-04`, `AWAKE-12`, `AWAKE-13`.
-- Deferred beyond v1.7: `CONV-01`, `CONV-02`, `CONV-03`.
+- No deferred milestone themes are currently active.
 
 ## Session Continuity
 
-Last session: 2026-04-19T04:05:00Z
-Stopped at: Milestone v1.7 initialized; next step is discussing or planning Phase 19
+Last session: 2026-04-19T04:25:00Z
+Stopped at: Deferred milestone themes removed; next step is starting a new milestone when needed
 Resume file: None
