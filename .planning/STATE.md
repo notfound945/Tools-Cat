@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.7
 milestone_name: Convenience Shortcuts
-status: defining_requirements
-stopped_at: Milestone v1.7 initialized; next step is defining requirements and phases
-last_updated: "2026-04-19T04:05:00Z"
-last_activity: 2026-04-19 -- Started v1.7 Convenience Shortcuts
+status: roadmap_ready
+stopped_at: Milestone v1.7 initialized; next step is discussing or planning Phase 19
+last_updated: "2026-04-19T04:12:00Z"
+last_activity: 2026-04-19 -- Created roadmap for v1.7 Convenience Shortcuts
 progress:
   total_phases: 3
   completed_phases: 0
@@ -26,8 +26,8 @@ See: `.planning/PROJECT.md` (updated 2026-04-19)
 
 Phase: 19 (recent-wake-shortcuts) — NOT STARTED
 Plan: Not started
-Status: Defining requirements and roadmap for v1.7
-Last activity: 2026-04-19 -- Started v1.7 Convenience Shortcuts
+Status: Milestone initialized; roadmap ready for Phase 19 discussion or planning
+Last activity: 2026-04-19 -- Created roadmap for v1.7 Convenience Shortcuts
 
 Progress: [----------] 0/3 milestone phases complete
 
@@ -119,5 +119,5 @@ The latest completed milestone established these durable decisions:
 ## Session Continuity
 
 Last session: 2026-04-19T04:05:00Z
-Stopped at: Milestone v1.7 initialized; next step is defining requirements and phases
+Stopped at: Milestone v1.7 initialized; next step is discussing or planning Phase 19
 Resume file: None
