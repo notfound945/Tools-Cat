@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.7
 milestone_name: WOL Device Entry Polish
-status: roadmap_ready
-stopped_at: ""
-last_updated: "2026-05-06T01:13:43Z"
-last_activity: 2026-05-06 -- Defined requirements and roadmap for milestone v1.7
+status: verifying
+stopped_at: Completed 19-01-PLAN.md
+last_updated: "2026-05-06T01:55:05.216Z"
+last_activity: 2026-05-06
 progress:
   total_phases: 2
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
 ---
 
 # Project State
@@ -20,25 +20,25 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-06)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Start Phase 19 planning for deferred device form validation
+**Current focus:** Phase 20 — first-use-device-seed
 
 ## Current Position
 
-Phase: 19 — Deferred Device Form Validation
-Plan: None active
-Status: Roadmap ready for milestone v1.7
-Last activity: 2026-05-06 -- Requirements and roadmap created for milestone v1.7
+Phase: 19 (deferred-device-form-validation) — COMPLETE
+Plan: 1 of 1
+Status: Phase complete — ready for verification
+Last activity: 2026-05-06
 
-Progress: [░░░░░░░░░░] 0/0 current milestone plans complete
+Progress: [██████████] 1/1 current milestone plans complete
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 5
-- Average duration: 3.8 min
-- Total execution time: 0.32 hours
-- Current milestone plans completed: 0
+- Total plans completed: 6
+- Average duration: 4.3 min
+- Total execution time: 0.43 hours
+- Current milestone plans completed: 1
 
 **By Phase:**
 
@@ -52,20 +52,21 @@ Progress: [░░░░░░░░░░] 0/0 current milestone plans complete
 
 - Last 5 plans: Phase 16-release-signing-readiness Plan 01 (3min), Plan 02 (2min), Phase 17-signed-dmg-notarization-pipeline Plan 01 (8min), Plan 02 (3min), Phase 18-distribution-verification-closure Plan 01 (3min)
 - Trend: Phase 17 was superseded by the 2026-04-17 friend-share pivot, and Phase 18 closed the replacement verification contract in one plan.
-- v1.7 is now active; execution planning should continue from Phase 19 because v1.6 archived at Phase 18.
+- v1.7 remains active; Phase 19 is complete and execution should continue with Phase 20.
 
 | Phase 16-release-signing-readiness P01 | 3min | 2 tasks | 6 files |
 | Phase 16-release-signing-readiness P02 | 2min | 2 tasks | 3 files |
 | Phase 17 P01 | 8 min | 2 tasks | 4 files |
 | Phase 17 P02 | 3 min | 2 tasks | 7 files |
 | Phase 18 P01 | 3 min | 2 tasks | 5 files |
+| Phase 19 P01 | 7min | 2 tasks | 4 files |
 
 ## Milestone Summary
 
 - Active milestone: `v1.7 WOL Device Entry Polish`
 - Latest archived milestone: `v1.6 Distribution Hardening`
 - New scope: defer device-library validation error reveal until blur/submit and seed one default `UGREEN NAS` device only for first-use empty libraries
-- Active roadmap: `.planning/ROADMAP.md` (phases 19-20 planned and pending execution)
+- Active roadmap: `.planning/ROADMAP.md` (Phase 19 complete; Phase 20 pending execution)
 - Working files:
   - `.planning/PROJECT.md`
   - `.planning/ROADMAP.md`
@@ -102,6 +103,8 @@ The latest completed milestone established these durable decisions:
 - [Phase 17]: Keep notarization submission and post-staple assessment in separate helpers so the release flow stays readable and statically verifiable. — The repo now verifies the notarization seam via shell gates, so each concern needs a small, grepable boundary.
 - [Phase 17/18 pivot]: Treat the notarized DMG path as historical work and make non-notarized friend sharing the current release truth because the maintainer chose not to join Apple Developer Program.
 - [Phase 18]: Keep `release.sh` as the only public build command and add one separate post-release verification command that mounts the real DMG, reruns focused WOL/keep-awake regressions, and states the remaining manual boundary explicitly.
+- [Phase 19]: Keep validation truth in DeviceLibrarySessionModel and expose reveal-aware messages instead of moving validation into the view.
+- [Phase 19]: Remove the invalid-only disabled save gate so saveDraft() remains the explicit submit boundary for invalid drafts.
 
 ### Roadmap Evolution
 
@@ -116,6 +119,6 @@ The latest completed milestone established these durable decisions:
 
 ## Session Continuity
 
-Last session: 2026-05-06T01:13:43Z
-Stopped at: Ready to discuss or plan Phase 19
+Last session: 2026-05-06T01:55:05.214Z
+Stopped at: Completed 19-01-PLAN.md
 Resume file: None

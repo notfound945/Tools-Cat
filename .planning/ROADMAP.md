@@ -21,7 +21,7 @@ This milestone returns to one small product-facing gap in the already-shipped sa
 - Integer phases continue from the last shipped milestone
 - v1.7 therefore starts at Phase 19
 
-- [ ] **Phase 19: Deferred Device Form Validation** - Make saved-device validation hints appear on blur or explicit field submission while preserving the current save-time truth barrier.
+- [x] **Phase 19: Deferred Device Form Validation** - Make saved-device validation hints appear on blur or explicit field submission while preserving the current save-time truth barrier. (completed 2026-05-06)
 - [ ] **Phase 20: First-Use Device Seed** - Seed one default `UGREEN NAS` device for first-use empty libraries without touching existing non-empty libraries.
 
 ## Phase Details
@@ -30,7 +30,7 @@ This milestone returns to one small product-facing gap in the already-shipped sa
 **Goal**: The `设备库` add/edit form feels native and non-noisy by revealing validation only after blur or explicit submit, while invalid drafts still cannot be saved.
 **Depends on**: Phase 18
 **Requirements**: DEVS-10, DEVS-11, DEVS-12
-**Plans**: 0/0 plans complete
+**Plans**: 1/1 plans complete
 **Success Criteria** (what must be TRUE):
   1. The required-name hint does not appear during in-progress typing and only appears after the user leaves the field or explicitly submits it.
   2. MAC validation hints do not appear during in-progress typing and only appear after the user leaves the field or explicitly submits it.
@@ -53,5 +53,5 @@ Phases execute in numeric order: 19, 20
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 19. Deferred Device Form Validation | 0/0 | Pending | — |
+| 19. Deferred Device Form Validation | 1/1 | Complete   | 2026-05-06 |
 | 20. First-Use Device Seed | 0/0 | Pending | — |

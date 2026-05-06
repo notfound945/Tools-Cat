@@ -9,9 +9,9 @@ Requirements for the v1.7 WOL device-entry polish milestone. This milestone stay
 
 ### Device Entry Experience
 
-- [ ] **DEVS-10**: User sees the saved-device name required-field hint only after the name field loses focus or is explicitly submitted
-- [ ] **DEVS-11**: User sees saved-device MAC validation hints only after the MAC field loses focus or is explicitly submitted
-- [ ] **DEVS-12**: User still cannot save a saved-device draft with an invalid name or invalid MAC address even when inline validation reveal is deferred
+- [x] **DEVS-10**: User sees the saved-device name required-field hint only after the name field loses focus or is explicitly submitted
+- [x] **DEVS-11**: User sees saved-device MAC validation hints only after the MAC field loses focus or is explicitly submitted
+- [x] **DEVS-12**: User still cannot save a saved-device draft with an invalid name or invalid MAC address even when inline validation reveal is deferred
 
 ### Device Library Seeding
 
@@ -50,9 +50,9 @@ Phase mapping assigned during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DEVS-10 | Phase 19 | Pending |
-| DEVS-11 | Phase 19 | Pending |
-| DEVS-12 | Phase 19 | Pending |
+| DEVS-10 | Phase 19 | Complete |
+| DEVS-11 | Phase 19 | Complete |
+| DEVS-12 | Phase 19 | Complete |
 | DEVS-13 | Phase 20 | Pending |
 | DEVS-14 | Phase 20 | Pending |
 
