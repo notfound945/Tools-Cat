@@ -3,6 +3,14 @@ import SwiftUI
 
 struct DeviceLibraryView: View {
     @ObservedObject var session: DeviceLibrarySessionModel
+    @FocusState private var focusedField: FormField?
+    @State private var lastFocusedField: FormField?
+
+    private enum FormField: Hashable {
+        case name
+        case macAddress
+        case note
+    }
 
     var body: some View {
         listContent
@@ -156,22 +164,40 @@ struct DeviceLibraryView: View {
             fieldGroup(title: "名称") {
                 TextField("请输入设备名称", text: $session.draftName)
                     .textFieldStyle(.roundedBorder)
+                    .focused($focusedField, equals: .name)
+                    .accessibilityIdentifier("device-library-name-field")
+                    .onSubmit {
+                        session.revealValidation(for: .name)
+                    }
             } message: {
-                session.nameValidationMessage
+                session.visibleNameValidationMessage
+            } messageIdentifier: {
+                "device-library-name-validation-message"
             }
 
             fieldGroup(title: "MAC 地址") {
                 TextField("AA:BB:CC:DD:EE:FF", text: $session.draftMACAddress)
                     .textFieldStyle(.roundedBorder)
+                    .focused($focusedField, equals: .macAddress)
+                    .accessibilityIdentifier("device-library-mac-field")
+                    .onSubmit {
+                        session.revealValidation(for: .macAddress)
+                    }
             } message: {
-                session.macAddressValidationMessage
+                session.visibleMACAddressValidationMessage
+            } messageIdentifier: {
+                "device-library-mac-validation-message"
             }
 
             fieldGroup(title: "备注（可选）") {
                 TextField("可填写位置、用途或说明", text: $session.draftNote, axis: .vertical)
                     .lineLimit(3, reservesSpace: true)
                     .textFieldStyle(.roundedBorder)
+                    .focused($focusedField, equals: .note)
+                    .accessibilityIdentifier("device-library-note-field")
             } message: {
+                nil
+            } messageIdentifier: {
                 nil
             }
 
@@ -195,16 +221,24 @@ struct DeviceLibraryView: View {
                     session.saveDraft()
                 }
                 .buttonStyle(.borderedProminent)
-                .disabled(!session.canSaveDraft)
             }
             .accessibilityIdentifier("device-library-form-actions")
+        }
+        .onAppear {
+            focusedField = nil
+            lastFocusedField = nil
+        }
+        .onChange(of: focusedField) { newFocusedField in
+            revealValidationIfNeeded(afterBlurFrom: lastFocusedField, to: newFocusedField)
+            lastFocusedField = newFocusedField
         }
     }
 
     private func fieldGroup<Control: View>(
         title: String,
         @ViewBuilder control: () -> Control,
-        message: () -> String?
+        message: () -> String?,
+        messageIdentifier: () -> String?
     ) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
@@ -217,7 +251,21 @@ struct DeviceLibraryView: View {
                 Text(message)
                     .font(.caption)
                     .foregroundStyle(.orange)
+                    .accessibilityIdentifier(messageIdentifier() ?? "")
             }
+        }
+    }
+
+    private func revealValidationIfNeeded(afterBlurFrom previousField: FormField?, to nextField: FormField?) {
+        guard previousField != nextField else { return }
+
+        switch previousField {
+        case .name:
+            session.revealValidation(for: .name)
+        case .macAddress:
+            session.revealValidation(for: .macAddress)
+        case .note, .none:
+            break
         }
     }
 

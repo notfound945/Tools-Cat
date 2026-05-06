@@ -167,6 +167,76 @@ final class Tools_CatUITests: XCTestCase {
     }
 
     @MainActor
+    func testDeviceLibraryNameValidationRevealsAfterBlurOrSubmit() throws {
+        let launchContext = try makeLaunchContext()
+        defer {
+            launchContext.defaults.removePersistentDomain(forName: launchContext.suiteName)
+        }
+
+        let app = makeApplication(
+            launchContext: launchContext,
+            additionalArguments: ["--ui-test-open-device-library"]
+        )
+        app.launch()
+        defer { terminateIfRunning(app) }
+
+        let window = waitForDeviceLibraryWindow(in: app)
+        openDeviceLibraryAddForm(in: app, window: window)
+
+        let nameField = app.textFields["device-library-name-field"].firstMatch
+        let macField = app.textFields["device-library-mac-field"].firstMatch
+        let nameValidationMessage = app.staticTexts["device-library-name-validation-message"].firstMatch
+
+        XCTAssertTrue(nameField.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(macField.waitForExistence(timeout: 2.0))
+        XCTAssertFalse(nameValidationMessage.exists)
+
+        clickElementAfterActivatingApp(nameField, in: app)
+        clickElementAfterActivatingApp(macField, in: app)
+
+        XCTAssertTrue(nameValidationMessage.waitForExistence(timeout: 2.0))
+        XCTAssertEqual(nameValidationMessage.label, "请填写设备名称")
+    }
+
+    @MainActor
+    func testDeviceLibraryMACValidationRevealsAfterBlurOrSubmit() throws {
+        let launchContext = try makeLaunchContext()
+        defer {
+            launchContext.defaults.removePersistentDomain(forName: launchContext.suiteName)
+        }
+
+        let app = makeApplication(
+            launchContext: launchContext,
+            additionalArguments: ["--ui-test-open-device-library"]
+        )
+        app.launch()
+        defer { terminateIfRunning(app) }
+
+        let window = waitForDeviceLibraryWindow(in: app)
+        let formActions = openDeviceLibraryAddForm(in: app, window: window)
+
+        let nameField = app.textFields["device-library-name-field"].firstMatch
+        let macField = app.textFields["device-library-mac-field"].firstMatch
+        let macValidationMessage = app.staticTexts["device-library-mac-validation-message"].firstMatch
+        let saveButton = formActions.descendants(matching: .button)["保存设备"].firstMatch
+
+        XCTAssertTrue(nameField.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(macField.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(saveButton.waitForExistence(timeout: 2.0))
+        XCTAssertFalse(macValidationMessage.exists)
+
+        replaceText(in: nameField, with: "书房 NAS")
+        replaceText(in: macField, with: "AA:BB:CC")
+        XCTAssertFalse(macValidationMessage.exists)
+
+        clickElementAfterActivatingApp(saveButton, in: app)
+
+        XCTAssertTrue(macValidationMessage.waitForExistence(timeout: 2.0))
+        XCTAssertEqual(macValidationMessage.label, "MAC 地址必须是 6 组两位十六进制字符")
+        XCTAssertTrue(app.descendants(matching: .any)["device-library-form-sheet"].exists)
+    }
+
+    @MainActor
     func testLaunchWithWOLWindowShowsPolishedSections() throws {
         let launchContext = try makeLaunchContext()
         defer {
@@ -413,6 +483,26 @@ private func waitForAnyElement(_ elements: [XCUIElement], timeout: TimeInterval)
     return elements.contains(where: \.exists)
 }
 
+@discardableResult
+private func openDeviceLibraryAddForm(in app: XCUIApplication, window: XCUIElement) -> XCUIElement {
+    let addButton = window.buttons["添加设备"].firstMatch
+    XCTAssertTrue(addButton.waitForExistence(timeout: 2.0))
+
+    let formSheet = app.descendants(matching: .any)["device-library-form-sheet"]
+    let formActions = app.descendants(matching: .any)["device-library-form-actions"]
+    clickElementAfterActivatingApp(addButton, in: app)
+    if !formSheet.waitForExistence(timeout: 2.0) && !formActions.exists {
+        clickElementAfterActivatingApp(addButton, in: app)
+    }
+
+    XCTAssertTrue(
+        formSheet.waitForExistence(timeout: 2.0) || formActions.waitForExistence(timeout: 2.0),
+        "Expected the device-library form sheet to appear."
+    )
+
+    return formActions
+}
+
 private func assertElementFrameIsContained(
     _ element: XCUIElement,
     within window: XCUIElement,
@@ -437,6 +527,13 @@ private func clickElementAfterActivatingApp(_ element: XCUIElement, in app: XCUI
     app.activate()
     XCTAssertTrue(element.waitForExistence(timeout: 2.0), "Expected the element to exist before clicking it.")
     element.click()
+}
+
+private func replaceText(in element: XCUIElement, with text: String) {
+    XCTAssertTrue(element.waitForExistence(timeout: 2.0), "Expected the text field to exist before typing.")
+    element.click()
+    element.typeKey("a", modifierFlags: .command)
+    element.typeText(text)
 }
 
 private struct LaunchContext {
