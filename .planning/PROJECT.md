@@ -12,21 +12,19 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 
 - Active milestone: `v1.8 WOL Feedback Guardrails`
 - Live product identity: `Tools Cat`
-- Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, stabilized direct-launch manager smokes, a non-notarized friend-share DMG flow with repeatable release verification, deferred saved-device validation reveal timing, and exact-once first-use device seeding for `UGREEN NAS`
-- Planning state: v1.8 is being defined around small WOL feedback and device-form interaction guardrails rather than new broad end-user capabilities
+- Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, stabilized direct-launch manager smokes, a non-notarized friend-share DMG flow with repeatable release verification, deferred saved-device validation reveal timing, exact-once first-use device seeding for `UGREEN NAS`, and transient shared WOL feedback that auto-clears after three seconds in both the window and menu bar
+- Planning state: v1.8 has completed the wake-feedback guardrail and is now focused on the saved-device form save-button affordance rather than new broad end-user capabilities
 
 ## Next Milestone Goals
 
-- Make WOL send feedback feel transient and intentional by auto-clearing both window and menu-bar result messages after three seconds.
 - Prevent no-op saves in the saved-device add/edit sheet by enabling `保存设备` only after the user has entered both a device name and a MAC address.
 - Keep the existing validation rules and deferred reveal behavior intact while aligning the save-button affordance with the current keep-awake duration form.
 
 ## Current Milestone: v1.8 WOL Feedback Guardrails
 
-**Goal:** Tighten two small interaction seams in the shipped WOL flow so result feedback does not linger and the device form does not invite empty saves.
+**Goal:** Finish the remaining small device-form interaction guardrail in the shipped WOL flow now that transient wake-result feedback is closed.
 
 **Target features:**
-- WOL send result messages in the `WOL` window and menu bar both disappear automatically after `3 秒`.
 - The saved-device add/edit sheet enables `保存设备` only after both `名称` and `MAC 地址` have been entered.
 - Existing WOL result copy, saved-device validation rules, and deferred validation-message reveal timing remain unchanged.
 
@@ -140,6 +138,8 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 - ✓ Save still blocks invalid saved-device drafts even when inline validation reveal is deferred — validated in Phase 19 and closed through Phase 21 verification
 - ✓ First-use empty saved-device libraries now seed exactly one default `UGREEN NAS` device with MAC `6C:1F:F7:75:C7:0E` — validated in Phase 20 and closed through Phase 21 verification
 - ✓ Existing non-empty saved-device libraries are never modified by the default-device seed path — validated in Phase 20 and closed through Phase 21 verification
+- ✓ WOL send result in the WOL window now auto-clears after three seconds — validated in Phase 22
+- ✓ WOL send result in the menu-bar wake section now auto-clears after three seconds — validated in Phase 22
 
 ### Active
 
@@ -230,7 +230,9 @@ Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, mo
 | Pivot v1.6 away from Developer ID/notarization and toward explicit non-notarized friend sharing | The maintainer chose not to join Apple Developer Program, so the release flow must stay usable without paid Apple distribution features | Validated in v1.6 |
 | Keep the existing saved-device validation rules but delay error reveal until blur or explicit submit | The current issue was premature error noise, not incorrect validation truth | Validated in v1.7 |
 | Seed exactly one default `UGREEN NAS` device only when the saved-device library is first used in an empty state | This gives first-use utility without silently mutating existing personal libraries | Validated in v1.7 |
-| Keep v1.8 limited to interaction guardrails instead of reopening copy or validation semantics | The user asked for smaller UI-behavior corrections, not new wake capabilities or a validator rewrite | Pending |
+| Keep v1.8 limited to interaction guardrails instead of reopening copy or validation semantics | The user asked for smaller UI-behavior corrections, not new wake capabilities or a validator rewrite | Active |
+| Keep WOL result lifetime owned by one shared `WOLSessionModel` seam so both the window and menu-bar row clear together after three seconds | The user wanted transient feedback in both surfaces without divergent behavior or duplicate timers | Validated in Phase 22 |
+| Rebuild `快速 WOL` from the updated device library on the next main-thread turn after device mutations | `@Published` device-change notifications can fire before synchronous menu rebuilds observe the new array, leaving the quick WOL menu stale after add/edit flows | Validated in Phase 22 follow-up |
 
 ## Evolution
 
@@ -250,4 +252,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-06 after starting milestone v1.8 WOL Feedback Guardrails*
+*Last updated: 2026-05-06 after completing Phase 22 WOL Result Timeout*
