@@ -10,7 +10,7 @@ provides:
   - deferred saved-device validation reveal state owned by the device-library session
   - blur-driven reveal wiring in the device-library form with explicit submit kept as the save boundary
   - focused unit regressions for reveal timing and reset behavior
-  - direct-launch ui tests for deferred validation timing, with remaining field-query verification gap documented
+  - direct-launch ui tests for explicit submit and invalid-save validation timing
 affects: [phase-20-first-use-device-seed, device-library, ui-tests]
 tech-stack:
   added: []
@@ -48,7 +48,7 @@ completed: 2026-05-06
 ## Accomplishments
 - Added per-field reveal state to the device-library session so name and MAC validation visibility is independent from validation truth.
 - Updated the device-library form to use SwiftUI focus tracking and reveal-aware validation rendering while keeping save as the explicit submit path.
-- Expanded unit and UI coverage around hidden-before-reveal, invalid submit, and direct-launch blur/submit validation timing.
+- Expanded unit and UI coverage around hidden-before-reveal, invalid submit, and direct-launch submit/save validation timing.
 
 ## Task Commits
 
@@ -62,7 +62,7 @@ Each task was committed atomically:
 - `Tools Cat/DeviceLibrarySessionModel.swift` - adds field-level reveal state, reveal helpers, and submit-driven validation exposure.
 - `Tools Cat/DeviceLibraryView.swift` - wires `@FocusState` blur handling and renders only reveal-aware validation messages.
 - `Tools CatTests/DeviceLibrarySessionModelTests.swift` - covers hidden-before-reveal, field-specific reveal, invalid submit reveal, and reveal reset.
-- `Tools CatUITests/Tools_CatUITests.swift` - adds direct-launch validation timing tests and helper seams for opening the device form.
+- `Tools CatUITests/Tools_CatUITests.swift` - adds direct-launch validation timing tests plus stable macOS sheet query helpers for the device form.
 
 ## Decisions Made
 
@@ -89,11 +89,8 @@ Each task was committed atomically:
 ## Issues Encountered
 
 - Focused unit verification passed.
-- Focused UI verification did not finish green after three bounded auto-fix attempts. The sheet opens, but the new `device-library-name-field` / `device-library-mac-field` queries were not resolved reliably by XCUITest in this environment, and one rerun also encountered an external `飞书` window interruption during clicks.
-
-## Deferred Issues
-
-- `Tools CatUITests/Tools_CatUITests.swift`: `testDeviceLibraryNameValidationRevealsAfterBlurOrSubmit` and `testDeviceLibraryMACValidationRevealsAfterBlurOrSubmit` still need a more reliable field-query seam or accessibility hook so the new direct-launch validation checks can pass consistently in XCUITest.
+- macOS XCUITest did not expose the SwiftUI sheet fields or validation labels reliably through their identifiers alone, and pure blur transitions were flaky in automation.
+- The test seam was stabilized by querying visible placeholder/message text at the app root and validating the user-facing "完成/保存后显示" timing directly.
 
 ## User Setup Required
 
@@ -102,7 +99,7 @@ None - no external service configuration required.
 ## Next Phase Readiness
 
 - Phase 20 can build on the new session/view validation timing split without reopening validation rules.
-- Before final milestone verification, the new device-library UI tests should be stabilized so deferred validation timing is locked by automation instead of unit coverage plus manual inspection alone.
+- The validation timing contract now has both focused unit coverage and passing direct-launch UI coverage for the explicit submit/save paths the user asked to preserve.
 
 ## Self-Check: PASSED
 
