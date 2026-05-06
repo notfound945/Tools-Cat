@@ -52,7 +52,9 @@ This milestone returns to one small product-facing gap in the already-shipped sa
 **Depends on**: Phase 20
 **Requirements**: DEVS-10, DEVS-11, DEVS-12, DEVS-13, DEVS-14
 **Gap Closure**: Closes the v1.7 milestone audit requirement-orphaning gap caused by missing `19-VERIFICATION.md` and `20-VERIFICATION.md`
-**Plans**: 0/0 plans complete
+**Plans**: 0/1 plans complete
+Plans:
+- [ ] `21-01-PLAN.md` — Restore Phase 19/20 verification artifacts, rerun the v1.7 milestone audit, and only then return DEVS traceability to complete.
 **Success Criteria** (what must be TRUE):
   1. Phase 19 has a formal verification report that maps `DEVS-10` through `DEVS-12` to the shipped validation-timing evidence.
   2. Phase 20 has a formal verification report that maps `DEVS-13` and `DEVS-14` to the shipped first-use seeding evidence.
