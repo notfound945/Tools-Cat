@@ -1,7 +1,7 @@
 ---
 phase: 20
 slug: first-use-device-seed
-status: draft
+status: complete
 nyquist_compliant: true
 wave_0_complete: true
 created: 2026-05-06
@@ -38,8 +38,8 @@ created: 2026-05-06
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 20-01-01 | 01 | 1 | DEVS-13, DEVS-14 | unit | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/SavedDeviceRepositoryTests' -only-testing:'Tools CatTests/SavedDeviceLibraryStoreTests'` | ✅ | ⬜ pending |
-| 20-01-02 | 01 | 1 | DEVS-13, DEVS-14 | ui | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithFreshDeviceLibrarySeedsDefaultDevice' -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithExplicitlyEmptyDeviceLibraryShowsPolishedEmptyState' -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithSeededDeviceLibraryShowsManagementWindow'` | ✅ (existing file; new tests added in task) | ⬜ pending |
+| 20-01-01 | 01 | 1 | DEVS-13, DEVS-14 | unit | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/SavedDeviceRepositoryTests' -only-testing:'Tools CatTests/SavedDeviceLibraryStoreTests'` | ✅ | ✅ green |
+| 20-01-02 | 01 | 1 | DEVS-13, DEVS-14 | ui | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithFreshDeviceLibrarySeedsDefaultDevice' -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithExplicitlyEmptyDeviceLibraryShowsPolishedEmptyState' -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithSeededDeviceLibraryShowsManagementWindow'` | ✅ (existing file; new tests added in task) | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -59,11 +59,11 @@ None required beyond automated coverage for this scope. The phase changes persis
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
 - [x] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 60s
+- [x] No watch-mode flags
+- [x] Feedback latency < 60s
 - [ ] `nyquist_compliant: true` set in frontmatter
 
 **Approval:** 2026-05-06 planning self-approved after Phase 20 verification mapping review

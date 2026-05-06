@@ -22,7 +22,7 @@ This milestone returns to one small product-facing gap in the already-shipped sa
 - v1.7 therefore starts at Phase 19
 
 - [x] **Phase 19: Deferred Device Form Validation** - Make saved-device validation hints appear on blur or explicit field submission while preserving the current save-time truth barrier. (completed 2026-05-06)
-- [ ] **Phase 20: First-Use Device Seed** - Seed one default `UGREEN NAS` device for first-use empty libraries without touching existing non-empty libraries.
+- [x] **Phase 20: First-Use Device Seed** - Seed one default `UGREEN NAS` device for first-use empty libraries without touching existing non-empty libraries. (completed 2026-05-06)
 
 ## Phase Details
 
@@ -40,7 +40,7 @@ This milestone returns to one small product-facing gap in the already-shipped sa
 **Goal**: A brand-new empty saved-device library gets one practical default NAS entry exactly once, without mutating existing personal libraries.
 **Depends on**: Phase 19
 **Requirements**: DEVS-13, DEVS-14
-**Plans**: 0/0 plans complete
+**Plans**: 1/1 plans complete
 **Success Criteria** (what must be TRUE):
   1. A first-use empty library automatically contains exactly one saved device named `UGREEN NAS` with normalized MAC `6C:1F:F7:75:C7:0E`.
   2. Reloading after the first-use seed does not duplicate the default device.
@@ -54,4 +54,4 @@ Phases execute in numeric order: 19, 20
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 19. Deferred Device Form Validation | 1/1 | Complete   | 2026-05-06 |
-| 20. First-Use Device Seed | 0/0 | Pending | — |
+| 20. First-Use Device Seed | 1/1 | Complete | 2026-05-06 |

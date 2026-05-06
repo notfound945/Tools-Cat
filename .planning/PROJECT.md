@@ -129,11 +129,11 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 
 ### Active
 
-- [ ] **DEVS-10**: Saved-device name validation appears only after the field loses focus or is explicitly submitted
-- [ ] **DEVS-11**: Saved-device MAC validation appears only after the field loses focus or is explicitly submitted
-- [ ] **DEVS-12**: Save still blocks invalid saved-device drafts even when inline validation reveal is deferred
-- [ ] **DEVS-13**: First-use empty saved-device libraries seed one default `UGREEN NAS` device with MAC `6C:1F:F7:75:C7:0E`
-- [ ] **DEVS-14**: The default-device seed path never mutates an existing non-empty saved-device library
+- [x] **DEVS-10**: Saved-device name validation appears only after the field loses focus or is explicitly submitted
+- [x] **DEVS-11**: Saved-device MAC validation appears only after the field loses focus or is explicitly submitted
+- [x] **DEVS-12**: Save still blocks invalid saved-device drafts even when inline validation reveal is deferred
+- [x] **DEVS-13**: First-use empty saved-device libraries seed one default `UGREEN NAS` device with MAC `6C:1F:F7:75:C7:0E`
+- [x] **DEVS-14**: The default-device seed path never mutates an existing non-empty saved-device library
 
 ### Out of Scope
 
