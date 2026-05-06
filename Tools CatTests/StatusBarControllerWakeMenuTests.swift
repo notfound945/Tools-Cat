@@ -135,6 +135,40 @@ final class StatusBarControllerWakeMenuTests: XCTestCase {
         XCTAssertEqual(controller.wakeStatusItem?.isHidden, false)
     }
 
+    func testWakeStatusRowHidesAfterSharedSuccessResultClear() async {
+        let devices = makeDevices()
+        let store = SavedDeviceLibraryStore(repository: InMemoryMenuSavedDeviceRepository(devices: devices))
+        let sender = RecordingMenuWakeSender()
+        let clearScheduler = FakeMenuWakeResultClearing()
+        let session = WOLSessionModel(
+            deviceLibrary: store,
+            wakeSender: sender,
+            wakeResultClearing: clearScheduler
+        )
+        let controller = makeController(deviceLibrary: store, wolSession: session)
+
+        session.sendSavedDevice(id: devices[0].id)
+
+        await expectLastCompletedWake(of: session) { attempt in
+            attempt?.deviceID == devices[0].id && attempt?.wasSuccessful == true
+        }
+
+        XCTAssertEqual(
+            controller.wakeStatusItem?.title,
+            WakeSendPresentation.successMessage(for: devices[0].macAddress)
+        )
+        XCTAssertEqual(controller.wakeStatusItem?.isHidden, false)
+
+        clearScheduler.fireLatest()
+
+        await expectWakeStatusRow(of: controller) { item in
+            item?.title == "" && item?.isHidden == true
+        }
+
+        XCTAssertEqual(controller.wakeStatusItem?.title, "")
+        XCTAssertEqual(controller.wakeStatusItem?.isHidden, true)
+    }
+
     func testWakeStatusRowPersistsLastFailureMessage() async {
         let devices = makeDevices()
         let store = SavedDeviceLibraryStore(repository: InMemoryMenuSavedDeviceRepository(devices: devices))
@@ -152,6 +186,38 @@ final class StatusBarControllerWakeMenuTests: XCTestCase {
         XCTAssertEqual(controller.wakeStatusItem?.title, WOLSenderError.sendFailed.userMessage)
         XCTAssertEqual(controller.wakeStatusItem?.isEnabled, false)
         XCTAssertEqual(controller.wakeStatusItem?.isHidden, false)
+    }
+
+    func testWakeStatusRowHidesAfterSharedFailureResultClear() async {
+        let devices = makeDevices()
+        let store = SavedDeviceLibraryStore(repository: InMemoryMenuSavedDeviceRepository(devices: devices))
+        let sender = RecordingMenuWakeSender()
+        sender.result = .failure(WOLSenderError.sendFailed)
+        let clearScheduler = FakeMenuWakeResultClearing()
+        let session = WOLSessionModel(
+            deviceLibrary: store,
+            wakeSender: sender,
+            wakeResultClearing: clearScheduler
+        )
+        let controller = makeController(deviceLibrary: store, wolSession: session)
+
+        session.sendSavedDevice(id: devices[0].id)
+
+        await expectLastCompletedWake(of: session) { attempt in
+            attempt?.deviceID == devices[0].id && attempt?.wasSuccessful == false
+        }
+
+        XCTAssertEqual(controller.wakeStatusItem?.title, WOLSenderError.sendFailed.userMessage)
+        XCTAssertEqual(controller.wakeStatusItem?.isHidden, false)
+
+        clearScheduler.fireLatest()
+
+        await expectWakeStatusRow(of: controller) { item in
+            item?.title == "" && item?.isHidden == true
+        }
+
+        XCTAssertEqual(controller.wakeStatusItem?.title, "")
+        XCTAssertEqual(controller.wakeStatusItem?.isHidden, true)
     }
 
     private func makeController(
@@ -231,6 +297,23 @@ final class StatusBarControllerWakeMenuTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: timeout)
         withExtendedLifetime(cancellable) {}
     }
+
+    private func expectWakeStatusRow(
+        of controller: StatusBarController,
+        matching predicate: @escaping (NSMenuItem?) -> Bool,
+        timeout: TimeInterval = 1.0
+    ) async {
+        let deadline = Date().addingTimeInterval(timeout)
+
+        while predicate(controller.wakeStatusItem) == false {
+            if Date() >= deadline {
+                XCTFail("Wake status row did not match expected state before timeout")
+                return
+            }
+
+            try? await Task.sleep(nanoseconds: 10_000_000)
+        }
+    }
 }
 
 private final class InMemoryMenuSavedDeviceRepository: SavedDeviceRepository {
@@ -296,6 +379,25 @@ private final class FakeMenuWakeCountdownScheduler: KeepAwakeCountdownScheduling
 }
 
 private final class FakeMenuWakeCountdownToken: KeepAwakeCountdownToken {
+    func cancel() {}
+}
+
+private final class FakeMenuWakeResultClearing: WakeResultClearing {
+    private var latestAction: (@MainActor () -> Void)?
+
+    func schedule(after delay: TimeInterval, _ action: @escaping @MainActor () -> Void) -> WakeResultClearToken {
+        latestAction = action
+        return FakeMenuWakeResultClearToken()
+    }
+
+    @MainActor
+    func fireLatest() {
+        latestAction?()
+        latestAction = nil
+    }
+}
+
+private final class FakeMenuWakeResultClearToken: WakeResultClearToken {
     func cancel() {}
 }
 
