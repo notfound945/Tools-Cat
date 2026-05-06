@@ -1,5 +1,25 @@
 # Milestones
 
+## v1.7 WOL Device Entry Polish (Shipped: 2026-05-06)
+
+**Phases completed:** 3 phases, 3 plans, 7 tasks
+**Audit:** passed
+
+**Key accomplishments:**
+
+- Saved-device name and MAC validation now appear only after blur or explicit submit instead of warning during in-progress typing
+- Invalid saved-device drafts still fail at the existing save boundary, with reveal-aware validation owned by the session model
+- First-use empty device libraries now seed exactly one canonical `UGREEN NAS` entry and never touch explicit-empty or non-empty libraries
+- v1.7 now has complete verification closure: formal Phase 19/20 artifacts, stabilized audit-grade UI seams, and a passing milestone audit across Phases 19-21
+
+**Archive files:**
+
+- `.planning/milestones/v1.7-ROADMAP.md`
+- `.planning/milestones/v1.7-REQUIREMENTS.md`
+- `.planning/milestones/v1.7-MILESTONE-AUDIT.md`
+
+---
+
 ## v1.6 Distribution Hardening (Shipped: 2026-04-19)
 
 **Phases completed:** 3 phases, 5 plans, 10 tasks
