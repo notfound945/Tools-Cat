@@ -42,6 +42,19 @@ final class SavedDeviceLibraryStoreTests: XCTestCase {
         XCTAssertEqual(makeStore().recentDeviceIDs, [second.id, first.id, fourth.id])
     }
 
+    func testFreshStoreSeedsDefaultDeviceExactlyOnce() throws {
+        let store = makeStore()
+
+        XCTAssertEqual(store.devices.count, 1)
+        XCTAssertEqual(store.devices[0].name, "UGREEN NAS")
+        XCTAssertEqual(store.devices[0].macAddress, "6C:1F:F7:75:C7:0E")
+        XCTAssertEqual(store.devices[0].note, "")
+        XCTAssertEqual(store.devices[0].sortOrder, 0)
+
+        let reloadedStore = makeStore()
+        XCTAssertEqual(reloadedStore.devices, store.devices)
+    }
+
     func testMarkWakeSucceededSetsLastUsedDeviceID() throws {
         let first = makeDevice(name: "书房 Mac mini", macAddress: "AA:BB:CC:DD:EE:01", sortOrder: 0)
         let second = makeDevice(name: "客厅 NAS", macAddress: "AA:BB:CC:DD:EE:02", sortOrder: 1)

@@ -35,7 +35,22 @@ final class SavedDeviceRepositoryTests: XCTestCase {
         super.tearDown()
     }
 
-    func testEmptySuiteLoadsNoDevices() throws {
+    func testMissingSavedDevicesPayloadSeedsDefaultDevice() throws {
+        let firstLoad = try repository.loadDevices()
+
+        XCTAssertEqual(firstLoad.count, 1)
+        XCTAssertEqual(firstLoad[0].name, "UGREEN NAS")
+        XCTAssertEqual(firstLoad[0].macAddress, "6C:1F:F7:75:C7:0E")
+        XCTAssertEqual(firstLoad[0].note, "")
+        XCTAssertEqual(firstLoad[0].sortOrder, 0)
+
+        let persistedLoad = try repository.loadDevices()
+        XCTAssertEqual(persistedLoad, firstLoad)
+    }
+
+    func testExplicitlyPersistedEmptyLibraryDoesNotReseed() throws {
+        try repository.saveDevices([])
+
         XCTAssertEqual(try repository.loadDevices(), [])
     }
 
@@ -241,5 +256,28 @@ final class SavedDeviceRepositoryTests: XCTestCase {
             defaults.bool(forKey: "did_migrate_legacy_saved_device_defaults"),
             "Expected migration marker to be written after the non-overwriting migration path."
         )
+    }
+
+    func testFirstUseSeedDoesNotOverwriteExistingNonEmptyLibrary() throws {
+        let existingDevice = SavedDevice(
+            id: UUID(),
+            name: "现有 NAS",
+            macAddress: "AA:BB:CC:DD:EE:01",
+            note: "existing",
+            sortOrder: 0
+        )
+
+        try repository.saveDevices([existingDevice])
+
+        let loadedDevices = try repository.loadDevices()
+        XCTAssertEqual(loadedDevices, [
+            SavedDevice(
+                id: existingDevice.id,
+                name: "现有 NAS",
+                macAddress: "AA:BB:CC:DD:EE:01",
+                note: "existing",
+                sortOrder: 0
+            )
+        ])
     }
 }

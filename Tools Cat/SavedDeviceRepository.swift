@@ -30,7 +30,9 @@ final class UserDefaultsSavedDeviceRepository: SavedDeviceRepository {
 
     func loadDevices() throws -> [SavedDevice] {
         guard let data = defaults.data(forKey: Self.devicesKey) else {
-            return []
+            let seededDevices = [Self.makeFirstUseDefaultDevice()]
+            try saveDevices(seededDevices)
+            return seededDevices
         }
 
         let devices = try decoder.decode([SavedDevice].self, from: data)
@@ -88,5 +90,15 @@ final class UserDefaultsSavedDeviceRepository: SavedDeviceRepository {
             normalizedDevice.sortOrder = index
             return normalizedDevice
         }
+    }
+
+    private static func makeFirstUseDefaultDevice() -> SavedDevice {
+        SavedDevice(
+            id: UUID(),
+            name: "UGREEN NAS",
+            macAddress: "6C:1F:F7:75:C7:0E",
+            note: "",
+            sortOrder: 0
+        )
     }
 }
