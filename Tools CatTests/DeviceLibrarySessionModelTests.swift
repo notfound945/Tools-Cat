@@ -3,6 +3,35 @@ import XCTest
 
 @MainActor
 final class DeviceLibrarySessionModelTests: XCTestCase {
+    func testValidationMessagesStayHiddenUntilFieldReveal() {
+        let session = makeSession()
+
+        session.beginAdd()
+        session.draftName = "   "
+        session.draftMACAddress = "AA:BB:CC"
+
+        XCTAssertEqual(session.nameValidationMessage, "请填写设备名称")
+        XCTAssertEqual(session.macAddressValidationMessage, ManualMACValidation.wrongGroupCount.userMessage)
+        XCTAssertNil(session.visibleNameValidationMessage)
+        XCTAssertNil(session.visibleMACAddressValidationMessage)
+        XCTAssertEqual(session.revealedValidationFields, [])
+    }
+
+    func testRevealValidationOnlyAffectsRequestedField() {
+        let session = makeSession()
+
+        session.beginAdd()
+        session.draftName = "   "
+        session.draftMACAddress = "AA:BB:CC"
+
+        session.revealValidation(for: .name)
+        XCTAssertEqual(session.visibleNameValidationMessage, "请填写设备名称")
+        XCTAssertNil(session.visibleMACAddressValidationMessage)
+
+        session.revealValidation(for: .macAddress)
+        XCTAssertEqual(session.visibleMACAddressValidationMessage, ManualMACValidation.wrongGroupCount.userMessage)
+    }
+
     func testInvalidDraftBlocksSave() {
         let session = makeSession()
 
@@ -14,6 +43,9 @@ final class DeviceLibrarySessionModelTests: XCTestCase {
         XCTAssertEqual(session.devices, [])
         XCTAssertEqual(session.currentFormMode, .add)
         XCTAssertEqual(session.validationMessage, "请填写设备名称")
+        XCTAssertEqual(session.visibleNameValidationMessage, "请填写设备名称")
+        XCTAssertNil(session.visibleMACAddressValidationMessage)
+        XCTAssertEqual(session.revealedValidationFields, [.name, .macAddress])
 
         session.draftName = "书房主机"
         session.draftMACAddress = "AA:BB:CC"
@@ -22,6 +54,36 @@ final class DeviceLibrarySessionModelTests: XCTestCase {
         XCTAssertEqual(session.devices, [])
         XCTAssertEqual(session.currentFormMode, .add)
         XCTAssertEqual(session.validationMessage, ManualMACValidation.wrongGroupCount.userMessage)
+        XCTAssertEqual(session.visibleMACAddressValidationMessage, ManualMACValidation.wrongGroupCount.userMessage)
+    }
+
+    func testBeginAddAndCancelResetValidationRevealState() {
+        let device = SavedDevice(
+            id: UUID(),
+            name: "书房主机",
+            macAddress: "AA:BB:CC:DD:EE:FF",
+            note: "",
+            sortOrder: 0
+        )
+        let session = makeSession(seedDevices: [device])
+
+        session.beginAdd()
+        session.draftName = "   "
+        session.draftMACAddress = "AA:BB:CC"
+        session.revealValidation(for: .name)
+        session.revealValidation(for: .macAddress)
+
+        XCTAssertFalse(session.revealedValidationFields.isEmpty)
+
+        session.cancelForm()
+        XCTAssertEqual(session.revealedValidationFields, [])
+        XCTAssertNil(session.visibleNameValidationMessage)
+        XCTAssertNil(session.visibleMACAddressValidationMessage)
+
+        session.beginEdit(deviceID: device.id)
+        XCTAssertEqual(session.revealedValidationFields, [])
+        XCTAssertNil(session.visibleNameValidationMessage)
+        XCTAssertNil(session.visibleMACAddressValidationMessage)
     }
 
     func testAddNormalizesMACAndPersistsOptionalNote() {

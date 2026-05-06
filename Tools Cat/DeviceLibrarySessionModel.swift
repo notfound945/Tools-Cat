@@ -6,6 +6,11 @@ enum DeviceLibraryFormMode: Equatable {
     case edit(deviceID: UUID)
 }
 
+enum DeviceLibraryValidationField: Hashable {
+    case name
+    case macAddress
+}
+
 @MainActor
 final class DeviceLibrarySessionModel: ObservableObject {
     @Published var devices: [SavedDevice]
@@ -17,6 +22,7 @@ final class DeviceLibrarySessionModel: ObservableObject {
     @Published var pendingDeleteDevice: SavedDevice?
     @Published var validationMessage: String?
     @Published var saveErrorMessage: String?
+    @Published private(set) var revealedValidationFields: Set<DeviceLibraryValidationField>
 
     private let libraryStore: SavedDeviceLibraryStore
 
@@ -36,6 +42,16 @@ final class DeviceLibrarySessionModel: ObservableObject {
         macAddressValidation.userMessage
     }
 
+    var visibleNameValidationMessage: String? {
+        guard revealedValidationFields.contains(.name) else { return nil }
+        return nameValidationMessage
+    }
+
+    var visibleMACAddressValidationMessage: String? {
+        guard revealedValidationFields.contains(.macAddress) else { return nil }
+        return macAddressValidationMessage
+    }
+
     var canSaveDraft: Bool {
         currentFormMode != nil && nameValidationMessage == nil && macAddressValidation.isValid
     }
@@ -52,6 +68,7 @@ final class DeviceLibrarySessionModel: ObservableObject {
         pendingDeleteDevice = nil
         validationMessage = nil
         saveErrorMessage = nil
+        revealedValidationFields = []
     }
 
     nonisolated deinit {}
@@ -92,17 +109,27 @@ final class DeviceLibrarySessionModel: ObservableObject {
         currentFormMode = nil
     }
 
+    func revealValidation(for field: DeviceLibraryValidationField) {
+        revealedValidationFields.insert(field)
+    }
+
+    func revealValidationForSubmit() {
+        revealedValidationFields.formUnion([.name, .macAddress])
+    }
+
     func saveDraft() {
         guard let activeFormMode = currentFormMode else { return }
+        revealValidationForSubmit()
 
         let trimmedName = draftName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let macValidation = macAddressValidation
+
         if let nameValidationMessage {
             validationMessage = nameValidationMessage
             saveErrorMessage = nil
             return
         }
 
-        let macValidation = macAddressValidation
         guard case let .valid(normalizedMACAddress) = macValidation else {
             validationMessage = macValidation.userMessage
             saveErrorMessage = nil
@@ -187,6 +214,7 @@ final class DeviceLibrarySessionModel: ObservableObject {
     private func clearErrors() {
         validationMessage = nil
         saveErrorMessage = nil
+        revealedValidationFields = []
     }
 
     private func syncDevicesFromStore() {
