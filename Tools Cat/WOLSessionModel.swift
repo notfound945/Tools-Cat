@@ -240,25 +240,25 @@ struct SystemWakeSender: WakeSending {
 
 struct DispatchQueueWakeResultClearing: WakeResultClearing {
     func schedule(after delay: TimeInterval, _ action: @escaping @MainActor () -> Void) -> WakeResultClearToken {
-        let task = Task {
-            let nanoseconds = UInt64(delay * 1_000_000_000)
-            try? await Task.sleep(nanoseconds: nanoseconds)
-            guard !Task.isCancelled else { return }
-            await action()
+        let workItem = DispatchWorkItem {
+            Task { @MainActor in
+                action()
+            }
         }
-        return TaskWakeResultClearToken(task: task)
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: workItem)
+        return DispatchWorkItemWakeResultClearToken(workItem: workItem)
     }
 }
 
-private final class TaskWakeResultClearToken: WakeResultClearToken {
-    private let task: Task<Void, Never>
+private final class DispatchWorkItemWakeResultClearToken: WakeResultClearToken {
+    private let workItem: DispatchWorkItem
 
-    init(task: Task<Void, Never>) {
-        self.task = task
+    init(workItem: DispatchWorkItem) {
+        self.workItem = workItem
     }
 
     func cancel() {
-        task.cancel()
+        workItem.cancel()
     }
 }
 

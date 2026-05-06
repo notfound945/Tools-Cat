@@ -3,9 +3,16 @@ import Combine
 @testable import Tools_Cat
 
 final class WOLSessionModelTests: XCTestCase {
+    private func makeWakeResultClearing() -> FakeWakeResultClearing {
+        FakeWakeResultClearing()
+    }
+
     func testModelStoresPublishedContracts() async {
         await MainActor.run {
-            let model = WOLSessionModel(deviceLibrary: SavedDeviceLibraryStore(repository: InMemorySavedDeviceRepository()))
+            let model = WOLSessionModel(
+                deviceLibrary: SavedDeviceLibraryStore(repository: InMemorySavedDeviceRepository()),
+                wakeResultClearing: makeWakeResultClearing()
+            )
 
             XCTAssertEqual(model.inputMode, .preset)
             XCTAssertNil(model.selectedSavedDeviceID)
@@ -21,7 +28,8 @@ final class WOLSessionModelTests: XCTestCase {
         let model = await MainActor.run {
             WOLSessionModel(
                 deviceLibrary: SavedDeviceLibraryStore(repository: InMemorySavedDeviceRepository()),
-                wakeSender: sender
+                wakeSender: sender,
+                wakeResultClearing: makeWakeResultClearing()
             )
         }
 
@@ -46,7 +54,8 @@ final class WOLSessionModelTests: XCTestCase {
         let model = await MainActor.run {
             WOLSessionModel(
                 deviceLibrary: SavedDeviceLibraryStore(repository: InMemorySavedDeviceRepository()),
-                wakeSender: sender
+                wakeSender: sender,
+                wakeResultClearing: makeWakeResultClearing()
             )
         }
 
@@ -82,7 +91,8 @@ final class WOLSessionModelTests: XCTestCase {
                 customMac: target,
                 validation: .valid(target),
                 sendState: .success(message: "旧结果"),
-                wakeSender: sender
+                wakeSender: sender,
+                wakeResultClearing: makeWakeResultClearing()
             )
         }
 
@@ -158,7 +168,8 @@ final class WOLSessionModelTests: XCTestCase {
                 deviceLibrary: SavedDeviceLibraryStore(repository: InMemorySavedDeviceRepository()),
                 inputMode: .custom,
                 customMac: "AA:BB:CC",
-                sendState: .failure(message: failure)
+                sendState: .failure(message: failure),
+                wakeResultClearing: makeWakeResultClearing()
             )
         }
 
@@ -205,7 +216,8 @@ final class WOLSessionModelTests: XCTestCase {
             WOLSessionModel(
                 deviceLibrary: store,
                 inputMode: .preset,
-                selectedSavedDeviceID: first.id
+                selectedSavedDeviceID: first.id,
+                wakeResultClearing: makeWakeResultClearing()
             )
         }
 
@@ -249,7 +261,8 @@ final class WOLSessionModelTests: XCTestCase {
                 inputMode: .custom,
                 selectedSavedDeviceID: second.id,
                 customMac: "AA:BB:CC",
-                validation: .wrongGroupCount
+                validation: .wrongGroupCount,
+                wakeResultClearing: makeWakeResultClearing()
             )
         }
 
@@ -293,7 +306,8 @@ final class WOLSessionModelTests: XCTestCase {
             WOLSessionModel(
                 deviceLibrary: store,
                 inputMode: .custom,
-                selectedSavedDeviceID: nil
+                selectedSavedDeviceID: nil,
+                wakeResultClearing: makeWakeResultClearing()
             )
         }
 
@@ -323,7 +337,8 @@ final class WOLSessionModelTests: XCTestCase {
             WOLSessionModel(
                 deviceLibrary: store,
                 selectedSavedDeviceID: device.id,
-                wakeSender: sender
+                wakeSender: sender,
+                wakeResultClearing: makeWakeResultClearing()
             )
         }
 
@@ -357,7 +372,11 @@ final class WOLSessionModelTests: XCTestCase {
             SavedDeviceLibraryStore(repository: InMemorySavedDeviceRepository(devices: [device]))
         }
         let model = await MainActor.run {
-            WOLSessionModel(deviceLibrary: store, wakeSender: sender)
+            WOLSessionModel(
+                deviceLibrary: store,
+                wakeSender: sender,
+                wakeResultClearing: makeWakeResultClearing()
+            )
         }
 
         await MainActor.run {
@@ -389,7 +408,11 @@ final class WOLSessionModelTests: XCTestCase {
             SavedDeviceLibraryStore(repository: InMemorySavedDeviceRepository(devices: [device]))
         }
         let model = await MainActor.run {
-            WOLSessionModel(deviceLibrary: store, wakeSender: RecordingWakeSender())
+            WOLSessionModel(
+                deviceLibrary: store,
+                wakeSender: RecordingWakeSender(),
+                wakeResultClearing: makeWakeResultClearing()
+            )
         }
 
         await MainActor.run {
@@ -516,7 +539,11 @@ final class WOLSessionModelTests: XCTestCase {
             SavedDeviceLibraryStore(repository: InMemorySavedDeviceRepository(devices: [first, second]))
         }
         let model = await MainActor.run {
-            WOLSessionModel(deviceLibrary: store, wakeSender: sender)
+            WOLSessionModel(
+                deviceLibrary: store,
+                wakeSender: sender,
+                wakeResultClearing: makeWakeResultClearing()
+            )
         }
 
         await MainActor.run {
@@ -579,7 +606,11 @@ final class WOLSessionModelTests: XCTestCase {
             SavedDeviceLibraryStore(repository: InMemorySavedDeviceRepository(devices: [first, second]))
         }
         let model = await MainActor.run {
-            WOLSessionModel(deviceLibrary: store, wakeSender: sender)
+            WOLSessionModel(
+                deviceLibrary: store,
+                wakeSender: sender,
+                wakeResultClearing: makeWakeResultClearing()
+            )
         }
 
         await MainActor.run {
@@ -625,7 +656,8 @@ final class WOLSessionModelTests: XCTestCase {
             WOLSessionModel(
                 deviceLibrary: store,
                 selectedSavedDeviceID: device.id,
-                wakeSender: sender
+                wakeSender: sender,
+                wakeResultClearing: makeWakeResultClearing()
             )
         }
 
@@ -654,7 +686,8 @@ final class WOLSessionModelTests: XCTestCase {
                 inputMode: .custom,
                 customMac: target,
                 validation: .valid(target),
-                wakeSender: sender
+                wakeSender: sender,
+                wakeResultClearing: makeWakeResultClearing()
             )
         }
 
