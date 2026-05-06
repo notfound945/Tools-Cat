@@ -1,35 +1,35 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.6
-milestone_name: Distribution Hardening
-status: milestone_archived
-stopped_at: Deferred milestone themes removed; next step is starting a new milestone when needed
-last_updated: "2026-04-19T04:25:00Z"
-last_activity: 2026-04-19 -- Removed deferred milestone themes after v1.6 archival
+milestone: v1.7
+milestone_name: WOL Device Entry Polish
+status: roadmap_ready
+stopped_at: ""
+last_updated: "2026-05-06T01:13:43Z"
+last_activity: 2026-05-06 -- Defined requirements and roadmap for milestone v1.7
 progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 5
-  completed_plans: 5
+  total_phases: 2
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-04-19)
+See: `.planning/PROJECT.md` (updated 2026-05-06)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Start the next milestone only when a new scoped goal is ready
+**Current focus:** Start Phase 19 planning for deferred device form validation
 
 ## Current Position
 
-Phase: None active
+Phase: 19 — Deferred Device Form Validation
 Plan: None active
-Status: v1.6 archived; no deferred milestone themes are currently active
-Last activity: 2026-04-19 -- Removed deferred milestone themes after v1.6 archival
+Status: Roadmap ready for milestone v1.7
+Last activity: 2026-05-06 -- Requirements and roadmap created for milestone v1.7
 
-Progress: [██████████] 5/5 historical/current milestone plans complete
+Progress: [░░░░░░░░░░] 0/0 current milestone plans complete
 
 ## Performance Metrics
 
@@ -38,7 +38,7 @@ Progress: [██████████] 5/5 historical/current milestone plan
 - Total plans completed: 5
 - Average duration: 3.8 min
 - Total execution time: 0.32 hours
-- Current milestone plans completed: 5
+- Current milestone plans completed: 0
 
 **By Phase:**
 
@@ -52,7 +52,7 @@ Progress: [██████████] 5/5 historical/current milestone plan
 
 - Last 5 plans: Phase 16-release-signing-readiness Plan 01 (3min), Plan 02 (2min), Phase 17-signed-dmg-notarization-pipeline Plan 01 (8min), Plan 02 (3min), Phase 18-distribution-verification-closure Plan 01 (3min)
 - Trend: Phase 17 was superseded by the 2026-04-17 friend-share pivot, and Phase 18 closed the replacement verification contract in one plan.
-- v1.6 remains the latest archived milestone; no new follow-up milestone is currently defined.
+- v1.7 is now active; execution planning should continue from Phase 19 because v1.6 archived at Phase 18.
 
 | Phase 16-release-signing-readiness P01 | 3min | 2 tasks | 6 files |
 | Phase 16-release-signing-readiness P02 | 2min | 2 tasks | 3 files |
@@ -62,10 +62,10 @@ Progress: [██████████] 5/5 historical/current milestone plan
 
 ## Milestone Summary
 
-- Active milestone: none
+- Active milestone: `v1.7 WOL Device Entry Polish`
 - Latest archived milestone: `v1.6 Distribution Hardening`
-- Scope delivered: deterministic non-notarized friend-share DMG, explicit first-launch guidance, and repeatable Phase 18 verification closure
-- Active roadmap: `.planning/ROADMAP.md` (all current milestones archived; no future milestone started yet)
+- New scope: defer device-library validation error reveal until blur/submit and seed one default `UGREEN NAS` device only for first-use empty libraries
+- Active roadmap: `.planning/ROADMAP.md` (phases 19-20 planned and pending execution)
 - Working files:
   - `.planning/PROJECT.md`
   - `.planning/ROADMAP.md`
@@ -112,10 +112,10 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- No deferred milestone themes are currently active.
+- New milestone theme activated from user request: device-library validation timing polish plus first-use default-device seeding.
 
 ## Session Continuity
 
-Last session: 2026-04-19T04:25:00Z
-Stopped at: Deferred milestone themes removed; next step is starting a new milestone when needed
+Last session: 2026-05-06T01:13:43Z
+Stopped at: Ready to discuss or plan Phase 19
 Resume file: None

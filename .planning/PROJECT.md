@@ -10,15 +10,27 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 
 ## Current State
 
-- Shipped: `v1.6 Distribution Hardening` is complete and archived as the latest shipped milestone
+- Active milestone: `v1.7 WOL Device Entry Polish`
 - Live product identity: `Tools Cat`
 - Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, stabilized direct-launch manager smokes, and a non-notarized friend-share DMG flow with repeatable release verification
-- Planning state: no active future milestone is defined yet; the next step is scoping the post-v1.6 roadmap
+- Current milestone scope: device-library form validation should reveal errors only after blur or explicit field submission, and first-use empty libraries should seed one practical default NAS device without touching existing saved-device libraries
+- Planning state: milestone initialized; requirements and roadmap now target phases 19-20
 
 ## Next Milestone Goals
 
-- No deferred milestone themes are currently active.
-- Start the next milestone only when a new scoped goal is ready.
+- Delay device-library inline validation messaging until the user leaves a field or explicitly submits it, instead of warning on every in-progress edit.
+- Preserve the existing save-time validation truth so invalid device names or MAC addresses still cannot be saved.
+- Seed `UGREEN NAS` with MAC `6C:1F:F7:75:C7:0E` exactly once when the saved-device library is first used in an empty state.
+
+## Current Milestone: v1.7 WOL Device Entry Polish
+
+**Goal:** Make saved-device entry feel more native and reduce empty-library setup friction without reopening the shipped wake or menu behavior.
+
+**Target features:**
+- Name and MAC validation hints in the `设备库` add/edit form appear only after blur or explicit field submission.
+- Save still refuses invalid name or MAC drafts even if the user never blurred a field before tapping save.
+- First-use empty libraries seed exactly one default saved device: `UGREEN NAS` / `6C:1F:F7:75:C7:0E`.
+- Existing non-empty libraries are never modified by the new seed path.
 
 ## Latest Shipped Milestone: v1.6 Distribution Hardening
 
@@ -117,7 +129,11 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 
 ### Active
 
-(None currently — define the next milestone before adding new active requirements)
+- [ ] **DEVS-10**: Saved-device name validation appears only after the field loses focus or is explicitly submitted
+- [ ] **DEVS-11**: Saved-device MAC validation appears only after the field loses focus or is explicitly submitted
+- [ ] **DEVS-12**: Save still blocks invalid saved-device drafts even when inline validation reveal is deferred
+- [ ] **DEVS-13**: First-use empty saved-device libraries seed one default `UGREEN NAS` device with MAC `6C:1F:F7:75:C7:0E`
+- [ ] **DEVS-14**: The default-device seed path never mutates an existing non-empty saved-device library
 
 ### Out of Scope
 
@@ -129,6 +145,9 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 - Adding new end-user features during the distribution milestone — this pass is only about release packaging and installability guidance
 - Pulling in a third-party component library before exhausting the native macOS list/table components — native consistency and lower maintenance take priority
 - Public-distribution polish as the primary milestone — signing/notarization matters later, but current scope is daily-use quality first
+- Injecting the default `UGREEN NAS` seed into existing non-empty device libraries — this milestone only improves first-use empty-library onboarding
+- Rewriting MAC/name validation rules or weakening save-time blocking — this milestone changes validation reveal timing, not device-truth rules
+- Changing the shipped `快速 WOL` / `发送 WOL …` wake surface during this pass — keep scope on device entry polish and default seeding only
 
 ## Context
 
@@ -155,6 +174,8 @@ The v1.4 milestone is intentionally narrower again: it does not reopen duration 
 The v1.5 milestone then brought the `设备库` manager up to that same native-management bar: device browsing now uses a real list surface, add/edit stays in a retained shared sheet, row actions communicate edit versus delete semantics immediately, and the existing saved-device CRUD, reorder, and direct-launch flows stayed truthful.
 
 The v1.6 milestone is now shipped and archived. It stayed intentionally operational rather than product-facing: the app already worked for daily use, but the release chain still needed a deterministic friend-share artifact and truthful install guidance. On 2026-04-17, the milestone pivoted away from Developer ID/notarization because the maintainer chose not to join Apple Developer Program. The shipped outcome is now a non-notarized DMG plus explicit first-launch instructions and repeatable release verification, not a fully Gatekeeper-approved release chain.
+
+The v1.7 milestone returns to one narrow product-facing gap in the already-shipped device library. The CRUD flow exists and the manager presentation is now native, but the add/edit form still surfaces required-field and MAC errors too early while the user is typing, and a brand-new empty library offers no practical starting device even though one stable NAS target is already known. This milestone keeps the current validator and store truth, but changes when validation feedback appears and how a first-use empty library is seeded.
 
 Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, module, bundle IDs, regression scripts, release packaging defaults, and active docs now agree on one product identity. Historical workflow-stability exception: the planning artifact directory remains `.planning/phases/09-mac-os-swiss-knife-tools-cat/`.
 
@@ -190,6 +211,8 @@ Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, mo
 | Keep device-library polish presentation-only by deriving add/edit presentation from `currentFormMode` and reusing the duration-manager's list and action semantics | The milestone only needed cross-surface parity, not a new saved-device data or routing model | Validated in Phase 15 |
 | Keep v1.6 limited to release-chain hardening so installability improves without reopening shipped runtime behavior | The immediate user problem is distribution friction, not missing app capability | Validated in v1.6 |
 | Pivot v1.6 away from Developer ID/notarization and toward explicit non-notarized friend sharing | The maintainer chose not to join Apple Developer Program, so the release flow must stay usable without paid Apple distribution features | Validated in v1.6 |
+| Keep the existing saved-device validation rules but delay error reveal until blur or explicit submit | The current issue is premature error noise, not incorrect validation truth | — Pending |
+| Seed exactly one default `UGREEN NAS` device only when the saved-device library is first used in an empty state | This gives first-use utility without silently mutating existing personal libraries | — Pending |
 
 ## Evolution
 
@@ -209,4 +232,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-19 after removing deferred milestone themes*
+*Last updated: 2026-05-06 after starting milestone v1.7 WOL Device Entry Polish*
