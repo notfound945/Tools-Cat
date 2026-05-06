@@ -21,7 +21,7 @@ This milestone tightens two small interaction seams in the already-shipped WOL f
 - Integer phases continue from the last shipped milestone
 - v1.8 therefore starts at Phase 22
 
-- [ ] **Phase 22: WOL Result Timeout** - Make WOL send result feedback in both the WOL window and the menu-bar wake section disappear automatically after three seconds.
+- [x] **Phase 22: WOL Result Timeout** - Make WOL send result feedback in both the WOL window and the menu-bar wake section disappear automatically after three seconds. (completed 2026-05-06)
 - [ ] **Phase 23: Device Form Save Guard** - Enable the saved-device `保存设备` button only after both required fields contain input while preserving the current delayed validation reveal behavior.
 
 ## Phase Details
@@ -30,9 +30,9 @@ This milestone tightens two small interaction seams in the already-shipped WOL f
 **Goal**: WOL send feedback stays visible long enough to confirm the action, then disappears automatically from both the WOL window and menu bar without manual cleanup.
 **Depends on**: Phase 21
 **Requirements**: WOLF-01, WOLF-02
-**Plans**: 0/1 plans complete
+**Plans**: 1/1 plans complete
 Plans:
-- [ ] `22-01-PLAN.md` — Stabilize the shared WOL result-timeout seam in `WOLSessionModel` and lock menu/window expiry coverage.
+- [x] `22-01-PLAN.md` — Stabilize the shared WOL result-timeout seam in `WOLSessionModel` and lock menu/window expiry coverage. Summary: `22-01-SUMMARY.md`
 **Success Criteria** (what must be TRUE):
   1. A successful or failed WOL result remains visible in the WOL window for approximately three seconds, then disappears automatically.
   2. The same WOL result remains visible in the menu-bar wake status row for approximately three seconds, then disappears automatically.
@@ -55,5 +55,5 @@ Phases execute in numeric order: 22, 23
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 22. WOL Result Timeout | 0/1 | Not Started | — |
+| 22. WOL Result Timeout | 1/1 | Complete   | 2026-05-06 |
 | 23. Device Form Save Guard | 0/1 | Not Started | — |

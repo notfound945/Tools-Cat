@@ -9,8 +9,8 @@ Requirements for the v1.8 WOL feedback guardrails milestone. This milestone is d
 
 ### Wake Feedback
 
-- [ ] **WOLF-01**: User sees a WOL send result in the WOL window for `3 秒`, after which it disappears automatically
-- [ ] **WOLF-02**: User sees the same WOL send result in the menu-bar wake section for `3 秒`, after which it disappears automatically
+- [x] **WOLF-01**: User sees a WOL send result in the WOL window for `3 秒`, after which it disappears automatically
+- [x] **WOLF-02**: User sees the same WOL send result in the menu-bar wake section for `3 秒`, after which it disappears automatically
 
 ### Device Form Guardrails
 
@@ -49,8 +49,8 @@ Phase mapping assigned during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| WOLF-01 | Phase 22 | Pending |
-| WOLF-02 | Phase 22 | Pending |
+| WOLF-01 | Phase 22 | Complete |
+| WOLF-02 | Phase 22 | Complete |
 | DEVS-15 | Phase 23 | Pending |
 | DEVS-16 | Phase 23 | Pending |
 

@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready for `$gsd-discuss-phase 22` or `$gsd-plan-phase 22`
-stopped_at: Phase 22 context gathered
-last_updated: "2026-05-06T06:43:10.474Z"
-last_activity: 2026-05-06 -- Milestone v1.8 started
+status: verifying
+stopped_at: Completed 22-01-PLAN.md
+last_updated: "2026-05-06T07:25:22.580Z"
+last_activity: 2026-05-06
 progress:
   total_phases: 2
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
 ---
 
 # Project State
@@ -20,41 +20,42 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-06)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Defining and starting milestone v1.8 WOL Feedback Guardrails
+**Current focus:** Phase 23 — device-form-save-guard
 
 ## Current Position
 
-Phase: Not started (defining requirements and roadmap)
-Plan: —
-Status: Ready for `$gsd-discuss-phase 22` or `$gsd-plan-phase 22`
-Last activity: 2026-05-06 -- Milestone v1.8 started
+Phase: 23 (device-form-save-guard) — READY
+Plan: 1 of 1
+Status: Phase 22 complete — ready to plan Phase 23
+Last activity: 2026-05-06
 
-Progress: [░░░░░░░░░░] 0/2 current milestone phases complete
+Progress: [█████░░░░░] 1/2 current milestone phases complete
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 0
-- Average duration: —
+- Total plans completed: 1
+- Average duration: 9 min
 - Total execution time: 0 hours
-- Current milestone plans completed: 0
+- Current milestone plans completed: 1
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 22 | 0 | — | — |
+| 22 | 1 | 9min | 9min |
 | 23 | 0 | — | — |
 
 **Recent Trend:**
 
 - Last shipped milestone: v1.7 WOL Device Entry Polish (Phases 19-21)
 - Trend: v1.8 remains intentionally narrow and is scoped as two focused interaction-guardrail phases rather than a feature-expansion milestone.
-- The next executable step is Phase 22 discussion or direct planning.
+- The next executable step is Phase 23 planning and execution.
 
-| Phase 22 | pending | roadmap only | 0 files |
+| Phase 22 | complete | summary written | 3 files |
 | Phase 23 | pending | roadmap only | 0 files |
+| Phase 22 P01 | 9min | 2 tasks | 3 files |
 
 ## Milestone Summary
 
@@ -104,6 +105,8 @@ The latest completed milestone established these durable decisions:
 - [Phase 20]: Keep first-use seeding inside `UserDefaultsSavedDeviceRepository.loadDevices()` so persistence truth stays in one repository-owned boundary.
 - [Phase 20]: Treat a missing `saved_devices` payload as first use, but preserve an explicit persisted empty array as an already-initialized empty library.
 - [Phase 22/23 planning]: Keep v1.8 limited to result-timeout and save-button affordance guardrails instead of reopening WOL copy or the saved-device validation rules.
+- [Phase 22]: Keep WOLSessionModel as the only owner of wake-result lifetime so the window and menu row clear from one shared state transition.
+- [Phase 22]: Stabilize shared-timeout regressions with fake wake-result schedulers in tests that do not need the production delay path.
 
 ### Roadmap Evolution
 
@@ -119,6 +122,6 @@ The latest completed milestone established these durable decisions:
 
 ## Session Continuity
 
-Last session: 2026-05-06T06:43:10.465Z
-Stopped at: Phase 22 context gathered
-Resume file: .planning/phases/22-wol-result-timeout/22-CONTEXT.md
+Last session: 2026-05-06T07:25:22.577Z
+Stopped at: Completed 22-01-PLAN.md
+Resume file: None
