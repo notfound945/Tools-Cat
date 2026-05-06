@@ -145,8 +145,31 @@ final class Tools_CatUITests: XCTestCase {
     }
 
     @MainActor
-    func testLaunchWithEmptyDeviceLibraryShowsPolishedEmptyState() throws {
+    func testLaunchWithFreshDeviceLibrarySeedsDefaultDevice() throws {
         let launchContext = try makeLaunchContext()
+        defer {
+            launchContext.defaults.removePersistentDomain(forName: launchContext.suiteName)
+        }
+
+        let app = makeApplication(
+            launchContext: launchContext,
+            additionalArguments: ["--ui-test-open-device-library"]
+        )
+        app.launch()
+        defer { terminateIfRunning(app) }
+
+        let window = waitForDeviceLibraryWindow(in: app)
+        let populatedList = window.descendants(matching: .any)["device-library-list"]
+
+        XCTAssertTrue(populatedList.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(window.staticTexts["UGREEN NAS"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(window.staticTexts["6C:1F:F7:75:C7:0E"].waitForExistence(timeout: 2.0))
+        XCTAssertFalse(window.descendants(matching: .any)["device-library-empty-state"].exists)
+    }
+
+    @MainActor
+    func testLaunchWithExplicitlyEmptyDeviceLibraryShowsPolishedEmptyState() throws {
+        let launchContext = try makeLaunchContext(seededDevices: [])
         defer {
             launchContext.defaults.removePersistentDomain(forName: launchContext.suiteName)
         }
@@ -586,19 +609,19 @@ private struct SeededSavedDevice: Codable {
     let sortOrder: Int
 }
 
-private func makeLaunchContext(seededDevices: [SeededSavedDevice] = []) throws -> LaunchContext {
+private func makeLaunchContext(seededDevices: [SeededSavedDevice]? = nil) throws -> LaunchContext {
     let suiteName = "Tools-Cat-UITests-\(UUID().uuidString)"
     let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
     defaults.removePersistentDomain(forName: suiteName)
 
     let seededDeviceLibraryData: Data?
-    if seededDevices.isEmpty {
-        seededDeviceLibraryData = nil
-    } else {
+    if let seededDevices {
         let encodedData = try JSONEncoder().encode(seededDevices)
         defaults.set(encodedData, forKey: "saved_devices")
         defaults.synchronize()
         seededDeviceLibraryData = encodedData
+    } else {
+        seededDeviceLibraryData = nil
     }
 
     return LaunchContext(
