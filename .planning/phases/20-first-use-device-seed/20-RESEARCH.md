@@ -1,30 +1,32 @@
 # Phase 20: First-Use Device Seed - Research
 
 **Researched:** 2026-05-06
-**Domain:** Saved-device persistence seeding in a native macOS Swift/AppKit/SwiftUI app
+**Domain:** first-use default-device seeding for the saved-device library
 **Confidence:** HIGH
 
 <user_constraints>
 ## User Constraints
 
-No `*-CONTEXT.md` exists for Phase 20. These constraints come from the user request, `.planning/ROADMAP.md`, and `.planning/REQUIREMENTS.md`.
+No Phase 20 `CONTEXT.md` exists. Planning constraints below are derived from [REQUIREMENTS.md](/Users/hailinpan/Documents/GitHub/Tools-Cat/.planning/REQUIREMENTS.md:1), [ROADMAP.md](/Users/hailinpan/Documents/GitHub/Tools-Cat/.planning/ROADMAP.md:1), [PROJECT.md](/Users/hailinpan/Documents/GitHub/Tools-Cat/.planning/PROJECT.md:1), [STATE.md](/Users/hailinpan/Documents/GitHub/Tools-Cat/.planning/STATE.md:1), the user prompt, and the shipped saved-device persistence seams.
 
-### Locked Constraints
+### Locked Decisions
 - Seed exactly one default saved device named `UGREEN NAS` with MAC `6C:1F:F7:75:C7:0E`.
-- Seed only when the saved-device library is first used and empty.
-- Do not mutate existing non-empty libraries.
-- Do not duplicate the default device on reload.
-- Keep scope strictly to Phase 20.
-- Do not reopen Phase 19 validation timing.
+- The default device should appear only for first-use empty libraries.
+- Existing non-empty libraries must never be mutated by the seed path.
+- Do not reopen Phase 19 validation timing, wake/menu behavior, or broader device-library UI polish.
+- Preserve the current native SwiftUI/AppKit stack and current `SavedDevice` persistence model.
 
 ### Claude's Discretion
-- Choose the best implementation seam for first-use seeding.
-- Recommend the minimum test updates needed to preserve intent.
+- Choose the narrowest persistence seam for first-use seeding.
+- Decide whether a dedicated “seeded once” flag is necessary or whether the existing `saved_devices` key truth is sufficient.
+- Decide the minimum UI-test fixture change needed so automation can still represent an intentionally empty library after first-use seeding exists.
 
 ### Deferred Ideas (OUT OF SCOPE)
-- Reworking saved-device validation timing or rules.
-- Changing the shipped WOL/menu behavior beyond what seeded data naturally causes.
-- Adding third-party persistence or migration libraries.
+- Seeding more than one device
+- Device discovery/import
+- Editing the default device copy after seed
+- Reworking wake metadata behavior
+- New onboarding UI beyond the existing manager/window surfaces
 </user_constraints>
 
 <phase_requirements>
@@ -32,264 +34,135 @@ No `*-CONTEXT.md` exists for Phase 20. These constraints come from the user requ
 
 | ID | Description | Research Support |
 |----|-------------|------------------|
-| DEVS-13 | First-use empty saved-device libraries seed exactly one default device named `UGREEN NAS` with MAC address `6C:1F:F7:75:C7:0E` | Recommend seeding in `UserDefaultsSavedDeviceRepository.loadDevices()` only when the `saved_devices` key is absent, then persisting the normalized seed immediately |
-| DEVS-14 | Existing non-empty saved-device libraries are never modified by the default-device seed path | Recommend using key absence, not `devices.isEmpty`, as the first-use gate; existing non-empty and explicitly persisted empty libraries bypass seeding |
+| DEVS-13 | First-use empty saved-device libraries seed exactly one default device named `UGREEN NAS` with MAC address `6C:1F:F7:75:C7:0E` | Seed inside the saved-device repository when the canonical `saved_devices` payload is absent, then persist immediately through the existing normalization path |
+| DEVS-14 | Existing non-empty saved-device libraries are never modified by the default-device seed path | Treat the presence of `saved_devices` data as “library already initialized,” regardless of whether it is non-empty or explicitly empty |
 </phase_requirements>
 
 ## Summary
 
-The best seam for Phase 20 is the concrete persistence boundary in [SavedDeviceRepository.swift](/Users/hailinpan/Documents/GitHub/Tools-Cat/Tools%20Cat/SavedDeviceRepository.swift), specifically `UserDefaultsSavedDeviceRepository.loadDevices()`. That class already owns the `saved_devices` key, already distinguishes real persistence state, and is the only current seam that can safely tell the difference between a brand-new library with no key at all and an intentionally persisted empty library after the user deletes everything.
+The narrowest safe seam is [SavedDeviceRepository.swift](/Users/hailinpan/Documents/GitHub/Tools-Cat/Tools%20Cat/SavedDeviceRepository.swift:15), not [SavedDeviceLibraryStore.swift](/Users/hailinpan/Documents/GitHub/Tools-Cat/Tools%20Cat/SavedDeviceLibraryStore.swift:4) or [AppDelegate.swift](/Users/hailinpan/Documents/GitHub/Tools-Cat/Tools%20Cat/AppDelegate.swift:74). The repository already owns the canonical `saved_devices` payload, normalization, and legacy migration behavior. That makes it the right layer to say “no persisted library exists yet, so materialize the first-use default device once and save it.”
 
-Seeding in `SavedDeviceLibraryStore` or `AppDelegate` is weaker. `AppDelegate` would miss other legitimate construction paths that instantiate `SavedDeviceLibraryStore()` directly, and store-level seeding would either need protocol expansion or type checks to recover persistence-state knowledge the repository already has. Repository-owned seeding keeps the change phase-local, preserves current in-memory test seams, and prevents duplicates by persisting the default device the first time it is materialized.
+The key design choice is to seed only when the `saved_devices` key is absent, not whenever the decoded device list is empty. That distinction matters because it lets the app treat an explicit persisted empty array as an already-initialized personal library, which satisfies DEVS-14 and also preserves a clean way for tests to represent an intentionally empty device library. A separate “seeded once” marker is unnecessary if the repository persists the default device immediately on first load, because subsequent loads will see existing `saved_devices` data and skip reseeding.
 
-The critical behavioral distinction is this: "first use" must mean "`saved_devices` has never been written", not "`loadDevices()` returned an empty array". If the implementation seeds any time the loaded array is empty, the app will wrongly reseed after a user intentionally clears the library, and several tests that currently use a fresh suite to mean "empty state" will start asserting the wrong product behavior.
+This phase also has one important automation consequence: several UI tests currently model an empty library by launching with no saved-device payload at all. After Phase 20, that startup path will correctly seed `UGREEN NAS`, so tests that still need the true empty-state surface must explicitly inject an encoded empty device array instead of omitting the payload entirely. That is a test-fixture adjustment, not a product behavior exception.
 
-**Primary recommendation:** Seed inside `UserDefaultsSavedDeviceRepository.loadDevices()` only when `defaults.object(forKey: "saved_devices") == nil`, persist the single normalized default immediately with `saveDevices`, and leave `SavedDeviceLibraryStore`, `AppDelegate`, and in-memory test repositories unmodified unless tests explicitly need first-use semantics.
+**Primary recommendation:** implement first-use seeding in `UserDefaultsSavedDeviceRepository.loadDevices()` when `saved_devices` is absent, persist the default device immediately through `saveDevices`, and update UI-test launch helpers so “fresh defaults” and “explicitly empty library” are separate test cases.
 
-## Project Constraints (from CLAUDE.md)
+## Project Constraints
 
-- Stay native to the existing AppKit/SwiftUI macOS stack.
-- Optimize for a personal daily-use utility, not generalized multi-user behavior.
-- Keep UX restrained and polished; avoid flashy scope expansion.
-- Core menu state must stay truthful; no fake success paths.
-- New functionality should reduce coupling or at least avoid deepening it.
-- Follow the existing small-file, focused-function style.
-- Keep persistence on `UserDefaults.standard`; Phase 18 state already treats that as a durable decision.
+- Keep persistence truth in the existing `UserDefaultsSavedDeviceRepository` + `SavedDeviceLibraryStore` stack.
+- Keep user-facing copy Chinese where existing UI already expects it, but preserve the exact seeded device name `UGREEN NAS` from the requirement.
+- Avoid new onboarding flags or alternate app boot flows unless tests genuinely require them.
+- Keep the phase tightly scoped to device-library seed initialization and verification.
 
 ## Standard Stack
 
 ### Core
 | Library | Version | Purpose | Why Standard |
 |---------|---------|---------|--------------|
-| Foundation `UserDefaults` | macOS SDK 26.2 via Xcode 26.2 | Persist the saved-device JSON blob and detect whether the library key has ever been written | Already the shipped persistence mechanism; it exposes both `data(forKey:)` and `object(forKey:)`, which is exactly what Phase 20 needs |
-| XCTest | Xcode 26.2 | Verify repository/store/session behavior without introducing new harnesses | Existing repo test stack and already covers this subsystem directly |
+| `UserDefaultsSavedDeviceRepository` | repo local | canonical storage/load seam for saved devices | already owns first-load truth, normalization, and migration |
+| `SavedDeviceLibraryStore` | repo local | observable runtime bridge for saved devices | already reflects repository state into WOL/device-library UI |
+| XCTest | Xcode 26.2 verified 2026-05-06 | repository/store regressions for seed behavior | already covers saved-device persistence and migration |
+| XCUITest | Xcode 26.2 verified 2026-05-06 | direct-launch verification for fresh-seed and explicit-empty-library surfaces | existing launch seam already exercises device-library startup |
 
 ### Supporting
 | Library | Version | Purpose | When to Use |
 |---------|---------|---------|-------------|
-| Combine / `ObservableObject` | macOS SDK 26.2 via Xcode 26.2 | Publish seeded or loaded store state into menu/session consumers | Use only through the existing `SavedDeviceLibraryStore` and session models |
-| AppKit / SwiftUI | macOS SDK 26.2 via Xcode 26.2 | Surface seeded devices in the management window and WOL picker/menu | Use for UI verification only; seeding logic itself should stay below the UI layer |
+| `SavedDevice` | repo local | exact seeded model shape and sort normalization | always; do not invent a parallel seed DTO in product code |
+| `AppDelegate` launch configuration | repo local | current UI-test defaults injection seam | when adjusting test-only startup fixtures for explicit empty libraries |
+| `WOLSessionModel` | repo local | indirect consumer of first saved device / last used device selection | only as a regression awareness surface, not the seed implementation seam |
 
 ### Alternatives Considered
 | Instead of | Could Use | Tradeoff |
 |------------|-----------|----------|
-| Repository-first seeding | `SavedDeviceLibraryStore` init seeding | Store lacks direct persisted-key knowledge; would need protocol expansion or concrete type checks |
-| Repository-first seeding | `AppDelegate.configureSharedStores()` seeding | Too launch-path-specific; misses other `SavedDeviceLibraryStore()` construction seams and couples app startup to persistence policy |
-| Missing-key detection | `register(defaults:)` | Apple documents registration defaults as volatile fallback values per launch, not persisted library creation; it cannot express "seed exactly once" safely |
-
-**Installation:**
-```bash
-# No new packages. Use the existing Xcode/macOS SDK toolchain.
-```
-
-**Version verification:** Verified locally with `xcodebuild -version` on 2026-05-06: `Xcode 26.2 (Build 17C52)`. The current build uses the macOS 26.2 SDK during test compilation.
+| repository-level seeding on missing key | seeding inside `SavedDeviceLibraryStore.init` | would pollute store truth, complicate in-memory repos, and make tests less precise |
+| key-absence as first-use signal | dedicated “did seed default device” defaults key | extra state without solving a real problem if seeding persists immediately |
+| explicit-empty test payloads | add a test-only “disable seed” launch flag | broader app-surface change than necessary for this phase |
 
 ## Architecture Patterns
 
-### Recommended Project Structure
-```text
-Tools Cat/
-├── SavedDevice.swift               # Saved-device value type
-├── SavedDeviceRepository.swift     # UserDefaults persistence truth, including first-use seed gate
-├── SavedDeviceLibraryStore.swift   # Published library state, reload/replace/upsert/delete orchestration
-├── DeviceLibrarySessionModel.swift # Add/edit/delete session logic
-└── WOLSessionModel.swift           # Picker/manual-send behavior that consumes library state
-```
+### Pattern 1: First-Use Seed Belongs To The Persistence Boundary
+**What:** If no saved-device payload exists yet, create the default device and persist it before returning from repository load.
 
-### Pattern 1: Seed At The UserDefaults Persistence Boundary
-**What:** Put first-use seeding in `UserDefaultsSavedDeviceRepository.loadDevices()`, before the method returns the loaded array.
-**When to use:** Any time the backing `saved_devices` key is absent in a real `UserDefaults` domain.
+**When to use:** Brownfield apps where “first-use defaults” must be globally true anywhere the store is read.
+
 **Example:**
+
 ```swift
-// Source: Tools Cat/SavedDeviceRepository.swift + Apple UserDefaults docs
-func loadDevices() throws -> [SavedDevice] {
-    if defaults.object(forKey: Self.devicesKey) == nil {
-        let seed = [Self.firstUseDefaultDevice()]
-        try saveDevices(seed)
-        return seed
-    }
-
-    guard let data = defaults.data(forKey: Self.devicesKey) else {
-        return []
-    }
-
-    let devices = try decoder.decode([SavedDevice].self, from: data)
-    return Self.normalized(devices.sorted { $0.sortOrder < $1.sortOrder })
+guard let data = defaults.data(forKey: Self.devicesKey) else {
+    let seededDevices = [Self.firstUseDefaultDevice()]
+    try saveDevices(seededDevices)
+    return seededDevices
 }
 ```
 
-### Pattern 2: Treat Persisted Empty As User Intent
-**What:** Preserve `[]` if the key exists and decodes to an empty array.
-**When to use:** After the user has deleted all saved devices, or a test intentionally persists an empty library.
-**Example:**
-```swift
-// Source: Tools CatTests/Tools_CatUITests.swift helpers + repository behavior
-let encodedEmptyLibrary = try JSONEncoder().encode([SavedDevice]())
-defaults.set(encodedEmptyLibrary, forKey: "saved_devices")
+**Why here:** the repository already owns normalized save/load truth.
 
-let repository = UserDefaultsSavedDeviceRepository(defaults: defaults)
-XCTAssertEqual(try repository.loadDevices(), [])
-```
+### Pattern 2: Distinguish Missing Library From Explicitly Empty Library
+**What:** `saved_devices` key missing means “never initialized”; encoded `[]` means “initialized and intentionally empty.”
 
-### Pattern 3: Keep Store Initialization Purely About Published State
-**What:** Let `SavedDeviceLibraryStore` continue to load, prune wake metadata, and publish the repository result.
-**When to use:** Always.
-**Example:**
-```swift
-// Source: Tools Cat/SavedDeviceLibraryStore.swift
-devices = (try? resolvedRepository.loadDevices()) ?? []
-let wakeMetadata = (try? resolvedRepository.loadWakeMetadata())
-    ?? SavedDeviceWakeMetadata(recentDeviceIDs: [], lastUsedDeviceID: nil)
-```
+**When to use:** When product requirements say first-use seeding must not come back after the user already had a library.
 
-### Anti-Patterns to Avoid
-- **Seed on `devices.isEmpty`:** Wrongly reseeds after the user intentionally clears the library.
-- **Seed in `AppDelegate`:** Makes first-use behavior dependent on one launch path instead of the persistence contract.
-- **Append-if-missing by name/MAC on every init:** Hides the real first-use boundary and can mutate old libraries unexpectedly.
-- **Use `register(defaults:)` for one-time seed:** Apple documents it as a volatile fallback domain applied each launch, not a persisted one-time creation path.
+**Why it matters:** This distinction satisfies DEVS-14 and keeps empty-state UI tests representable.
+
+### Pattern 3: Test Fixtures Must Separate Fresh Defaults From Explicit Empty State
+**What:** UI-test launch helpers should support both:
+- no saved-device payload injected → seed path
+- encoded empty array injected → explicit empty-library path
+
+**When to use:** As soon as first-use product behavior depends on key absence.
 
 ## Don't Hand-Roll
 
 | Problem | Don't Build | Use Instead | Why |
 |---------|-------------|-------------|-----|
-| First-use detection | A second "didSeedDefaultDevice" boolean flag | The existing `saved_devices` key absence check | One persistence key already encodes the distinction Phase 20 needs |
-| Duplicate prevention | Name/MAC dedupe scans on every launch | One-time write on missing key, then normal loads thereafter | Eliminates duplicate logic and preserves explicit empty/non-empty user state |
-| UI onboarding truth | View/session-local fake seed rows | Repository-backed persisted seed | Menu, WOL window, and management window all stay in sync automatically |
-
-**Key insight:** This phase is not about finding a device if one is missing later; it is about materializing the initial persisted library exactly once. Presence of the persistence key is the simplest durable truth.
+| First-use detection | app-wide extra onboarding controller | repository key-absence check | smallest truth boundary |
+| Seed normalization | custom uppercase/sort logic in multiple places | existing `saveDevices` normalization path | keeps ordering/persistence behavior consistent |
+| Empty-state test escape hatch | product-only bypass flag | explicit empty encoded payload in tests | smaller, clearer, and contained to harness code |
+| Seed duplication prevention | post-load de-dup passes on every startup | immediate persisted seed plus existing key-presence truth | simpler and deterministic |
 
 ## Common Pitfalls
 
-### Pitfall 1: Confusing "Missing Key" With "Empty Library"
-**What goes wrong:** The app reseeds after the user deletes the last device.
-**Why it happens:** The code checks `loadDevices().isEmpty` instead of whether `saved_devices` has ever been written.
-**How to avoid:** Gate seeding on `defaults.object(forKey: devicesKey) == nil` before decoding.
-**Warning signs:** A test that saves `[]`, reloads, and unexpectedly sees `UGREEN NAS`.
+### Pitfall 1: Seeding On Every Empty Decode
+**What goes wrong:** A user who deletes all devices gets `UGREEN NAS` reinserted later.
 
-### Pitfall 2: Putting Seeding Above The Repository
-**What goes wrong:** Some app paths seed while others still behave as truly empty, causing inconsistent menu/window behavior.
-**Why it happens:** `AppDelegate` is only one construction path; tests and some production types instantiate the store directly.
-**How to avoid:** Keep the policy in `UserDefaultsSavedDeviceRepository`.
-**Warning signs:** UI tests pass but unit tests with `SavedDeviceLibraryStore()` or `StatusBarController(deviceLibrary: nil)` diverge.
+**Why it happens:** The implementation checks `devices.isEmpty` after decode instead of checking whether persistence has ever been initialized.
 
-### Pitfall 3: Breaking Existing Empty-State Tests By Accident
-**What goes wrong:** Fresh-suite UI tests fail because "empty suite" no longer means "empty library".
-**Why it happens:** Today several tests rely on a brand-new `UserDefaults` suite with no `saved_devices` key.
-**How to avoid:** Add explicit test helpers for a persisted empty library where that scenario still matters.
-**Warning signs:** `testLaunchWithEmptyDeviceLibraryShowsPolishedEmptyState` fails immediately after seeding lands.
+**How to avoid:** Seed only when the `saved_devices` payload is absent.
 
-## Code Examples
+### Pitfall 2: Putting The Seed In `SavedDeviceLibraryStore`
+**What goes wrong:** In-memory repositories and existing unit tests stop meaning “repository truth,” and first-use logic becomes harder to isolate.
 
-Verified patterns from project sources and official docs:
+**How to avoid:** Keep the seed behavior in `UserDefaultsSavedDeviceRepository`.
 
-### One-Time Repository Seed
-```swift
-// Source: Tools Cat/SavedDeviceRepository.swift
-private static func firstUseDefaultDevice() -> SavedDevice {
-    SavedDevice(
-        id: UUID(),
-        name: "UGREEN NAS",
-        macAddress: "6C:1F:F7:75:C7:0E",
-        note: "",
-        sortOrder: 0
-    )
-}
-```
+### Pitfall 3: Forgetting UI-Test Empty-State Fixtures
+**What goes wrong:** Existing “empty library” UI tests suddenly fail because fresh launch now correctly seeds one device.
 
-### Focused Regression Command
-```bash
-# Source: local verified command on 2026-05-06
-xcodebuild test \
-  -project 'Tools Cat.xcodeproj' \
-  -scheme 'Tools Cat' \
-  -only-testing:'Tools CatTests/SavedDeviceRepositoryTests' \
-  -only-testing:'Tools CatTests/SavedDeviceLibraryStoreTests' \
-  -only-testing:'Tools CatTests/WOLSessionModelTests' \
-  -only-testing:'Tools CatTests/DeviceLibrarySessionModelTests' \
-  CODE_SIGNING_ALLOWED=NO
-```
+**How to avoid:** Change the launch helper to support an explicit empty payload distinct from nil/no payload.
 
-## State of the Art
+### Pitfall 4: Using Non-Canonical Seed Copy Or Formatting
+**What goes wrong:** The seeded device appears as `Ugreen NAS` or with a differently cased MAC, violating DEVS-13.
 
-| Old Approach | Current Approach | When Changed | Impact |
-|--------------|------------------|--------------|--------|
-| Missing `saved_devices` key loads as `[]` | Missing `saved_devices` key should persist and return one default saved device | Phase 20 | First-use users see a practical default; explicit empty libraries remain empty |
-| UI tests use fresh suites to mean "empty library" | UI tests that need a true empty library should persist `[]` explicitly | Phase 20 | Tests become aligned with real product semantics |
-| Launch-time seeding is absent | Repository-owned one-time seed | Phase 20 | All real `UserDefaults` consumers share the same persistence truth |
-
-**Deprecated/outdated:**
-- Fresh-suite-equals-empty assumptions in UserDefaults-backed tests: outdated once Phase 20 ships, because fresh suite now means first-use seeding should occur.
-
-## Open Questions
-
-1. **Should the seeded device use a fixed UUID or a newly generated UUID?**
-   - What we know: Requirements only lock the name and MAC, not the identifier.
-   - What's unclear: Whether the planner wants exact-ID assertions in UI/unit tests.
-   - Recommendation: Use `UUID()` unless a test needs stable exact-object identity across fresh suites; the one-time persisted write already prevents duplicates without a fixed ID.
-
-## Environment Availability
-
-| Dependency | Required By | Available | Version | Fallback |
-|------------|------------|-----------|---------|----------|
-| `xcodebuild` | Unit and UI validation | ✓ | Xcode 26.2 / Build 17C52 | — |
-
-**Missing dependencies with no fallback:**
-- None
-
-**Missing dependencies with fallback:**
-- None
+**How to avoid:** Define one canonical default `SavedDevice` source with exact requirement values and rely on existing save/load normalization only for sort order.
 
 ## Validation Architecture
 
-### Test Framework
-| Property | Value |
-|----------|-------|
-| Framework | XCTest via Xcode 26.2 |
-| Config file | none — Xcode project target configuration |
-| Quick run command | `xcodebuild test -project 'Tools Cat.xcodeproj' -scheme 'Tools Cat' -only-testing:'Tools CatTests/SavedDeviceRepositoryTests' -only-testing:'Tools CatTests/SavedDeviceLibraryStoreTests' CODE_SIGNING_ALLOWED=NO` |
-| Full suite command | `xcodebuild test -project 'Tools Cat.xcodeproj' -scheme 'Tools Cat' CODE_SIGNING_ALLOWED=NO` |
+Recommended verification layers:
+- repository truth: first-load seed, no duplicate on repeated loads, no overwrite of current/non-empty libraries
+- store truth: fresh `SavedDeviceLibraryStore` reflects the seeded default from the repository
+- UI truth: fresh direct-launch device-library surface shows the seeded device; explicit-empty injected library still shows the empty state
 
-### Phase Requirements → Test Map
-| Req ID | Behavior | Test Type | Automated Command | File Exists? |
-|--------|----------|-----------|-------------------|-------------|
-| DEVS-13 | Missing `saved_devices` key seeds exactly one `UGREEN NAS` with normalized MAC and persists it | unit | `xcodebuild test -project 'Tools Cat.xcodeproj' -scheme 'Tools Cat' -only-testing:'Tools CatTests/SavedDeviceRepositoryTests' -only-testing:'Tools CatTests/SavedDeviceLibraryStoreTests' CODE_SIGNING_ALLOWED=NO` | ❌ Wave 0 |
-| DEVS-13 | Fresh app/device-library launch shows the seeded device instead of blank onboarding when using a new UserDefaults suite | UI smoke | `xcodebuild test -project 'Tools Cat.xcodeproj' -scheme 'Tools Cat' -only-testing:'Tools CatUITests/Tools_CatUITests' CODE_SIGNING_ALLOWED=NO` | ⚠️ Existing file, new case needed |
-| DEVS-14 | Existing non-empty library remains unchanged | unit | `xcodebuild test -project 'Tools Cat.xcodeproj' -scheme 'Tools Cat' -only-testing:'Tools CatTests/SavedDeviceRepositoryTests' CODE_SIGNING_ALLOWED=NO` | ⚠️ Existing file, new case needed |
-| DEVS-14 | Persisted empty library remains empty and does not reseed after reload | unit/UI | `xcodebuild test -project 'Tools Cat.xcodeproj' -scheme 'Tools Cat' -only-testing:'Tools CatTests/SavedDeviceRepositoryTests' -only-testing:'Tools CatUITests/Tools_CatUITests' CODE_SIGNING_ALLOWED=NO` | ❌ Wave 0 |
+Recommended quick regression command:
+`xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/SavedDeviceRepositoryTests' -only-testing:'Tools CatTests/SavedDeviceLibraryStoreTests'`
 
-### Sampling Rate
-- **Per task commit:** `xcodebuild test -project 'Tools Cat.xcodeproj' -scheme 'Tools Cat' -only-testing:'Tools CatTests/SavedDeviceRepositoryTests' -only-testing:'Tools CatTests/SavedDeviceLibraryStoreTests' CODE_SIGNING_ALLOWED=NO`
-- **Per wave merge:** `xcodebuild test -project 'Tools Cat.xcodeproj' -scheme 'Tools Cat' -only-testing:'Tools CatTests/SavedDeviceRepositoryTests' -only-testing:'Tools CatTests/SavedDeviceLibraryStoreTests' -only-testing:'Tools CatTests/WOLSessionModelTests' -only-testing:'Tools CatTests/DeviceLibrarySessionModelTests' CODE_SIGNING_ALLOWED=NO`
-- **Phase gate:** Full suite green before `/gsd:verify-work`
+Recommended full regression command:
+`xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/SavedDeviceRepositoryTests' -only-testing:'Tools CatTests/SavedDeviceLibraryStoreTests' -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithFreshDeviceLibrarySeedsDefaultDevice' -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithExplicitlyEmptyDeviceLibraryShowsPolishedEmptyState' -only-testing:'Tools CatUITests/Tools_CatUITests/testLaunchWithSeededDeviceLibraryShowsManagementWindow'`
 
-### Wave 0 Gaps
-- [ ] Replace `SavedDeviceRepositoryTests.testEmptySuiteLoadsNoDevices()` with a first-use seed test and a persisted-empty-no-reseed test.
-- [ ] Add a `SavedDeviceLibraryStoreTests` case that verifies initial UserDefaults-backed load seeds once and `reload()` does not duplicate.
-- [ ] Add a UI-test helper that persists an explicit empty library for tests that still need the blank-state contract.
-- [ ] Update or replace `Tools_CatUITests.testLaunchWithEmptyDeviceLibraryShowsPolishedEmptyState()` so it no longer treats a fresh suite as a persisted empty library.
+## Recommended Phase Split
 
-## Sources
+1. `20-01`: Add repository-owned first-use seeding with unit/store regressions, then adjust direct-launch UI fixtures so fresh-seed and explicit-empty-library behavior are both covered.
 
-### Primary (HIGH confidence)
-- Local code: [Tools Cat/SavedDeviceRepository.swift](/Users/hailinpan/Documents/GitHub/Tools-Cat/Tools%20Cat/SavedDeviceRepository.swift) - current `UserDefaults` persistence seam, migration helper, normalized save/load behavior
-- Local code: [Tools Cat/SavedDeviceLibraryStore.swift](/Users/hailinpan/Documents/GitHub/Tools-Cat/Tools%20Cat/SavedDeviceLibraryStore.swift) - store hydration, reload, metadata pruning, and published-state boundary
-- Local code: [Tools Cat/AppDelegate.swift](/Users/hailinpan/Documents/GitHub/Tools-Cat/Tools%20Cat/AppDelegate.swift) - current app startup path and why it is a weaker seeding seam
-- Local tests: [Tools CatTests/SavedDeviceRepositoryTests.swift](/Users/hailinpan/Documents/GitHub/Tools-Cat/Tools%20CatTests/SavedDeviceRepositoryTests.swift), [Tools CatTests/SavedDeviceLibraryStoreTests.swift](/Users/hailinpan/Documents/GitHub/Tools-Cat/Tools%20CatTests/SavedDeviceLibraryStoreTests.swift), [Tools CatUITests/Tools_CatUITests.swift](/Users/hailinpan/Documents/GitHub/Tools-Cat/Tools%20CatUITests/Tools_CatUITests.swift) - current assumptions that Phase 20 will change
-- Apple Developer Documentation: https://developer.apple.com/documentation/foundation/userdefaults - verified that `UserDefaults` provides `object(forKey:)`, `data(forKey:)`, and persistent app-domain storage behavior
-- Apple Developer Documentation: https://developer.apple.com/documentation/Foundation/UserDefaults/register%28defaults%3A%29 - verified that `register(defaults:)` writes volatile fallback defaults per launch, not one-time persisted seed state
+---
 
-### Secondary (MEDIUM confidence)
-- Apple Developer Documentation: https://developer.apple.com/documentation/xcode/adding-tests-to-your-xcode-project - current Apple guidance that XCTest remains a standard supported testing path in Xcode
-
-### Tertiary (LOW confidence)
-- None
-
-## Metadata
-
-**Confidence breakdown:**
-- Standard stack: HIGH - no new libraries are needed; this phase sits directly on the repo's existing UserDefaults/XCTest stack
-- Architecture: HIGH - repository key-absence detection is directly supported by current code structure and avoids unnecessary seam widening
-- Pitfalls: HIGH - the missing-key versus persisted-empty distinction is visible in current code and tests, and was verified against Apple UserDefaults docs
-
-**Research date:** 2026-05-06
-**Valid until:** 2026-06-05
+*Phase: 20-first-use-device-seed*
+*Research completed: 2026-05-06*
