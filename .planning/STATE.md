@@ -1,15 +1,15 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.8
-milestone_name: WOL Feedback Guardrails
-status: requirements_defined
-stopped_at: Milestone initialized; ready for Phase 22 discussion/planning
-last_updated: "2026-05-06T14:30:00+0800"
-last_activity: 2026-05-06 -- Milestone v1.8 started and roadmap created
+milestone: v1.0
+milestone_name: milestone
+status: Ready for `$gsd-discuss-phase 22` or `$gsd-plan-phase 22`
+stopped_at: Phase 22 context gathered
+last_updated: "2026-05-06T06:43:10.474Z"
+last_activity: 2026-05-06 -- Milestone v1.8 started
 progress:
   total_phases: 2
   completed_phases: 0
-  total_plans: 2
+  total_plans: 0
   completed_plans: 0
 ---
 
@@ -119,6 +119,6 @@ The latest completed milestone established these durable decisions:
 
 ## Session Continuity
 
-Last session: 2026-05-06T14:30:00+0800
-Stopped at: Milestone v1.8 initialized; next step is `$gsd-discuss-phase 22` or `$gsd-plan-phase 22`
-Resume file: None
+Last session: 2026-05-06T06:43:10.465Z
+Stopped at: Phase 22 context gathered
+Resume file: .planning/phases/22-wol-result-timeout/22-CONTEXT.md
