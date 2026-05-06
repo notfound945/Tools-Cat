@@ -31,6 +31,8 @@ This milestone tightens two small interaction seams in the already-shipped WOL f
 **Depends on**: Phase 21
 **Requirements**: WOLF-01, WOLF-02
 **Plans**: 0/1 plans complete
+Plans:
+- [ ] `22-01-PLAN.md` — Stabilize the shared WOL result-timeout seam in `WOLSessionModel` and lock menu/window expiry coverage.
 **Success Criteria** (what must be TRUE):
   1. A successful or failed WOL result remains visible in the WOL window for approximately three seconds, then disappears automatically.
   2. The same WOL result remains visible in the menu-bar wake status row for approximately three seconds, then disappears automatically.
