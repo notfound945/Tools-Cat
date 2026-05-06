@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.7
-milestone_name: WOL Device Entry Polish
-status: milestone_archived
-stopped_at: v1.7 archived; next step is starting a new milestone
-last_updated: "2026-05-06T13:00:05+0800"
-last_activity: 2026-05-06 -- Archived v1.7 WOL Device Entry Polish
+milestone: v1.8
+milestone_name: WOL Feedback Guardrails
+status: requirements_defined
+stopped_at: Milestone initialized; ready for Phase 22 discussion/planning
+last_updated: "2026-05-06T14:30:00+0800"
+last_activity: 2026-05-06 -- Milestone v1.8 started and roadmap created
 progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 3
-  completed_plans: 3
+  total_phases: 2
+  completed_phases: 0
+  total_plans: 2
+  completed_plans: 0
 ---
 
 # Project State
@@ -20,53 +20,52 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-06)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Start the next milestone after archiving v1.7
+**Current focus:** Defining and starting milestone v1.8 WOL Feedback Guardrails
 
 ## Current Position
 
-Phase: None active
-Plan: None active
-Status: v1.7 archived; ready for `$gsd-new-milestone`
-Last activity: 2026-05-06 -- Archived v1.7 WOL Device Entry Polish
+Phase: Not started (defining requirements and roadmap)
+Plan: —
+Status: Ready for `$gsd-discuss-phase 22` or `$gsd-plan-phase 22`
+Last activity: 2026-05-06 -- Milestone v1.8 started
 
-Progress: [██████████] 3/3 current milestone phases complete
+Progress: [░░░░░░░░░░] 0/2 current milestone phases complete
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 3
-- Average duration: 4.7 min
-- Total execution time: 0.23 hours
-- Current milestone plans completed: 3
+- Total plans completed: 0
+- Average duration: —
+- Total execution time: 0 hours
+- Current milestone plans completed: 0
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 19 | 1 | 7min | 7min |
-| 20 | 1 | session | session |
-| 21 | 1 | session | session |
+| 22 | 0 | — | — |
+| 23 | 0 | — | — |
 
 **Recent Trend:**
 
-- Last 3 plans: Phase 19-deferred-device-form-validation Plan 01 (7min), Phase 20-first-use-device-seed Plan 01 (session), Phase 21-device-entry-verification-closure Plan 01 (session)
-- Trend: v1.7 stayed intentionally narrow, with one product behavior pass for validation timing, one onboarding seed pass, and one final verification-closure pass.
-- v1.7 is archived and the project is ready for the next milestone definition cycle.
+- Last shipped milestone: v1.7 WOL Device Entry Polish (Phases 19-21)
+- Trend: v1.8 remains intentionally narrow and is scoped as two focused interaction-guardrail phases rather than a feature-expansion milestone.
+- The next executable step is Phase 22 discussion or direct planning.
 
-| Phase 19 P01 | 7min | 2 tasks | 4 files |
-| Phase 20 P01 | session | 2 tasks | 4 files |
-| Phase 21 P01 | session | 3 tasks | 8 files |
+| Phase 22 | pending | roadmap only | 0 files |
+| Phase 23 | pending | roadmap only | 0 files |
 
 ## Milestone Summary
 
-- Active milestone: none
+- Active milestone: `v1.8 WOL Feedback Guardrails`
 - Latest archived milestone: `v1.7 WOL Device Entry Polish`
-- Scope delivered: defer device-library validation error reveal until blur/submit and seed one default `UGREEN NAS` device only for first-use empty libraries
-- Active roadmap: `.planning/ROADMAP.md` (all current milestones archived; no future milestone started yet)
+- New scope: auto-clear WOL result feedback after three seconds and gate saved-device save affordance on required-field completeness
+- Active roadmap: `.planning/ROADMAP.md` (Phases 22-23 planned)
 - Working files:
   - `.planning/PROJECT.md`
   - `.planning/ROADMAP.md`
+  - `.planning/REQUIREMENTS.md`
   - `.planning/MILESTONES.md`
 - Latest shipped summary: `.planning/MILESTONES.md`
 
@@ -104,6 +103,7 @@ The latest completed milestone established these durable decisions:
 - [Phase 19]: Remove the invalid-only disabled save gate so saveDraft() remains the explicit submit boundary for invalid drafts.
 - [Phase 20]: Keep first-use seeding inside `UserDefaultsSavedDeviceRepository.loadDevices()` so persistence truth stays in one repository-owned boundary.
 - [Phase 20]: Treat a missing `saved_devices` payload as first use, but preserve an explicit persisted empty array as an already-initialized empty library.
+- [Phase 22/23 planning]: Keep v1.8 limited to result-timeout and save-button affordance guardrails instead of reopening WOL copy or the saved-device validation rules.
 
 ### Roadmap Evolution
 
@@ -114,11 +114,11 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- No active milestone is currently defined.
-- Deferred themes after v1.7: `CONV-04`, `AWAKE-12`, `AWAKE-13`.
+- Active milestone theme: tighten small WOL/device-entry interaction guardrails without reopening existing behavior contracts.
+- Deferred themes after v1.8 planning: `CONV-04`, `AWAKE-12`, `AWAKE-13`.
 
 ## Session Continuity
 
-Last session: 2026-05-06T13:00:05+0800
-Stopped at: v1.7 archived; next step is `$gsd-new-milestone`
+Last session: 2026-05-06T14:30:00+0800
+Stopped at: Milestone v1.8 initialized; next step is `$gsd-discuss-phase 22` or `$gsd-plan-phase 22`
 Resume file: None

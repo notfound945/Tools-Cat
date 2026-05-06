@@ -10,16 +10,25 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 
 ## Current State
 
-- Shipped: `v1.7 WOL Device Entry Polish` is complete and archived as the latest shipped milestone
+- Active milestone: `v1.8 WOL Feedback Guardrails`
 - Live product identity: `Tools Cat`
 - Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, stabilized direct-launch manager smokes, a non-notarized friend-share DMG flow with repeatable release verification, deferred saved-device validation reveal timing, and exact-once first-use device seeding for `UGREEN NAS`
-- Planning state: no active future milestone is defined yet; the next step is scoping the post-v1.7 roadmap
+- Planning state: v1.8 is being defined around small WOL feedback and device-form interaction guardrails rather than new broad end-user capabilities
 
 ## Next Milestone Goals
 
-- Revisit end-user convenience work that was deferred during hardening and device-entry polish, especially faster repeat wake actions (`CONV-04`).
-- Add one-off keep-awake convenience on top of the managed duration model without reopening the core truth contracts (`AWAKE-12`).
-- Explore richer duration metadata such as custom labels or notes once the current managed-duration surface is stable enough to expand (`AWAKE-13`).
+- Make WOL send feedback feel transient and intentional by auto-clearing both window and menu-bar result messages after three seconds.
+- Prevent no-op saves in the saved-device add/edit sheet by enabling `保存设备` only after the user has entered both a device name and a MAC address.
+- Keep the existing validation rules and deferred reveal behavior intact while aligning the save-button affordance with the current keep-awake duration form.
+
+## Current Milestone: v1.8 WOL Feedback Guardrails
+
+**Goal:** Tighten two small interaction seams in the shipped WOL flow so result feedback does not linger and the device form does not invite empty saves.
+
+**Target features:**
+- WOL send result messages in the `WOL` window and menu bar both disappear automatically after `3 秒`.
+- The saved-device add/edit sheet enables `保存设备` only after both `名称` and `MAC 地址` have been entered.
+- Existing WOL result copy, saved-device validation rules, and deferred validation-message reveal timing remain unchanged.
 
 ## Latest Shipped Milestone: v1.7 WOL Device Entry Polish
 
@@ -134,9 +143,10 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 
 ### Active
 
-- [ ] Add a short recent-devices shortcut surface for faster repeat wake actions without reopening the current root wake contract
-- [ ] Allow a one-off timed keep-awake action without forcing the duration into the managed list
-- [ ] Let managed keep-awake durations carry custom labels or notes for quicker recognition
+- [ ] WOL send result in the WOL window auto-clears after three seconds
+- [ ] WOL send result in the menu-bar wake section auto-clears after three seconds
+- [ ] Saved-device `保存设备` stays disabled until both name and MAC address have been entered
+- [ ] Device-form save-button gating preserves the current delayed validation-reveal behavior and save-time validation truth
 
 ### Out of Scope
 
@@ -151,6 +161,8 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 - Injecting the default `UGREEN NAS` seed into existing non-empty device libraries — the shipped v1.7 scope only improved first-use empty-library onboarding
 - Rewriting MAC/name validation rules or weakening save-time blocking — the shipped v1.7 scope changed validation reveal timing, not device-truth rules
 - Changing the shipped `快速 WOL` / `发送 WOL …` wake surface during the device-entry polish pass — keep that work closed unless a later milestone deliberately reopens it
+- Changing the WOL success/failure copy itself during v1.8 — this pass only changes how long the existing feedback stays visible
+- Reopening deferred validation-message timing for the device form during v1.8 — this pass only changes the save button's enabled state
 
 ## Context
 
@@ -179,6 +191,8 @@ The v1.5 milestone then brought the `设备库` manager up to that same native-m
 The v1.6 milestone is now shipped and archived. It stayed intentionally operational rather than product-facing: the app already worked for daily use, but the release chain still needed a deterministic friend-share artifact and truthful install guidance. On 2026-04-17, the milestone pivoted away from Developer ID/notarization because the maintainer chose not to join Apple Developer Program. The shipped outcome is now a non-notarized DMG plus explicit first-launch instructions and repeatable release verification, not a fully Gatekeeper-approved release chain.
 
 The v1.7 milestone is now shipped and archived. It kept the current validation rules and wake/menu contract intact, but changed when saved-device validation feedback appears and how a truly first-use empty library is seeded. The shipped outcome is quieter add/edit feedback, preserved invalid-save truth, one exact-once `UGREEN NAS` seed for fresh libraries, and a fully closed verification chain for those behaviors.
+
+The v1.8 milestone is intentionally narrower still. It does not introduce new WOL capabilities or reopen the validation contract from v1.7. It only makes wake-result feedback transient again and aligns the saved-device form's save-button affordance with the existing keep-awake duration form pattern.
 
 Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, module, bundle IDs, regression scripts, release packaging defaults, and active docs now agree on one product identity. Historical workflow-stability exception: the planning artifact directory remains `.planning/phases/09-mac-os-swiss-knife-tools-cat/`.
 
@@ -216,6 +230,7 @@ Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, mo
 | Pivot v1.6 away from Developer ID/notarization and toward explicit non-notarized friend sharing | The maintainer chose not to join Apple Developer Program, so the release flow must stay usable without paid Apple distribution features | Validated in v1.6 |
 | Keep the existing saved-device validation rules but delay error reveal until blur or explicit submit | The current issue was premature error noise, not incorrect validation truth | Validated in v1.7 |
 | Seed exactly one default `UGREEN NAS` device only when the saved-device library is first used in an empty state | This gives first-use utility without silently mutating existing personal libraries | Validated in v1.7 |
+| Keep v1.8 limited to interaction guardrails instead of reopening copy or validation semantics | The user asked for smaller UI-behavior corrections, not new wake capabilities or a validator rewrite | Pending |
 
 ## Evolution
 
@@ -235,4 +250,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-06 after archiving v1.7 WOL Device Entry Polish*
+*Last updated: 2026-05-06 after starting milestone v1.8 WOL Feedback Guardrails*

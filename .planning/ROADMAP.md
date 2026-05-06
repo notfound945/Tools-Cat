@@ -11,29 +11,47 @@
 - ✅ **v1.6 Distribution Hardening** — Phases 16-18 shipped 2026-04-19. Archive: `.planning/milestones/v1.6-ROADMAP.md`
 - ✅ **v1.7 WOL Device Entry Polish** — Phases 19-21 shipped 2026-05-06. Archive: `.planning/milestones/v1.7-ROADMAP.md`
 
-## Current Status
+## Overview
 
-- All roadmap phases currently on disk are shipped and archived by milestone.
-- The latest shipped milestone is `v1.7 WOL Device Entry Polish`.
-- No future milestone is planned yet.
+This milestone tightens two small interaction seams in the already-shipped WOL flow. Wake feedback should feel transient instead of lingering in the window and menu forever, and the saved-device add/edit sheet should stop presenting an actionable `保存设备` button before the user has filled the two required fields. The goal is to align those affordances with the app's current validation and management patterns without reopening the underlying WOL or validation contracts.
 
-## Next Up
+## Phases
 
-Start the next planning cycle with:
+**Phase Numbering:**
+- Integer phases continue from the last shipped milestone
+- v1.8 therefore starts at Phase 22
 
-`$gsd-new-milestone`
+- [ ] **Phase 22: WOL Result Timeout** - Make WOL send result feedback in both the WOL window and the menu-bar wake section disappear automatically after three seconds.
+- [ ] **Phase 23: Device Form Save Guard** - Enable the saved-device `保存设备` button only after both required fields contain input while preserving the current delayed validation reveal behavior.
 
-For full phase details from shipped milestones, use the archive links above.
+## Phase Details
+
+### Phase 22: WOL Result Timeout
+**Goal**: WOL send feedback stays visible long enough to confirm the action, then disappears automatically from both the WOL window and menu bar without manual cleanup.
+**Depends on**: Phase 21
+**Requirements**: WOLF-01, WOLF-02
+**Plans**: 0/1 plans complete
+**Success Criteria** (what must be TRUE):
+  1. A successful or failed WOL result remains visible in the WOL window for approximately three seconds, then disappears automatically.
+  2. The same WOL result remains visible in the menu-bar wake status row for approximately three seconds, then disappears automatically.
+  3. Starting a new wake action cancels any stale result timeout so newer feedback is never cleared by an older timer.
+
+### Phase 23: Device Form Save Guard
+**Goal**: The saved-device add/edit form only exposes an actionable `保存设备` button after the user has entered the two required fields, while preserving the current validation and save-truth contract.
+**Depends on**: Phase 22
+**Requirements**: DEVS-15, DEVS-16
+**Plans**: 0/1 plans complete
+**Success Criteria** (what must be TRUE):
+  1. `保存设备` is disabled when either the name field or MAC field is still empty.
+  2. `保存设备` becomes enabled once both fields contain input, even though deeper validation still runs at the existing save boundary.
+  3. The v1.7 delayed validation-message reveal behavior remains unchanged: validation text still appears only on blur or explicit submit, not during ordinary in-progress typing.
 
 ## Progress
 
-| Milestone | Status | Shipped |
-|-----------|--------|---------|
-| v1.0 MVP | Complete | 2026-04-13 |
-| v1.1 Hardening | Complete | 2026-04-13 |
-| v1.2 Menu Truth | Complete | 2026-04-15 |
-| v1.3 Duration Management | Complete | 2026-04-16 |
-| v1.4 Duration UI Polish | Complete | 2026-04-16 |
-| v1.5 Device Library UI Parity | Complete | 2026-04-16 |
-| v1.6 Distribution Hardening | Complete | 2026-04-19 |
-| v1.7 WOL Device Entry Polish | Complete | 2026-05-06 |
+**Execution Order:**
+Phases execute in numeric order: 22, 23
+
+| Phase | Plans Complete | Status | Completed |
+|-------|----------------|--------|-----------|
+| 22. WOL Result Timeout | 0/1 | Not Started | — |
+| 23. Device Form Save Guard | 0/1 | Not Started | — |
