@@ -104,13 +104,15 @@ final class WOLSessionModelTests: XCTestCase {
         let started = expectation(description: "hidden send started")
         let sender = BlockingWakeSender(started: started)
         let target = "AA:BB:CC:DD:EE:FF"
+        let clearScheduler = FakeWakeResultClearing()
         let model = await MainActor.run {
             WOLSessionModel(
                 deviceLibrary: SavedDeviceLibraryStore(repository: InMemorySavedDeviceRepository()),
                 inputMode: .custom,
                 customMac: target,
                 validation: .valid(target),
-                wakeSender: sender
+                wakeSender: sender,
+                wakeResultClearing: clearScheduler
             )
         }
 
@@ -130,6 +132,8 @@ final class WOLSessionModelTests: XCTestCase {
             state == .success(message: WakeSendPresentation.successMessage(for: target))
         }
 
+        XCTAssertEqual(clearScheduler.scheduledDelays, [3])
+
         await MainActor.run {
             model.handleWindowWillShow()
 
@@ -138,6 +142,12 @@ final class WOLSessionModelTests: XCTestCase {
                 model.sendState,
                 .success(message: WakeSendPresentation.successMessage(for: target))
             )
+            XCTAssertEqual(clearScheduler.scheduledDelays, [3])
+
+            clearScheduler.fireLatest()
+
+            XCTAssertEqual(model.sendState, .idle)
+            XCTAssertNil(model.lastCompletedWake)
         }
     }
 
@@ -404,6 +414,88 @@ final class WOLSessionModelTests: XCTestCase {
         }
     }
 
+    func testCompletedWakeResultClearsAfterThreeSeconds() async {
+        let device = SavedDevice(
+            id: UUID(),
+            name: "NAS",
+            macAddress: "6C:1F:F7:75:C7:0E",
+            note: "",
+            sortOrder: 0
+        )
+        let clearScheduler = FakeWakeResultClearing()
+        let store = await MainActor.run {
+            SavedDeviceLibraryStore(repository: InMemorySavedDeviceRepository(devices: [device]))
+        }
+        let model = await MainActor.run {
+            WOLSessionModel(
+                deviceLibrary: store,
+                wakeSender: RecordingWakeSender(),
+                wakeResultClearing: clearScheduler
+            )
+        }
+
+        await MainActor.run {
+            model.sendSavedDevice(id: device.id)
+        }
+
+        await expectSendState(of: model) { state in
+            state == .success(message: WakeSendPresentation.successMessage(for: device.macAddress))
+        }
+
+        XCTAssertEqual(clearScheduler.scheduledDelays, [3])
+
+        await MainActor.run {
+            clearScheduler.fireLatest()
+            XCTAssertEqual(model.sendState, .idle)
+            XCTAssertNil(model.lastCompletedWake)
+        }
+    }
+
+    func testNewSendCancelsPreviousWakeResultClear() async {
+        let clearScheduler = FakeWakeResultClearing()
+        let target = "AA:BB:CC:DD:EE:FF"
+        let store = await MainActor.run {
+            SavedDeviceLibraryStore(repository: InMemorySavedDeviceRepository())
+        }
+        let firstStarted = expectation(description: "first replacement send started")
+        let firstSender = BlockingWakeSender(started: firstStarted)
+        let model = await MainActor.run {
+            WOLSessionModel(
+                deviceLibrary: store,
+                inputMode: .custom,
+                customMac: target,
+                validation: .valid(target),
+                wakeSender: firstSender,
+                wakeResultClearing: clearScheduler
+            )
+        }
+
+        await MainActor.run {
+            model.sendState = .success(message: "旧结果")
+            model.sendCurrentSelection()
+        }
+
+        await fulfillment(of: [firstStarted], timeout: 1.0)
+        firstSender.finish(with: .success(()))
+
+        await expectSendState(of: model) { state in
+            state == .success(message: WakeSendPresentation.successMessage(for: target))
+        }
+
+        let secondStarted = expectation(description: "second replacement send started")
+        let secondSender = BlockingWakeSender(started: secondStarted)
+
+        await MainActor.run {
+            model.sendState = .success(message: WakeSendPresentation.successMessage(for: target))
+            model.setWakeSenderForTesting(secondSender)
+            model.sendCurrentSelection()
+        }
+
+        await fulfillment(of: [secondStarted], timeout: 1.0)
+        XCTAssertEqual(clearScheduler.cancelCount, 1)
+        secondSender.finish(with: .success(()))
+    }
+
     func testFailedSendKeepsLastCompletedWakeButDoesNotUpdateRecents() async {
         let first = SavedDevice(
             id: UUID(),
@@ -634,6 +726,38 @@ final class WOLSessionModelTests: XCTestCase {
 
         await fulfillment(of: [expectation], timeout: timeout)
         withExtendedLifetime(cancellable) {}
+    }
+}
+
+private final class FakeWakeResultClearing: WakeResultClearing {
+    private(set) var scheduledDelays: [TimeInterval] = []
+    private(set) var cancelCount = 0
+    private var latestAction: (@MainActor () -> Void)?
+
+    func schedule(after delay: TimeInterval, _ action: @escaping @MainActor () -> Void) -> WakeResultClearToken {
+        scheduledDelays.append(delay)
+        latestAction = action
+        return FakeWakeResultClearToken { [weak self] in
+            self?.cancelCount += 1
+        }
+    }
+
+    @MainActor
+    func fireLatest() {
+        latestAction?()
+        latestAction = nil
+    }
+}
+
+private final class FakeWakeResultClearToken: WakeResultClearToken {
+    private let onCancel: () -> Void
+
+    init(onCancel: @escaping () -> Void) {
+        self.onCancel = onCancel
+    }
+
+    func cancel() {
+        onCancel()
     }
 }
 

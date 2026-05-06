@@ -5,6 +5,14 @@ protocol WakeSending {
     func send(to macAddress: String) throws
 }
 
+protocol WakeResultClearing {
+    func schedule(after delay: TimeInterval, _ action: @escaping @MainActor () -> Void) -> WakeResultClearToken
+}
+
+protocol WakeResultClearToken {
+    func cancel()
+}
+
 enum WakeSendState: Equatable {
     case idle
     case sending(macAddress: String)
@@ -27,9 +35,11 @@ final class WOLSessionModel: ObservableObject {
     @Published private(set) var lastCompletedWake: CompletedWakeAttempt?
     @Published var isWindowVisible: Bool
     private let deviceLibrary: SavedDeviceLibraryStore
-    private let wakeSender: WakeSending
+    private var wakeSender: WakeSending
     private let sendQueue: DispatchQueue
+    private let wakeResultClearing: WakeResultClearing
     private var preservesHiddenCompletionResult = false
+    private var clearWakeResultToken: WakeResultClearToken?
 
     init(
         deviceLibrary: SavedDeviceLibraryStore,
@@ -41,7 +51,8 @@ final class WOLSessionModel: ObservableObject {
         lastCompletedWake: CompletedWakeAttempt? = nil,
         isWindowVisible: Bool = false,
         wakeSender: WakeSending = SystemWakeSender(),
-        sendQueue: DispatchQueue = DispatchQueue(label: "WOLSessionModel.send", qos: .userInitiated)
+        sendQueue: DispatchQueue = DispatchQueue(label: "WOLSessionModel.send", qos: .userInitiated),
+        wakeResultClearing: WakeResultClearing = DispatchQueueWakeResultClearing()
     ) {
         self.deviceLibrary = deviceLibrary
         self.inputMode = inputMode
@@ -53,6 +64,7 @@ final class WOLSessionModel: ObservableObject {
         self.isWindowVisible = isWindowVisible
         self.wakeSender = wakeSender
         self.sendQueue = sendQueue
+        self.wakeResultClearing = wakeResultClearing
     }
 
     var canSend: Bool {
@@ -137,6 +149,13 @@ final class WOLSessionModel: ObservableObject {
         isWindowVisible = false
     }
 
+    #if DEBUG
+    @MainActor
+    func setWakeSenderForTesting(_ wakeSender: WakeSending) {
+        self.wakeSender = wakeSender
+    }
+    #endif
+
     private func updateSendStateOnMain(_ nextState: WakeSendState) {
         if Thread.isMainThread {
             sendState = nextState
@@ -151,6 +170,8 @@ final class WOLSessionModel: ObservableObject {
     private func send(targetMACAddress: String, savedDeviceID: UUID?) {
         guard !isSending else { return }
 
+        clearWakeResultToken?.cancel()
+        clearWakeResultToken = nil
         preservesHiddenCompletionResult = false
         updateSendStateOnMain(.sending(macAddress: targetMACAddress))
 
@@ -190,7 +211,23 @@ final class WOLSessionModel: ObservableObject {
                 } else {
                     self.sendState = .failure(message: outcome.message)
                 }
+
+                self.scheduleWakeResultClear()
             }
+        }
+    }
+
+    @MainActor
+    private func scheduleWakeResultClear() {
+        clearWakeResultToken?.cancel()
+        clearWakeResultToken = wakeResultClearing.schedule(after: 3) { [weak self] in
+            guard let self else { return }
+            self.clearWakeResultToken = nil
+            self.lastCompletedWake = nil
+            if self.sendState.isCompletedResult {
+                self.sendState = .idle
+            }
+            self.preservesHiddenCompletionResult = false
         }
     }
 }
@@ -198,6 +235,30 @@ final class WOLSessionModel: ObservableObject {
 struct SystemWakeSender: WakeSending {
     func send(to macAddress: String) throws {
         try WOLSender.send(to: macAddress)
+    }
+}
+
+struct DispatchQueueWakeResultClearing: WakeResultClearing {
+    func schedule(after delay: TimeInterval, _ action: @escaping @MainActor () -> Void) -> WakeResultClearToken {
+        let task = Task {
+            let nanoseconds = UInt64(delay * 1_000_000_000)
+            try? await Task.sleep(nanoseconds: nanoseconds)
+            guard !Task.isCancelled else { return }
+            await action()
+        }
+        return TaskWakeResultClearToken(task: task)
+    }
+}
+
+private final class TaskWakeResultClearToken: WakeResultClearToken {
+    private let task: Task<Void, Never>
+
+    init(task: Task<Void, Never>) {
+        self.task = task
+    }
+
+    func cancel() {
+        task.cancel()
     }
 }
 
