@@ -43,6 +43,8 @@ Plans:
 **Depends on**: Phase 22
 **Requirements**: DEVS-15, DEVS-16
 **Plans**: 0/1 plans complete
+Plans:
+- [ ] `23-01-PLAN.md` — Gate the saved-device `保存设备` button on trimmed required-field presence while preserving delayed validation reveal and save-time validation truth.
 **Success Criteria** (what must be TRUE):
   1. `保存设备` is disabled when either the name field or MAC field is still empty.
   2. `保存设备` becomes enabled once both fields contain input, even though deeper validation still runs at the existing save boundary.
