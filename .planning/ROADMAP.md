@@ -9,7 +9,7 @@
 - ✅ **v1.4 Duration UI Polish** — Phase 14 shipped 2026-04-16. Archive: `.planning/milestones/v1.4-ROADMAP.md`
 - ✅ **v1.5 Device Library UI Parity** — Phase 15 shipped 2026-04-16. Archive: `.planning/milestones/v1.5-ROADMAP.md`
 - ✅ **v1.6 Distribution Hardening** — Phases 16-18 shipped 2026-04-19. Archive: `.planning/milestones/v1.6-ROADMAP.md`
-- 🚧 **v1.7 WOL Device Entry Polish** — Phases 19-20 planned 2026-05-06
+- 🚧 **v1.7 WOL Device Entry Polish** — Phases 19-21 planned 2026-05-06
 
 ## Overview
 
@@ -23,6 +23,7 @@ This milestone returns to one small product-facing gap in the already-shipped sa
 
 - [x] **Phase 19: Deferred Device Form Validation** - Make saved-device validation hints appear on blur or explicit field submission while preserving the current save-time truth barrier. (completed 2026-05-06)
 - [x] **Phase 20: First-Use Device Seed** - Seed one default `UGREEN NAS` device for first-use empty libraries without touching existing non-empty libraries. (completed 2026-05-06)
+- [ ] **Phase 21: Device Entry Verification Closure** - Close the v1.7 audit gap by adding formal Phase 19/20 verification artifacts and rerunning milestone audit truth.
 
 ## Phase Details
 
@@ -46,12 +47,24 @@ This milestone returns to one small product-facing gap in the already-shipped sa
   2. Reloading after the first-use seed does not duplicate the default device.
   3. Existing non-empty libraries never receive the default seed implicitly.
 
+### Phase 21: Device Entry Verification Closure
+**Goal**: Close the remaining v1.7 audit gap without changing shipped product behavior by adding formal verification artifacts for the completed device-entry phases and regenerating a passing milestone audit.
+**Depends on**: Phase 20
+**Requirements**: DEVS-10, DEVS-11, DEVS-12, DEVS-13, DEVS-14
+**Gap Closure**: Closes the v1.7 milestone audit requirement-orphaning gap caused by missing `19-VERIFICATION.md` and `20-VERIFICATION.md`
+**Plans**: 0/0 plans complete
+**Success Criteria** (what must be TRUE):
+  1. Phase 19 has a formal verification report that maps `DEVS-10` through `DEVS-12` to the shipped validation-timing evidence.
+  2. Phase 20 has a formal verification report that maps `DEVS-13` and `DEVS-14` to the shipped first-use seeding evidence.
+  3. Re-running the v1.7 milestone audit no longer reports orphaned requirements or missing verification artifacts for these device-entry phases.
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 19, 20
+Phases execute in numeric order: 19, 20, 21
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 19. Deferred Device Form Validation | 1/1 | Complete   | 2026-05-06 |
 | 20. First-Use Device Seed | 1/1 | Complete | 2026-05-06 |
+| 21. Device Entry Verification Closure | 0/0 | Pending | — |

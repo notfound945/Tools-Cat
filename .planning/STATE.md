@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.7
 milestone_name: WOL Device Entry Polish
-status: ready_for_milestone_audit
-stopped_at: Completed 20-01-PLAN.md
-last_updated: "2026-05-06T02:42:14Z"
+status: gap_closure_planned
+stopped_at: Planned Phase 21 gap closure
+last_updated: "2026-05-06T11:28:44+0800"
 last_activity: 2026-05-06
 progress:
-  total_phases: 2
+  total_phases: 3
   completed_phases: 2
   total_plans: 2
   completed_plans: 2
@@ -20,16 +20,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-06)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Milestone v1.7 closure
+**Current focus:** Phase 21 — device-entry-verification-closure
 
 ## Current Position
 
-Phase: 20 (first-use-device-seed) — COMPLETE
-Plan: 1 of 1
-Status: Milestone scope complete — ready for audit/archive
+Phase: 21 (device-entry-verification-closure) — PENDING
+Plan: 0 of 0
+Status: Gap-closure phase added — ready for planning
 Last activity: 2026-05-06
 
-Progress: [██████████] 2/2 current milestone plans complete
+Progress: [███████░░░] 2/3 current milestone phases complete
 
 ## Performance Metrics
 
@@ -52,7 +52,7 @@ Progress: [██████████] 2/2 current milestone plans complete
 
 - Last 5 plans: Phase 16-release-signing-readiness Plan 01 (3min), Plan 02 (2min), Phase 17-signed-dmg-notarization-pipeline Plan 01 (8min), Plan 02 (3min), Phase 18-distribution-verification-closure Plan 01 (3min)
 - Trend: Phase 17 was superseded by the 2026-04-17 friend-share pivot, and Phase 18 closed the replacement verification contract in one plan.
-- v1.7 implementation scope is complete; next workflow step should be milestone audit/archive.
+- v1.7 product implementation is complete, but milestone archival is blocked on the new verification-closure phase created from the audit gaps.
 
 | Phase 16-release-signing-readiness P01 | 3min | 2 tasks | 6 files |
 | Phase 16-release-signing-readiness P02 | 2min | 2 tasks | 3 files |
@@ -66,7 +66,7 @@ Progress: [██████████] 2/2 current milestone plans complete
 - Active milestone: `v1.7 WOL Device Entry Polish`
 - Latest archived milestone: `v1.6 Distribution Hardening`
 - New scope: defer device-library validation error reveal until blur/submit and seed one default `UGREEN NAS` device only for first-use empty libraries
-- Active roadmap: `.planning/ROADMAP.md` (Phases 19-20 complete; milestone ready for audit)
+- Active roadmap: `.planning/ROADMAP.md` (Phase 21 added to close audit gaps before milestone archival)
 - Working files:
   - `.planning/PROJECT.md`
   - `.planning/ROADMAP.md`
@@ -117,9 +117,10 @@ The latest completed milestone established these durable decisions:
 
 - New milestone theme activated from user request: device-library validation timing polish plus first-use default-device seeding.
 - Phase 20 completed: first-use saved-device libraries now seed one canonical `UGREEN NAS` entry exactly once without mutating initialized libraries.
+- Phase 21 added: close the remaining v1.7 verification-artifact gap so milestone audit can pass without accepting process debt.
 
 ## Session Continuity
 
 Last session: 2026-05-06T01:55:05.214Z
-Stopped at: Completed 20-01-PLAN.md
+Stopped at: Planned Phase 21 gap closure
 Resume file: None
