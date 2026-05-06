@@ -23,7 +23,7 @@ This milestone returns to one small product-facing gap in the already-shipped sa
 
 - [x] **Phase 19: Deferred Device Form Validation** - Make saved-device validation hints appear on blur or explicit field submission while preserving the current save-time truth barrier. (completed 2026-05-06)
 - [x] **Phase 20: First-Use Device Seed** - Seed one default `UGREEN NAS` device for first-use empty libraries without touching existing non-empty libraries. (completed 2026-05-06)
-- [ ] **Phase 21: Device Entry Verification Closure** - Close the v1.7 audit gap by adding formal Phase 19/20 verification artifacts and rerunning milestone audit truth.
+- [x] **Phase 21: Device Entry Verification Closure** - Close the v1.7 audit gap by adding formal Phase 19/20 verification artifacts and rerunning milestone audit truth. (completed 2026-05-06)
 
 ## Phase Details
 
@@ -52,9 +52,9 @@ This milestone returns to one small product-facing gap in the already-shipped sa
 **Depends on**: Phase 20
 **Requirements**: DEVS-10, DEVS-11, DEVS-12, DEVS-13, DEVS-14
 **Gap Closure**: Closes the v1.7 milestone audit requirement-orphaning gap caused by missing `19-VERIFICATION.md` and `20-VERIFICATION.md`
-**Plans**: 0/1 plans complete
+**Plans**: 1/1 plans complete
 Plans:
-- [ ] `21-01-PLAN.md` — Restore Phase 19/20 verification artifacts, rerun the v1.7 milestone audit, and only then return DEVS traceability to complete.
+- [x] `21-01-PLAN.md` — Restore Phase 19/20 verification artifacts, rerun the v1.7 milestone audit, and only then return DEVS traceability to complete.
 **Success Criteria** (what must be TRUE):
   1. Phase 19 has a formal verification report that maps `DEVS-10` through `DEVS-12` to the shipped validation-timing evidence.
   2. Phase 20 has a formal verification report that maps `DEVS-13` and `DEVS-14` to the shipped first-use seeding evidence.
@@ -69,4 +69,4 @@ Phases execute in numeric order: 19, 20, 21
 |-------|----------------|--------|-----------|
 | 19. Deferred Device Form Validation | 1/1 | Complete   | 2026-05-06 |
 | 20. First-Use Device Seed | 1/1 | Complete | 2026-05-06 |
-| 21. Device Entry Verification Closure | 0/0 | Pending | — |
+| 21. Device Entry Verification Closure | 1/1 | Complete | 2026-05-06 |

@@ -64,6 +64,6 @@ None required beyond automated coverage for this scope. The phase changes persis
 - [x] Wave 0 covers all MISSING references
 - [x] No watch-mode flags
 - [x] Feedback latency < 60s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] `nyquist_compliant: true` set in frontmatter
 
 **Approval:** 2026-05-06 planning self-approved after Phase 20 verification mapping review

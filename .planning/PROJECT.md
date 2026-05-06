@@ -14,7 +14,7 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 - Live product identity: `Tools Cat`
 - Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, stabilized direct-launch manager smokes, and a non-notarized friend-share DMG flow with repeatable release verification
 - Current milestone scope: device-library form validation should reveal errors only after blur or explicit field submission, and first-use empty libraries should seed one practical default NAS device without touching existing saved-device libraries
-- Planning state: milestone initialized; requirements and roadmap now target phases 19-20
+- Planning state: milestone implementation and verification closure are complete; v1.7 is ready for final milestone completion once the refreshed audit is confirmed
 
 ## Next Milestone Goals
 
@@ -211,8 +211,8 @@ Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, mo
 | Keep device-library polish presentation-only by deriving add/edit presentation from `currentFormMode` and reusing the duration-manager's list and action semantics | The milestone only needed cross-surface parity, not a new saved-device data or routing model | Validated in Phase 15 |
 | Keep v1.6 limited to release-chain hardening so installability improves without reopening shipped runtime behavior | The immediate user problem is distribution friction, not missing app capability | Validated in v1.6 |
 | Pivot v1.6 away from Developer ID/notarization and toward explicit non-notarized friend sharing | The maintainer chose not to join Apple Developer Program, so the release flow must stay usable without paid Apple distribution features | Validated in v1.6 |
-| Keep the existing saved-device validation rules but delay error reveal until blur or explicit submit | The current issue is premature error noise, not incorrect validation truth | — Pending |
-| Seed exactly one default `UGREEN NAS` device only when the saved-device library is first used in an empty state | This gives first-use utility without silently mutating existing personal libraries | — Pending |
+| Keep the existing saved-device validation rules but delay error reveal until blur or explicit submit | The current issue is premature error noise, not incorrect validation truth | Validated in Phase 19 and closed through Phase 21 verification |
+| Seed exactly one default `UGREEN NAS` device only when the saved-device library is first used in an empty state | This gives first-use utility without silently mutating existing personal libraries | Validated in Phase 20 and closed through Phase 21 verification |
 
 ## Evolution
 
@@ -232,4 +232,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-06 after starting milestone v1.7 WOL Device Entry Polish*
+*Last updated: 2026-05-06 after completing Phase 21 verification closure for v1.7*

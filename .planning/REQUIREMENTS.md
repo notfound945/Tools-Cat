@@ -9,14 +9,14 @@ Requirements for the v1.7 WOL device-entry polish milestone. This milestone stay
 
 ### Device Entry Experience
 
-- [ ] **DEVS-10**: User sees the saved-device name required-field hint only after the name field loses focus or is explicitly submitted
-- [ ] **DEVS-11**: User sees saved-device MAC validation hints only after the MAC field loses focus or is explicitly submitted
-- [ ] **DEVS-12**: User still cannot save a saved-device draft with an invalid name or invalid MAC address even when inline validation reveal is deferred
+- [x] **DEVS-10**: User sees the saved-device name required-field hint only after the name field loses focus or is explicitly submitted
+- [x] **DEVS-11**: User sees saved-device MAC validation hints only after the MAC field loses focus or is explicitly submitted
+- [x] **DEVS-12**: User still cannot save a saved-device draft with an invalid name or invalid MAC address even when inline validation reveal is deferred
 
 ### Device Library Seeding
 
-- [ ] **DEVS-13**: First-use empty saved-device libraries seed exactly one default device named `UGREEN NAS` with MAC address `6C:1F:F7:75:C7:0E`
-- [ ] **DEVS-14**: Existing non-empty saved-device libraries are never modified by the default-device seed path
+- [x] **DEVS-13**: First-use empty saved-device libraries seed exactly one default device named `UGREEN NAS` with MAC address `6C:1F:F7:75:C7:0E`
+- [x] **DEVS-14**: Existing non-empty saved-device libraries are never modified by the default-device seed path
 
 ## v2 Requirements
 
@@ -50,11 +50,11 @@ Phase mapping assigned during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DEVS-10 | Phase 21 | Pending |
-| DEVS-11 | Phase 21 | Pending |
-| DEVS-12 | Phase 21 | Pending |
-| DEVS-13 | Phase 21 | Pending |
-| DEVS-14 | Phase 21 | Pending |
+| DEVS-10 | Phase 19 | Complete |
+| DEVS-11 | Phase 19 | Complete |
+| DEVS-12 | Phase 19 | Complete |
+| DEVS-13 | Phase 20 | Complete |
+| DEVS-14 | Phase 20 | Complete |
 
 **Coverage:**
 - v1 requirements: 5 total
@@ -63,4 +63,4 @@ Phase mapping assigned during roadmap creation.
 
 ---
 *Requirements defined: 2026-05-06*
-*Last updated: 2026-05-06 after planning Phase 21 gap closure*
+*Last updated: 2026-05-06 after Phase 21 verification closure execution*
