@@ -51,6 +51,33 @@ final class StatusBarControllerWakeMenuTests: XCTestCase {
         XCTAssertLessThan(macFont.pointSize, nameFont.pointSize)
     }
 
+    func testAddingDeviceRefreshesQuickWOLSubmenu() async throws {
+        let store = SavedDeviceLibraryStore(repository: InMemoryMenuSavedDeviceRepository(devices: []))
+        let controller = makeController(deviceLibrary: store)
+
+        XCTAssertNil(controller.allDevicesItem)
+
+        let device = SavedDevice(
+            id: UUID(),
+            name: "新 NAS",
+            macAddress: "AA:BB:CC:DD:EE:99",
+            note: "",
+            sortOrder: 0
+        )
+
+        try store.upsert(device)
+
+        await expectQuickWOLMenu(
+            of: controller,
+            matching: { item in
+                guard let submenuItems = item?.submenu?.items else { return false }
+                return item?.title == "快速 WOL"
+                    && submenuItems.count == 1
+                    && submenuItems.first?.representedObject as? UUID == device.id
+            }
+        )
+    }
+
     func testMenuWakeRowsDispatchThroughSharedSession() async throws {
         let devices = makeDevices()
         let store = SavedDeviceLibraryStore(repository: InMemoryMenuSavedDeviceRepository(devices: devices))
@@ -308,6 +335,23 @@ final class StatusBarControllerWakeMenuTests: XCTestCase {
         while predicate(controller.wakeStatusItem) == false {
             if Date() >= deadline {
                 XCTFail("Wake status row did not match expected state before timeout")
+                return
+            }
+
+            try? await Task.sleep(nanoseconds: 10_000_000)
+        }
+    }
+
+    private func expectQuickWOLMenu(
+        of controller: StatusBarController,
+        matching predicate: @escaping (NSMenuItem?) -> Bool,
+        timeout: TimeInterval = 1.0
+    ) async {
+        let deadline = Date().addingTimeInterval(timeout)
+
+        while predicate(controller.allDevicesItem) == false {
+            if Date() >= deadline {
+                XCTFail("Quick WOL menu did not match expected state before timeout")
                 return
             }
 

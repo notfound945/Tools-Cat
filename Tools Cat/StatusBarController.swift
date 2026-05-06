@@ -142,7 +142,9 @@ final class StatusBarController: NSObject {
         deviceLibrary.$devices
             .dropFirst()
             .sink { [weak self] _ in
-                self?.rebuildWakeMenu()
+                DispatchQueue.main.async {
+                    self?.rebuildWakeMenu()
+                }
             }
             .store(in: &cancellables)
 
