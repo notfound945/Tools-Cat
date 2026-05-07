@@ -64,7 +64,7 @@ Each task was committed atomically:
 1. **Task 1: Redefine device-form save gating in the session model and lock it with focused unit coverage** - `4e50f8f` (`feat`)
 2. **Task 2: Bind the save button to the session predicate and prove the direct-launch form behavior in UI tests** - `7367f2b` (`test`)
 
-**Plan metadata:** pending final docs commit
+**Plan metadata:** `81b4542` (`docs(phase-23): complete phase execution`)
 
 ## Files Created/Modified
 
