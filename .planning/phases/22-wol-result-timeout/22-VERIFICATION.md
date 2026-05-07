@@ -1,23 +1,16 @@
 ---
 phase: 22-wol-result-timeout
-verified: 2026-05-06T07:28:59Z
-status: human_needed
+verified: 2026-05-07T14:20:00+08:00
+status: passed
 score: 3/3 must-haves verified
-human_verification:
-  - test: "WOL window result dwell"
-    expected: "After sending WOL from the window, the success or failure message remains visible for about 3 seconds, then disappears without closing or reopening the window."
-    why_human: "Automated tests prove the shared timeout state transition, but they do not measure perceived on-screen dwell time or repaint timing in the live AppKit/SwiftUI window."
-  - test: "Menu-bar wake status dwell"
-    expected: "After triggering WOL from the menu, the wake status row shows the sending/result message and then hides itself after about 3 seconds without manual menu cleanup."
-    why_human: "Automated tests prove the shared-session menu state updates, but they do not validate the real menu-bar presentation timing and visibility behavior in the running app."
 ---
 
 # Phase 22: WOL Result Timeout Verification Report
 
 **Phase Goal:** WOL send feedback stays visible long enough to confirm the action, then disappears automatically from both the WOL window and menu bar without manual cleanup.
-**Verified:** 2026-05-06T07:28:59Z
-**Status:** human_needed
-**Re-verification:** No - initial verification
+**Verified:** 2026-05-07T14:20:00+08:00
+**Status:** passed
+**Re-verification:** Yes - human dwell confirmation completed after the initial automated verification
 
 ## Goal Achievement
 
@@ -81,23 +74,16 @@ All requirement IDs declared in PLAN frontmatter are accounted for in `.planning
 
 ### Human Verification Required
 
-### 1. WOL Window Result Dwell
+No further human verification is required for Phase 22. On 2026-05-07, the maintainer confirmed both live behaviors:
 
-**Test:** Open the WOL window, send a wake action that succeeds or fails, and watch the status text without closing the window.
-**Expected:** The result stays visible for about 3 seconds, then disappears automatically while the window remains open.
-**Why human:** XCTest proves the shared scheduler-driven state transition, but it does not confirm perceived dwell time or live SwiftUI/AppKit repaint behavior.
-
-### 2. Menu-Bar Wake Status Dwell
-
-**Test:** Trigger WOL from the menu bar and keep the menu open long enough to observe the wake status row.
-**Expected:** The row shows the sending/result message, then hides itself after about 3 seconds without manual cleanup.
-**Why human:** The automated tests confirm menu state changes, not the real menu-bar presentation timing or visual disappearance in the live app.
+1. The WOL window success/failure message stays visible for about 3 seconds, then disappears automatically.
+2. The menu-bar wake-status row also stays visible for about 3 seconds, then disappears automatically.
 
 ### Gaps Summary
 
-No code or wiring gaps were found against the Phase 22 must-haves. The remaining work is manual confirmation that the real running app presents the verified shared timeout with the intended on-screen dwell and disappearance timing on both UI surfaces.
+No code, wiring, or behavior gaps remain against the Phase 22 must-haves. The previously pending live dwell confirmation on both UI surfaces is now complete.
 
 ---
 
-_Verified: 2026-05-06T07:28:59Z_
+_Verified: 2026-05-07T14:20:00+08:00_
 _Verifier: Claude (gsd-verifier)_
