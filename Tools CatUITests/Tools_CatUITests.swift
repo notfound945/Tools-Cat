@@ -234,6 +234,45 @@ final class Tools_CatUITests: XCTestCase {
     }
 
     @MainActor
+    func testDeviceLibrarySaveButtonEnablesAfterRequiredInput() throws {
+        let launchContext = try makeLaunchContext()
+        defer {
+            launchContext.defaults.removePersistentDomain(forName: launchContext.suiteName)
+        }
+
+        let app = makeApplication(
+            launchContext: launchContext,
+            additionalArguments: ["--ui-test-open-device-library"]
+        )
+        app.launch()
+        defer { terminateIfRunning(app) }
+
+        let window = waitForDeviceLibraryWindow(in: app)
+        let formActions = openDeviceLibraryAddForm(in: app, window: window)
+        let saveButton = deviceLibrarySaveButton(in: app, formActions: formActions)
+        let nameField = deviceLibraryNameField(in: app)
+        let macField = deviceLibraryMACField(in: app)
+
+        XCTAssertTrue(saveButton.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(nameField.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(macField.waitForExistence(timeout: 2.0))
+        XCTAssertFalse(saveButton.isEnabled)
+
+        replaceText(in: nameField, with: "书房 NAS")
+        XCTAssertFalse(saveButton.isEnabled)
+
+        replaceText(in: macField, with: "AA:BB:CC")
+        XCTAssertTrue(saveButton.isEnabled)
+
+        clickElementAfterActivatingApp(saveButton, in: app)
+
+        let macValidationMessage = deviceLibraryMACValidationMessage(in: app)
+        XCTAssertTrue(macValidationMessage.waitForExistence(timeout: 2.0))
+        XCTAssertEqual(visibleText(of: macValidationMessage), "MAC 地址必须是 6 组两位十六进制字符")
+        XCTAssertTrue(app.descendants(matching: .any)["device-library-form-sheet"].waitForExistence(timeout: 2.0))
+    }
+
+    @MainActor
     func testLaunchWithWOLWindowShowsPolishedSections() throws {
         let launchContext = try makeLaunchContext()
         defer {

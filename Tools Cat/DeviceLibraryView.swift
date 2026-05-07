@@ -221,6 +221,7 @@ struct DeviceLibraryView: View {
                     session.saveDraft()
                 }
                 .buttonStyle(.borderedProminent)
+                .disabled(!session.canSaveDraft)
             }
             .accessibilityIdentifier("device-library-form-actions")
         }
