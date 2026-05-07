@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.8
-milestone_name: WOL Feedback Guardrails
-status: execution_complete
-stopped_at: Completed 23-01-PLAN.md
-last_updated: "2026-05-07T14:13:53+08:00"
+milestone: archived
+milestone_name: none
+status: milestone_complete
+stopped_at: Completed v1.8 milestone archival
+last_updated: "2026-05-07T14:44:56+08:00"
 last_activity: 2026-05-07
 progress:
-  total_phases: 2
-  completed_phases: 2
-  total_plans: 2
-  completed_plans: 2
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -20,54 +20,51 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Phase 23 — device-form-save-guard
+**Current focus:** No active milestone — ready for `$gsd-new-milestone`
 
 ## Current Position
 
-Phase: 23
-Plan: 01
-Status: Phase 23 complete — ready for milestone closure
+Phase: none
+Plan: none
+Status: Milestone v1.8 archived — ready for next milestone definition
 Last activity: 2026-05-07
 
-Progress: [██████████] 2/2 current milestone phases complete
+Progress: [██████████] milestone complete
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 2
+- Total plans completed: 0
 - Average duration: 7 min
 - Total execution time: 0 hours
-- Current milestone plans completed: 2
+- Current milestone plans completed: 0
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 22 | 1 | 9min | 9min |
-| 23 | 1 | 5min | 5min |
+| v1.8 archived | 2 | 14min | 7min |
 
 **Recent Trend:**
 
-- Last shipped milestone: v1.7 WOL Device Entry Polish (Phases 19-21)
-- Trend: v1.8 remains intentionally narrow and is scoped as two focused interaction-guardrail phases rather than a feature-expansion milestone.
-- The next workflow step is milestone closure and archival for v1.8.
+- Last shipped milestone: v1.8 WOL Feedback Guardrails (Phases 22-23)
+- Trend: recent milestones remain intentionally narrow and interaction-focused rather than feature-expansion heavy.
+- The next workflow step is `$gsd-new-milestone`.
 
-| Phase 22 | complete | summary written | 3 files |
-| Phase 23 | complete | summary + verification written | 5 files |
-| Phase 22 P01 | 9min | 2 tasks | 3 files |
-| Phase 23 P01 | 5min | 2 tasks | 5 files |
+| Milestone v1.8 | archived | roadmap + requirements + audit written | 3 archive files |
+| Phase 22 | complete | summary + verification + validation closed | 4 files |
+| Phase 23 | complete | summary + verification + validation closed | 4 files |
 
 ## Milestone Summary
 
-- Active milestone: `v1.8 WOL Feedback Guardrails`
-- Latest archived milestone: `v1.7 WOL Device Entry Polish`
-- New scope: auto-clear WOL result feedback after three seconds and gate saved-device save affordance on required-field completeness
-- Active roadmap: `.planning/ROADMAP.md` (Phases 22-23 planned)
+- Active milestone: none
+- Latest archived milestone: `v1.8 WOL Feedback Guardrails`
+- Most recent shipped scope: auto-clear WOL result feedback after three seconds and gate saved-device save affordance on required-field completeness
+- Active roadmap: `.planning/ROADMAP.md` (archived milestone index only until the next milestone is created)
 - Working files:
   - `.planning/PROJECT.md`
   - `.planning/ROADMAP.md`
-  - `.planning/REQUIREMENTS.md`
   - `.planning/MILESTONES.md`
 - Latest shipped summary: `.planning/MILESTONES.md`
 
@@ -118,11 +115,10 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Active milestone theme: tighten small WOL/device-entry interaction guardrails without reopening existing behavior contracts.
-- Deferred themes after v1.8 planning: `CONV-04`, `AWAKE-12`, `AWAKE-13`.
+- No active milestone theme. Next likely themes remain `CONV-04`, `AWAKE-12`, and `AWAKE-13`.
 
 ## Session Continuity
 
-Last session: 2026-05-07T14:13:53+08:00
-Stopped at: Completed 23-01-PLAN.md
+Last session: 2026-05-07T14:44:56+08:00
+Stopped at: Completed v1.8 milestone archival
 Resume file: None

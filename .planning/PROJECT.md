@@ -10,25 +10,33 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 
 ## Current State
 
-- Active milestone: `v1.8 WOL Feedback Guardrails`
+- Active milestone: none
 - Live product identity: `Tools Cat`
 - Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, stabilized direct-launch manager smokes, a non-notarized friend-share DMG flow with repeatable release verification, deferred saved-device validation reveal timing, exact-once first-use device seeding for `UGREEN NAS`, transient shared WOL feedback that auto-clears after three seconds in both the window and menu bar, and a required-field save guard that enables `保存设备` only after trimmed name and MAC input exist
-- Planning state: v1.8 implementation scope is complete and ready for milestone closure rather than additional feature work
+- Planning state: v1.8 is shipped and archived; the project is ready to define a fresh milestone.
 
 ## Next Milestone Goals
 
-- Archive and close the finished v1.8 WOL feedback guardrails milestone.
 - Decide whether the next milestone should return to deferred convenience items such as recent devices or keep-awake duration flexibility.
+- Create a fresh milestone-scoped `REQUIREMENTS.md` instead of carrying forward the archived v1.8 requirement surface.
 
-## Current Milestone: v1.8 WOL Feedback Guardrails
+## Current Milestone
 
-**Goal:** Finish the remaining small device-form interaction guardrail in the shipped WOL flow now that transient wake-result feedback is closed.
+No active milestone is defined yet.
 
-**Target features:**
-- The saved-device add/edit sheet enables `保存设备` only after both `名称` and `MAC 地址` have been entered.
-- Existing WOL result copy, saved-device validation rules, and deferred validation-message reveal timing remain unchanged.
+Use `$gsd-new-milestone` to define the next scoped requirement set and roadmap.
 
-## Latest Shipped Milestone: v1.7 WOL Device Entry Polish
+## Latest Shipped Milestone: v1.8 WOL Feedback Guardrails
+
+**Result:** WOL feedback now feels transient and less noisy, and the saved-device add/edit form no longer exposes an actionable save button before the required fields are filled.
+
+**Delivered:**
+- Auto-cleared shared WOL success/failure feedback after about three seconds in both the WOL window and the menu-bar wake section.
+- Kept the saved-device `保存设备` button disabled until trimmed name and MAC input exist, while preserving delayed validation reveal and submit-time MAC blocking.
+- Closed the milestone with a passing v1.8 audit, completed human dwell confirmation, and Nyquist validation closure for both new phases.
+
+<details>
+<summary>Previous shipped milestone: v1.7 WOL Device Entry Polish</summary>
 
 **Result:** Saved-device entry now feels quieter and more helpful: validation appears only after blur or explicit submit, first-use empty libraries start with one practical NAS target, and the v1.7 evidence chain is formally closed.
 
@@ -95,6 +103,7 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 </details>
 </details>
 </details>
+</details>
 
 ## Requirements
 
@@ -144,6 +153,7 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 ### Active
 
 - [ ] Decide whether to bring deferred convenience work such as recent devices back into scope for the next milestone
+- [ ] Define the next milestone's requirement set in a fresh `.planning/REQUIREMENTS.md`
 
 ### Out of Scope
 
@@ -250,4 +260,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-07 after completing Phase 23 Device Form Save Guard*
+*Last updated: 2026-05-07 after archiving milestone v1.8*

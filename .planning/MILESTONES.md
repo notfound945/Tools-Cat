@@ -1,5 +1,25 @@
 # Milestones
 
+## v1.8 WOL Feedback Guardrails (Shipped: 2026-05-07)
+
+**Phases completed:** 2 phases, 2 plans, 4 tasks
+**Audit:** passed
+
+**Key accomplishments:**
+
+- Shared WOL success and failure feedback now auto-clears after about three seconds from both the WOL window and the menu-bar wake section
+- Stale WOL timeout clears are cancelled before new sends, so older wake results cannot erase newer feedback
+- The saved-device add/edit form now keeps `保存设备` disabled until trimmed name and MAC input exist
+- The saved-device save-button affordance now matches the keep-awake duration form pattern without weakening delayed validation reveal or submit-time MAC blocking
+
+**Archive files:**
+
+- `.planning/milestones/v1.8-ROADMAP.md`
+- `.planning/milestones/v1.8-REQUIREMENTS.md`
+- `.planning/milestones/v1.8-MILESTONE-AUDIT.md`
+
+---
+
 ## v1.7 WOL Device Entry Polish (Shipped: 2026-05-06)
 
 **Phases completed:** 3 phases, 3 plans, 7 tasks
