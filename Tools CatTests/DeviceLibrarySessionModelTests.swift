@@ -3,6 +3,66 @@ import XCTest
 
 @MainActor
 final class DeviceLibrarySessionModelTests: XCTestCase {
+    func testCanSaveDraftRequiresTrimmedNameAndMACInput() {
+        let session = makeSession()
+
+        session.beginAdd()
+        XCTAssertFalse(session.canSaveDraft)
+
+        session.draftName = "   "
+        session.draftMACAddress = "   "
+        XCTAssertFalse(session.canSaveDraft)
+
+        session.draftName = "书房 NAS"
+        session.draftMACAddress = ""
+        XCTAssertFalse(session.canSaveDraft)
+
+        session.draftName = ""
+        session.draftMACAddress = "AA:BB:CC:DD:EE:FF"
+        XCTAssertFalse(session.canSaveDraft)
+
+        session.draftName = "书房 NAS"
+        session.draftMACAddress = "   "
+        XCTAssertFalse(session.canSaveDraft)
+
+        session.draftName = "   "
+        session.draftMACAddress = "AA:BB:CC:DD:EE:FF"
+        XCTAssertFalse(session.canSaveDraft)
+    }
+
+    func testCanSaveDraftAllowsMalformedButNonEmptyMACUntilSubmit() {
+        let session = makeSession()
+
+        session.beginAdd()
+        session.draftName = "书房 NAS"
+        session.draftMACAddress = "AA:BB:CC"
+
+        XCTAssertTrue(session.canSaveDraft)
+
+        session.saveDraft()
+
+        XCTAssertEqual(session.currentFormMode, .add)
+        XCTAssertEqual(session.devices, [])
+        XCTAssertEqual(session.validationMessage, ManualMACValidation.wrongGroupCount.userMessage)
+        XCTAssertEqual(session.visibleMACAddressValidationMessage, ManualMACValidation.wrongGroupCount.userMessage)
+    }
+
+    func testBeginEditWithPrefilledRequiredFieldsCanSaveImmediately() {
+        let device = SavedDevice(
+            id: UUID(),
+            name: "书房主机",
+            macAddress: "AA:BB:CC:DD:EE:FF",
+            note: "常用",
+            sortOrder: 0
+        )
+        let session = makeSession(seedDevices: [device])
+
+        session.beginEdit(deviceID: device.id)
+
+        XCTAssertEqual(session.currentFormMode, .edit(deviceID: device.id))
+        XCTAssertTrue(session.canSaveDraft)
+    }
+
     func testValidationMessagesStayHiddenUntilFieldReveal() {
         let session = makeSession()
 

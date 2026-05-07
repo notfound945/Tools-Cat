@@ -53,7 +53,9 @@ final class DeviceLibrarySessionModel: ObservableObject {
     }
 
     var canSaveDraft: Bool {
-        currentFormMode != nil && nameValidationMessage == nil && macAddressValidation.isValid
+        currentFormMode != nil
+            && !draftName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && !draftMACAddress.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     init(libraryStore: SavedDeviceLibraryStore? = nil) {
