@@ -22,7 +22,7 @@ This milestone tightens two small interaction seams in the already-shipped WOL f
 - v1.8 therefore starts at Phase 22
 
 - [x] **Phase 22: WOL Result Timeout** - Make WOL send result feedback in both the WOL window and the menu-bar wake section disappear automatically after three seconds. (completed 2026-05-06)
-- [ ] **Phase 23: Device Form Save Guard** - Enable the saved-device `保存设备` button only after both required fields contain input while preserving the current delayed validation reveal behavior.
+- [x] **Phase 23: Device Form Save Guard** - Enable the saved-device `保存设备` button only after both required fields contain input while preserving the current delayed validation reveal behavior. (completed 2026-05-07)
 
 ## Phase Details
 
@@ -42,9 +42,9 @@ Plans:
 **Goal**: The saved-device add/edit form only exposes an actionable `保存设备` button after the user has entered the two required fields, while preserving the current validation and save-truth contract.
 **Depends on**: Phase 22
 **Requirements**: DEVS-15, DEVS-16
-**Plans**: 0/1 plans complete
+**Plans**: 1/1 plans complete
 Plans:
-- [ ] `23-01-PLAN.md` — Gate the saved-device `保存设备` button on trimmed required-field presence while preserving delayed validation reveal and save-time validation truth.
+- [x] `23-01-PLAN.md` — Gate the saved-device `保存设备` button on trimmed required-field presence while preserving delayed validation reveal and save-time validation truth. Summary: `23-01-SUMMARY.md`
 **Success Criteria** (what must be TRUE):
   1. `保存设备` is disabled when either the name field or MAC field is still empty.
   2. `保存设备` becomes enabled once both fields contain input, even though deeper validation still runs at the existing save boundary.
@@ -58,4 +58,4 @@ Phases execute in numeric order: 22, 23
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 22. WOL Result Timeout | 1/1 | Complete    | 2026-05-06 |
-| 23. Device Form Save Guard | 0/1 | Not Started | — |
+| 23. Device Form Save Guard | 1/1 | Complete | 2026-05-07 |

@@ -12,13 +12,13 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 
 - Active milestone: `v1.8 WOL Feedback Guardrails`
 - Live product identity: `Tools Cat`
-- Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, stabilized direct-launch manager smokes, a non-notarized friend-share DMG flow with repeatable release verification, deferred saved-device validation reveal timing, exact-once first-use device seeding for `UGREEN NAS`, and transient shared WOL feedback that auto-clears after three seconds in both the window and menu bar
-- Planning state: v1.8 has completed the wake-feedback guardrail and is now focused on the saved-device form save-button affordance rather than new broad end-user capabilities
+- Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, stabilized direct-launch manager smokes, a non-notarized friend-share DMG flow with repeatable release verification, deferred saved-device validation reveal timing, exact-once first-use device seeding for `UGREEN NAS`, transient shared WOL feedback that auto-clears after three seconds in both the window and menu bar, and a required-field save guard that enables `保存设备` only after trimmed name and MAC input exist
+- Planning state: v1.8 implementation scope is complete and ready for milestone closure rather than additional feature work
 
 ## Next Milestone Goals
 
-- Prevent no-op saves in the saved-device add/edit sheet by enabling `保存设备` only after the user has entered both a device name and a MAC address.
-- Keep the existing validation rules and deferred reveal behavior intact while aligning the save-button affordance with the current keep-awake duration form.
+- Archive and close the finished v1.8 WOL feedback guardrails milestone.
+- Decide whether the next milestone should return to deferred convenience items such as recent devices or keep-awake duration flexibility.
 
 ## Current Milestone: v1.8 WOL Feedback Guardrails
 
@@ -143,10 +143,7 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 
 ### Active
 
-- [ ] WOL send result in the WOL window auto-clears after three seconds
-- [ ] WOL send result in the menu-bar wake section auto-clears after three seconds
-- [ ] Saved-device `保存设备` stays disabled until both name and MAC address have been entered
-- [ ] Device-form save-button gating preserves the current delayed validation-reveal behavior and save-time validation truth
+- [ ] Decide whether to bring deferred convenience work such as recent devices back into scope for the next milestone
 
 ### Out of Scope
 
@@ -230,9 +227,10 @@ Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, mo
 | Pivot v1.6 away from Developer ID/notarization and toward explicit non-notarized friend sharing | The maintainer chose not to join Apple Developer Program, so the release flow must stay usable without paid Apple distribution features | Validated in v1.6 |
 | Keep the existing saved-device validation rules but delay error reveal until blur or explicit submit | The current issue was premature error noise, not incorrect validation truth | Validated in v1.7 |
 | Seed exactly one default `UGREEN NAS` device only when the saved-device library is first used in an empty state | This gives first-use utility without silently mutating existing personal libraries | Validated in v1.7 |
-| Keep v1.8 limited to interaction guardrails instead of reopening copy or validation semantics | The user asked for smaller UI-behavior corrections, not new wake capabilities or a validator rewrite | Active |
+| Keep v1.8 limited to interaction guardrails instead of reopening copy or validation semantics | The user asked for smaller UI-behavior corrections, not new wake capabilities or a validator rewrite | Validated in v1.8 |
 | Keep WOL result lifetime owned by one shared `WOLSessionModel` seam so both the window and menu-bar row clear together after three seconds | The user wanted transient feedback in both surfaces without divergent behavior or duplicate timers | Validated in Phase 22 |
 | Rebuild `快速 WOL` from the updated device library on the next main-thread turn after device mutations | `@Published` device-change notifications can fire before synchronous menu rebuilds observe the new array, leaving the quick WOL menu stale after add/edit flows | Validated in Phase 22 follow-up |
+| Keep the saved-device save affordance owned by `DeviceLibrarySessionModel.canSaveDraft` and gate only on trimmed required-field presence | The button should stop no-op submits without weakening delayed validation reveal or submit-time MAC truth | Validated in Phase 23 |
 
 ## Evolution
 
@@ -252,4 +250,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-06 after completing Phase 22 WOL Result Timeout*
+*Last updated: 2026-05-07 after completing Phase 23 Device Form Save Guard*

@@ -14,8 +14,8 @@ Requirements for the v1.8 WOL feedback guardrails milestone. This milestone is d
 
 ### Device Form Guardrails
 
-- [ ] **DEVS-15**: User can tap `保存设备` only after both the saved-device name and MAC address fields contain input
-- [ ] **DEVS-16**: The saved-device form still uses the current delayed validation-message reveal timing and save-time validation truth after the new save-button gating is added
+- [x] **DEVS-15**: User can tap `保存设备` only after both the saved-device name and MAC address fields contain input
+- [x] **DEVS-16**: The saved-device form still uses the current delayed validation-message reveal timing and save-time validation truth after the new save-button gating is added
 
 ## v2 Requirements
 
@@ -51,8 +51,8 @@ Phase mapping assigned during roadmap creation.
 |-------------|-------|--------|
 | WOLF-01 | Phase 22 | Complete |
 | WOLF-02 | Phase 22 | Complete |
-| DEVS-15 | Phase 23 | Pending |
-| DEVS-16 | Phase 23 | Pending |
+| DEVS-15 | Phase 23 | Complete |
+| DEVS-16 | Phase 23 | Complete |
 
 **Coverage:**
 - v1 requirements: 4 total
@@ -61,4 +61,4 @@ Phase mapping assigned during roadmap creation.
 
 ---
 *Requirements defined: 2026-05-06*
-*Last updated: 2026-05-06 after starting milestone v1.8 requirements definition*
+*Last updated: 2026-05-07 after completing Phase 23*
