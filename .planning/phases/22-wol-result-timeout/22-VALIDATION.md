@@ -1,9 +1,9 @@
 ---
 phase: 22
 slug: wol-result-timeout
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: complete
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-05-06
 ---
 
@@ -38,8 +38,8 @@ created: 2026-05-06
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 22-01-01 | 01 | 1 | WOLF-01, WOLF-02 | unit | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/WOLSessionModelTests/testCompletedWakeResultClearsAfterThreeSeconds' -only-testing:'Tools CatTests/WOLSessionModelTests/testNewSendCancelsPreviousWakeResultClear' -only-testing:'Tools CatTests/WOLSessionModelTests/testHiddenWindowReceivesFinalResult'` | ✅ | ⬜ pending |
-| 22-01-02 | 01 | 1 | WOLF-01, WOLF-02 | controller | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/StatusBarControllerWakeMenuTests'` | ✅ | ⬜ pending |
+| 22-01-01 | 01 | 1 | WOLF-01, WOLF-02 | unit | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/WOLSessionModelTests/testCompletedWakeResultClearsAfterThreeSeconds' -only-testing:'Tools CatTests/WOLSessionModelTests/testNewSendCancelsPreviousWakeResultClear' -only-testing:'Tools CatTests/WOLSessionModelTests/testHiddenWindowReceivesFinalResult'` | ✅ | ✅ green |
+| 22-01-02 | 01 | 1 | WOLF-01, WOLF-02 | controller | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/StatusBarControllerWakeMenuTests'` | ✅ | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -47,8 +47,7 @@ created: 2026-05-06
 
 ## Wave 0 Requirements
 
-- [ ] `Tools CatTests/WOLSessionModelTests.swift` — stabilize the hidden-window regression path so the focused WOL session suite is green before relying on the timeout tests as the phase safety net.
-- [ ] `Tools CatTests/StatusBarControllerWakeMenuTests.swift` — add coverage that the menu-bar wake status row hides after the shared timeout clear, not just that it shows completed wake text.
+Existing WOL session and wake-menu controller coverage now close the former Wave 0 needs. No standalone bootstrap plan is required.
 
 ---
 
@@ -56,17 +55,17 @@ created: 2026-05-06
 
 | Behavior | Requirement | Why Manual | Test Instructions |
 |----------|-------------|------------|-------------------|
-| WOL window status text and menu-bar wake status both feel transient but readable in real use | WOLF-01, WOLF-02 | Automated tests can prove timing state transitions, but not whether the 3-second confirmation feels natural in a live menu-bar workflow | Launch the app, send one successful wake and one failed wake, confirm both surfaces show the result briefly and both clear on their own without leaving stale text behind |
+| WOL window status text and menu-bar wake status both feel transient but readable in real use | WOLF-01, WOLF-02 | Automated tests can prove timing state transitions, but not whether the 3-second confirmation feels natural in a live menu-bar workflow | Completed 2026-05-07: confirmed both surfaces show the result briefly and both clear on their own without leaving stale text behind |
 
 ---
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 90s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references
+- [x] No watch-mode flags
+- [x] Feedback latency < 90s
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** 2026-05-07 validated after focused regression passes and completed live dwell confirmation

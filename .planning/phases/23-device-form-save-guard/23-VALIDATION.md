@@ -1,9 +1,9 @@
 ---
 phase: 23
 slug: device-form-save-guard
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: complete
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-05-06
 ---
 
@@ -38,8 +38,8 @@ created: 2026-05-06
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 23-01-01 | 01 | 1 | DEVS-15, DEVS-16 | unit | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/DeviceLibrarySessionModelTests'` | ✅ | ⬜ pending |
-| 23-01-02 | 01 | 1 | DEVS-15, DEVS-16 | ui | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatUITests/Tools_CatUITests/testDeviceLibrarySaveButtonEnablesAfterRequiredInput' -only-testing:'Tools CatUITests/Tools_CatUITests/testDeviceLibraryNameValidationRevealsAfterSubmit' -only-testing:'Tools CatUITests/Tools_CatUITests/testDeviceLibraryMACValidationRevealsAfterBlurOrSubmit'` | ✅ existing file, new test method needed | ⬜ pending |
+| 23-01-01 | 01 | 1 | DEVS-15, DEVS-16 | unit | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatTests/DeviceLibrarySessionModelTests'` | ✅ | ✅ green |
+| 23-01-02 | 01 | 1 | DEVS-15, DEVS-16 | ui | `xcodebuild test -project "Tools Cat.xcodeproj" -scheme "Tools Cat" -destination 'platform=macOS' -parallel-testing-enabled NO -only-testing:'Tools CatUITests/Tools_CatUITests/testDeviceLibrarySaveButtonEnablesAfterRequiredInput' -only-testing:'Tools CatUITests/Tools_CatUITests/testDeviceLibraryNameValidationRevealsAfterSubmit' -only-testing:'Tools CatUITests/Tools_CatUITests/testDeviceLibraryMACValidationRevealsAfterBlurOrSubmit'` | ✅ existing file, new test method needed | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -47,9 +47,7 @@ created: 2026-05-06
 
 ## Wave 0 Requirements
 
-- [ ] `Tools CatTests/DeviceLibrarySessionModelTests.swift` — add `canSaveDraft` coverage for empty, whitespace-only, partially filled, malformed-but-non-empty, fully filled, and prefilled edit-form states.
-- [ ] `Tools CatUITests/Tools_CatUITests.swift` — add one focused save-button enabled/disabled transition test using the existing device-library form helpers.
-- [ ] `Tools CatUITests/Tools_CatUITests.swift` — ensure the new UI test proves malformed-but-non-empty MAC input can enable the button without weakening submit-time validation.
+Existing session-model and direct-launch UI coverage now satisfy the Wave 0 needs. No standalone bootstrap plan is required.
 
 ---
 
@@ -63,11 +61,11 @@ created: 2026-05-06
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 75s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references
+- [x] No watch-mode flags
+- [x] Feedback latency < 75s
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** 2026-05-07 validated after focused unit and UI regression passes
