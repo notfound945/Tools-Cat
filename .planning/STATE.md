@@ -1,15 +1,15 @@
 ---
 gsd_state_version: 1.0
-milestone: archived
-milestone_name: none
-status: milestone_complete
-stopped_at: Completed v1.8 milestone archival
-last_updated: "2026-05-07T14:44:56+08:00"
-last_activity: 2026-05-07
+milestone: v1.9
+milestone_name: Timed Keep-Awake Notifications
+status: requirements_defined
+stopped_at: Milestone initialized; ready for Phase 24 discussion/planning
+last_updated: "2026-05-09T21:58:36+0800"
+last_activity: 2026-05-09 -- Milestone v1.9 started and roadmap created
 progress:
-  total_phases: 0
+  total_phases: 2
   completed_phases: 0
-  total_plans: 0
+  total_plans: 2
   completed_plans: 0
 ---
 
@@ -17,26 +17,26 @@ progress:
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-05-07)
+See: `.planning/PROJECT.md` (updated 2026-05-09)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** No active milestone — ready for `$gsd-new-milestone`
+**Current focus:** Defining and starting milestone v1.9 Timed Keep-Awake Notifications
 
 ## Current Position
 
-Phase: none
-Plan: none
-Status: Milestone v1.8 archived — ready for next milestone definition
-Last activity: 2026-05-07
+Phase: Not started (defining requirements and roadmap)
+Plan: —
+Status: Ready for `$gsd-discuss-phase 24` or `$gsd-plan-phase 24`
+Last activity: 2026-05-09 -- Milestone v1.9 started
 
-Progress: [██████████] milestone complete
+Progress: [░░░░░░░░░░] 0/2 current milestone phases complete
 
 ## Performance Metrics
 
 **Velocity:**
 
 - Total plans completed: 0
-- Average duration: 7 min
+- Average duration: —
 - Total execution time: 0 hours
 - Current milestone plans completed: 0
 
@@ -44,27 +44,28 @@ Progress: [██████████] milestone complete
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| v1.8 archived | 2 | 14min | 7min |
+| 24 | 0 | — | — |
+| 25 | 0 | — | — |
 
 **Recent Trend:**
 
 - Last shipped milestone: v1.8 WOL Feedback Guardrails (Phases 22-23)
-- Trend: recent milestones remain intentionally narrow and interaction-focused rather than feature-expansion heavy.
-- The next workflow step is `$gsd-new-milestone`.
+- Trend: recent milestones remain intentionally narrow and interaction-focused; v1.9 keeps that pattern by adding notification truth around an existing timed keep-awake flow.
+- The next executable step is Phase 24 discussion or direct planning.
 
-| Milestone v1.8 | archived | roadmap + requirements + audit written | 3 archive files |
-| Phase 22 | complete | summary + verification + validation closed | 4 files |
-| Phase 23 | complete | summary + verification + validation closed | 4 files |
+| Phase 24 | pending | roadmap only | 0 files |
+| Phase 25 | pending | roadmap only | 0 files |
 
 ## Milestone Summary
 
-- Active milestone: none
+- Active milestone: `v1.9 Timed Keep-Awake Notifications`
 - Latest archived milestone: `v1.8 WOL Feedback Guardrails`
-- Most recent shipped scope: auto-clear WOL result feedback after three seconds and gate saved-device save affordance on required-field completeness
-- Active roadmap: `.planning/ROADMAP.md` (archived milestone index only until the next milestone is created)
+- New scope: add timed keep-awake reminder notifications at about two minutes before expiry and again when the session ends
+- Active roadmap: `.planning/ROADMAP.md` (Phases 24-25 planned)
 - Working files:
   - `.planning/PROJECT.md`
   - `.planning/ROADMAP.md`
+  - `.planning/REQUIREMENTS.md`
   - `.planning/MILESTONES.md`
 - Latest shipped summary: `.planning/MILESTONES.md`
 
@@ -105,6 +106,8 @@ The latest completed milestone established these durable decisions:
 - [Phase 22/23 planning]: Keep v1.8 limited to result-timeout and save-button affordance guardrails instead of reopening WOL copy or the saved-device validation rules.
 - [Phase 22]: Keep WOLSessionModel as the only owner of wake-result lifetime so the window and menu row clear from one shared state transition.
 - [Phase 22]: Stabilize shared-timeout regressions with fake wake-result schedulers in tests that do not need the production delay path.
+- [v1.9 planning]: Keep timed keep-awake reminders tied to the active session lifecycle so pre-expiry and expiry notifications cannot drift away from the actual countdown truth.
+- [v1.9 planning]: Keep local notification permission failure visible to the user but non-blocking for timed keep-awake itself.
 
 ### Roadmap Evolution
 
@@ -115,10 +118,11 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- No active milestone theme. Next likely themes remain `CONV-04`, `AWAKE-12`, and `AWAKE-13`.
+- Active milestone theme: add truthful timed keep-awake reminders without expanding into general notification settings.
+- Deferred themes after v1.9 planning: `CONV-04`, `AWAKE-12`, `AWAKE-13`.
 
 ## Session Continuity
 
-Last session: 2026-05-07T14:44:56+08:00
-Stopped at: Completed v1.8 milestone archival
+Last session: 2026-05-09T21:58:36+0800
+Stopped at: Milestone v1.9 initialized; next step is `$gsd-discuss-phase 24` or `$gsd-plan-phase 24`
 Resume file: None
