@@ -13,7 +13,7 @@ final class AppDelegateNotificationTests: XCTestCase {
         }
         defaults.removePersistentDomain(forName: suiteName)
 
-        let scheduler = FakeKeepAwakeReminderScheduler()
+        let scheduler = LaunchFakeKeepAwakeReminderScheduler()
         let subject = AppDelegate()
         subject.makeKeepAwakeReminderScheduler = { scheduler }
         subject.launchConfigurationOverride = LaunchConfiguration(
@@ -36,7 +36,7 @@ final class AppDelegateNotificationTests: XCTestCase {
         }
         defaults.removePersistentDomain(forName: suiteName)
 
-        let scheduler = FakeKeepAwakeReminderScheduler()
+        let scheduler = LaunchFakeKeepAwakeReminderScheduler()
         let subject = AppDelegate()
         subject.makeKeepAwakeReminderScheduler = {
             scheduler.wasFactoryUsed = true
@@ -58,7 +58,7 @@ final class AppDelegateNotificationTests: XCTestCase {
     }
 }
 
-private final class FakeKeepAwakeReminderScheduler: KeepAwakeReminderScheduling {
+private final class LaunchFakeKeepAwakeReminderScheduler: KeepAwakeReminderScheduling {
     var requestedAuthorizationCount = 0
     var wasFactoryUsed = false
     var scheduledRequests: [ScheduledRequest] = []

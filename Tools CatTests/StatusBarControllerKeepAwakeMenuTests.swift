@@ -216,7 +216,30 @@ final class StatusBarControllerKeepAwakeMenuTests: XCTestCase {
         assertStatusItemSymbol(button.image, equals: "bolt.fill")
     }
 
-    private func makeFixture(initiallyEnabled: Bool = false) -> KeepAwakeMenuFixture {
+    func testReminderPermissionUnavailableReusesKeepAwakeStatusRow() async throws {
+        let reminderScheduler = FakeKeepAwakeReminderScheduler()
+        let fixture = makeFixture(reminderScheduler: reminderScheduler)
+
+        trigger(fixture.controller.keepAwake15MinutesItem)
+        fixture.powerController.complete(with: .success(true))
+        await flushControllerUpdates()
+
+        reminderScheduler.completeRequest(at: 0, with: .permissionUnavailable)
+        await flushControllerUpdates()
+
+        XCTAssertEqual(fixture.controller.keepAwake15MinutesItem.state, .on)
+        XCTAssertEqual(fixture.controller.keepAwakeOffItem.isHidden, false)
+        XCTAssertEqual(fixture.controller.keepAwakeStatusItem.title, "提醒不可用：通知权限未开启")
+        XCTAssertEqual(
+            visibleKeepAwakeActionTitles(of: fixture.controller),
+            ["无限常亮", "15 分钟", "30 分钟", "1 小时", "2 小时", "关闭常亮"]
+        )
+    }
+
+    private func makeFixture(
+        initiallyEnabled: Bool = false,
+        reminderScheduler: FakeKeepAwakeReminderScheduler = FakeKeepAwakeReminderScheduler()
+    ) -> KeepAwakeMenuFixture {
         let deviceLibrary = SavedDeviceLibraryStore(repository: KeepAwakeMenuSavedDeviceRepository())
         let wolSession = WOLSessionModel(deviceLibrary: deviceLibrary, wakeSender: NoopWakeSender())
         let powerController = RecordingKeepAwakePowerController(isEnabled: initiallyEnabled)
@@ -231,6 +254,7 @@ final class StatusBarControllerKeepAwakeMenuTests: XCTestCase {
         let session = KeepAwakeSessionModel(
             powerController: powerController,
             scheduler: scheduler,
+            reminderScheduler: reminderScheduler,
             nowProvider: { now.value }
         )
         let controller = StatusBarController(
@@ -245,6 +269,7 @@ final class StatusBarControllerKeepAwakeMenuTests: XCTestCase {
             session: session,
             powerController: powerController,
             scheduler: scheduler,
+            reminderScheduler: reminderScheduler,
             durationStore: durationStore,
             durationDefaults: durationDefaults,
             now: now,
@@ -292,6 +317,7 @@ private struct KeepAwakeMenuFixture {
     let session: KeepAwakeSessionModel
     let powerController: RecordingKeepAwakePowerController
     let scheduler: RecordingKeepAwakeCountdownScheduler
+    let reminderScheduler: FakeKeepAwakeReminderScheduler
     let durationStore: KeepAwakeDurationStore
     let durationDefaults: UserDefaults
     let now: MutableNowBox
