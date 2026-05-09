@@ -22,16 +22,19 @@ final class KeepAwakeSessionModel: ObservableObject {
 
     private let powerController: KeepAwakePowerControlling
     private let scheduler: KeepAwakeCountdownScheduling
+    private let reminderScheduler: KeepAwakeReminderScheduling
     private let nowProvider: () -> Date
     private var countdownToken: KeepAwakeCountdownToken?
 
     init(
         powerController: KeepAwakePowerControlling,
         scheduler: KeepAwakeCountdownScheduling,
+        reminderScheduler: KeepAwakeReminderScheduling,
         nowProvider: @escaping () -> Date = Date.init
     ) {
         self.powerController = powerController
         self.scheduler = scheduler
+        self.reminderScheduler = reminderScheduler
         self.nowProvider = nowProvider
         let initialNow = nowProvider()
         self.confirmedMode = powerController.isEnabled ? .indefinite : .off
@@ -40,10 +43,24 @@ final class KeepAwakeSessionModel: ObservableObject {
         self.countdownNow = initialNow
     }
 
+    convenience init(
+        powerController: KeepAwakePowerControlling,
+        scheduler: KeepAwakeCountdownScheduling,
+        nowProvider: @escaping () -> Date = Date.init
+    ) {
+        self.init(
+            powerController: powerController,
+            scheduler: scheduler,
+            reminderScheduler: NoopKeepAwakeReminderScheduler(),
+            nowProvider: nowProvider
+        )
+    }
+
     convenience init(nowProvider: @escaping () -> Date = Date.init) {
         self.init(
             powerController: SystemKeepAwakePowerController(manager: .shared),
             scheduler: TimerKeepAwakeCountdownScheduler(),
+            reminderScheduler: NoopKeepAwakeReminderScheduler(),
             nowProvider: nowProvider
         )
     }

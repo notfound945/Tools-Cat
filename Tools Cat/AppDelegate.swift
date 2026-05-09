@@ -7,14 +7,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var savedDeviceLibrary: SavedDeviceLibraryStore!
     private var wolSession: WOLSessionModel!
     private var keepAwakeSession: KeepAwakeSessionModel!
+    private var keepAwakeReminderScheduler: KeepAwakeReminderScheduling!
     private var keepAwakeDurationStore: KeepAwakeDurationStore!
     private var keepAwakeDurationManagementSession: KeepAwakeDurationManagementSessionModel!
     private var keepAwakeDurationManagementWindow: KeepAwakeDurationManagementWindow?
     private var deviceLibrarySession: DeviceLibrarySessionModel!
     private var deviceLibraryWindow: DeviceLibraryWindow?
+    var makeKeepAwakeReminderScheduler: () -> KeepAwakeReminderScheduling = {
+        UserNotificationKeepAwakeReminderScheduler()
+    }
+    var launchConfigurationOverride: LaunchConfiguration?
+    var forcesReminderAuthorizationRequestDuringTests = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        configureSharedStores()
+        bootstrapLaunchServices()
 
         if launchConfiguration.shouldOpenUtilityWindow {
             NSApp.setActivationPolicy(.regular)
@@ -52,6 +58,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillTerminate(_ notification: Notification) {
         _ = PowerAssertionManager.shared.disable()
+    }
+
+    func bootstrapLaunchServices() {
+        configureSharedStores()
+        guard shouldRequestReminderAuthorizationAtLaunch else { return }
+        keepAwakeReminderScheduler.requestAuthorizationAtLaunch()
     }
 
     private func openWOLWindow() {
@@ -95,9 +107,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let keepAwakeDurationRepository = UserDefaultsKeepAwakeDurationRepository(defaults: defaults)
         savedDeviceLibrary = SavedDeviceLibraryStore(repository: repository)
         wolSession = WOLSessionModel(deviceLibrary: savedDeviceLibrary)
+        keepAwakeReminderScheduler = makeKeepAwakeReminderScheduler()
         keepAwakeSession = KeepAwakeSessionModel(
             powerController: SystemKeepAwakePowerController(manager: .shared),
-            scheduler: TimerKeepAwakeCountdownScheduler()
+            scheduler: TimerKeepAwakeCountdownScheduler(),
+            reminderScheduler: keepAwakeReminderScheduler
         )
         keepAwakeDurationStore = KeepAwakeDurationStore(repository: keepAwakeDurationRepository)
         keepAwakeDurationManagementSession = KeepAwakeDurationManagementSessionModel(
@@ -108,15 +122,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private var launchConfiguration: LaunchConfiguration {
-        LaunchConfiguration(arguments: ProcessInfo.processInfo.arguments)
+        launchConfigurationOverride ?? LaunchConfiguration(arguments: ProcessInfo.processInfo.arguments)
     }
 
     private var isRunningUnderXCTest: Bool {
         ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
     }
+
+    private var shouldRequestReminderAuthorizationAtLaunch: Bool {
+        !isRunningUnderXCTest || forcesReminderAuthorizationRequestDuringTests
+    }
 }
 
-private struct LaunchConfiguration {
+struct LaunchConfiguration {
     let shouldOpenWOLWindow: Bool
     let shouldOpenDeviceLibrary: Bool
     let shouldOpenKeepAwakeDurationManagement: Bool
