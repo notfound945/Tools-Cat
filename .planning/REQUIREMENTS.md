@@ -9,10 +9,10 @@ Requirements for the v1.9 timed keep-awake notifications milestone. This milesto
 
 ### Notifications
 
-- [ ] **NOTF-01**: User can allow local notification permission the first time timed keep-awake reminder delivery is needed
-- [ ] **NOTF-02**: User receives one local notification about `2 分钟` before a timed keep-awake session ends when the session duration leaves at least two minutes remaining
+- [x] **NOTF-01**: User can allow local notification permission the first time timed keep-awake reminder delivery is needed
+- [x] **NOTF-02**: User receives one local notification about `2 分钟` before a timed keep-awake session ends when the session duration leaves at least two minutes remaining
 - [ ] **NOTF-03**: User receives one local notification when a timed keep-awake session actually ends
-- [ ] **NOTF-04**: Replacing, stopping, or switching away from a timed keep-awake session cancels stale scheduled reminders so old notifications never describe the wrong active session
+- [x] **NOTF-04**: Replacing, stopping, or switching away from a timed keep-awake session cancels stale scheduled reminders so old notifications never describe the wrong active session
 - [ ] **NOTF-05**: If local notification permission is unavailable, timed keep-awake still works and the app surfaces a truthful reminder-unavailable state instead of implying reminders will arrive
 
 ## v2 Requirements
@@ -49,9 +49,9 @@ Phase mapping assigned during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NOTF-01 | Phase 24 | Pending |
-| NOTF-02 | Phase 24 | Pending |
-| NOTF-04 | Phase 24 | Pending |
+| NOTF-01 | Phase 24 | Complete |
+| NOTF-02 | Phase 24 | Complete |
+| NOTF-04 | Phase 24 | Complete |
 | NOTF-03 | Phase 25 | Pending |
 | NOTF-05 | Phase 25 | Pending |
 

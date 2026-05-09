@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready for `$gsd-discuss-phase 24` or `$gsd-plan-phase 24`
-stopped_at: Phase 24 context gathered
-last_updated: "2026-05-09T14:23:00.158Z"
-last_activity: 2026-05-09 -- Milestone v1.9 started
+status: verifying
+stopped_at: Completed 24-01-PLAN.md
+last_updated: "2026-05-09T15:39:59.050Z"
+last_activity: 2026-05-09
 progress:
   total_phases: 2
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
 ---
 
 # Project State
@@ -20,41 +20,42 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-09)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Defining and starting milestone v1.9 Timed Keep-Awake Notifications
+**Current focus:** Phase 25 — expiry-reminder-truth
 
 ## Current Position
 
-Phase: Not started (defining requirements and roadmap)
-Plan: —
-Status: Ready for `$gsd-discuss-phase 24` or `$gsd-plan-phase 24`
-Last activity: 2026-05-09 -- Milestone v1.9 started
+Phase: 24 (timed-reminder-scheduling) — COMPLETE
+Plan: 1 of 1
+Status: Phase complete — ready for verification
+Last activity: 2026-05-09
 
-Progress: [░░░░░░░░░░] 0/2 current milestone phases complete
+Progress: [█████░░░░░] 1/2 current milestone phases complete
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 0
-- Average duration: —
-- Total execution time: 0 hours
-- Current milestone plans completed: 0
+- Total plans completed: 1
+- Average duration: 11m
+- Total execution time: 11m
+- Current milestone plans completed: 1
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 24 | 0 | — | — |
+| 24 | 1 | 11m | 11m |
 | 25 | 0 | — | — |
 
 **Recent Trend:**
 
 - Last shipped milestone: v1.8 WOL Feedback Guardrails (Phases 22-23)
 - Trend: recent milestones remain intentionally narrow and interaction-focused; v1.9 keeps that pattern by adding notification truth around an existing timed keep-awake flow.
-- The next executable step is Phase 24 discussion or direct planning.
+- The next executable step is Phase 25 discussion or direct planning.
 
-| Phase 24 | pending | roadmap only | 0 files |
+| Phase 24 | complete | summary written | 6 files |
 | Phase 25 | pending | roadmap only | 0 files |
+| Phase 24 P01 | 10min | 2 tasks | 7 files |
 
 ## Milestone Summary
 
@@ -108,6 +109,11 @@ The latest completed milestone established these durable decisions:
 - [Phase 22]: Stabilize shared-timeout regressions with fake wake-result schedulers in tests that do not need the production delay path.
 - [v1.9 planning]: Keep timed keep-awake reminders tied to the active session lifecycle so pre-expiry and expiry notifications cannot drift away from the actual countdown truth.
 - [v1.9 planning]: Keep local notification permission failure visible to the user but non-blocking for timed keep-awake itself.
+- [Phase 24]: Keep reminder authorization and scheduling behind one shared KeepAwakeReminderScheduling seam so AppDelegate launch wiring and session logic stay testable without touching UNUserNotificationCenter directly.
+- [Phase 24]: Tie pre-expiry reminder ownership to confirmed timed-session UUIDs instead of duration values so replacements with the same duration still cancel stale pending reminders truthfully.
+- [Phase 24]: Reuse the existing keep-awake status row for permission-unavailable reminder messaging instead of adding a second notification-specific UI surface.
+- [Phase 24]: KeepAwakeSessionModel owns session-scoped pre-expiry reminder truth via an injected scheduler seam.
+- [Phase 24]: Reminder-unavailable outcomes reuse the existing keep-awake message/status row instead of creating a new notification UI surface.
 
 ### Roadmap Evolution
 
@@ -123,6 +129,6 @@ The latest completed milestone established these durable decisions:
 
 ## Session Continuity
 
-Last session: 2026-05-09T14:23:00.151Z
-Stopped at: Phase 24 context gathered
-Resume file: .planning/phases/24-timed-reminder-scheduling/24-CONTEXT.md
+Last session: 2026-05-09T15:39:59.048Z
+Stopped at: Completed 24-01-PLAN.md
+Resume file: None

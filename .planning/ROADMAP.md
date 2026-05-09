@@ -22,7 +22,7 @@ This milestone adds one narrow layer of truthful feedback to the already-shipped
 - Integer phases continue from the last shipped milestone
 - v1.9 therefore starts at Phase 24
 
-- [ ] **Phase 24: Timed Reminder Scheduling** - Add local notification authorization, pre-expiry reminder scheduling, and stale-reminder cancellation that stay aligned with the active timed keep-awake session.
+- [x] **Phase 24: Timed Reminder Scheduling** - Add local notification authorization, pre-expiry reminder scheduling, and stale-reminder cancellation that stay aligned with the active timed keep-awake session. (completed 2026-05-09)
 - [ ] **Phase 25: Expiry Reminder Truth** - Deliver the end-of-session reminder and make notification-unavailable states visible without breaking the existing timed keep-awake truth boundary.
 
 ## Phase Details
@@ -31,13 +31,13 @@ This milestone adds one narrow layer of truthful feedback to the already-shipped
 **Goal**: The app can request local-notification permission when needed and keep pre-expiry reminder scheduling tied to the currently active timed keep-awake session.
 **Depends on**: Phase 23
 **Requirements**: NOTF-01, NOTF-02, NOTF-04
-**Plans**: 0/1 plans complete
+**Plans**: 1/1 plans complete
 **Success Criteria** (what must be TRUE):
   1. Starting a timed keep-awake session that has more than two minutes remaining schedules exactly one local reminder for about two minutes before the session ends.
   2. Starting a timed keep-awake session with two minutes or less remaining skips the pre-expiry reminder instead of sending an immediate or misleading notification.
   3. Replacing a timed session, stopping it early, or switching to `无限常亮` cancels stale scheduled reminders so only the currently active timed session can still notify.
 Plans:
-- [ ] `24-01-PLAN.md` — Add launch-time notification authorization plus session-scoped pre-expiry reminder scheduling, skip, and stale-cancellation truth.
+- [x] `24-01-PLAN.md` — Add launch-time notification authorization plus session-scoped pre-expiry reminder scheduling, skip, and stale-cancellation truth. Summary: `.planning/phases/24-timed-reminder-scheduling/24-01-SUMMARY.md`
 
 ### Phase 25: Expiry Reminder Truth
 **Goal**: Timed keep-awake ending now produces one truthful local notification, and reminder-unavailable states stay visible to the user without breaking keep-awake behavior.
@@ -56,5 +56,5 @@ Phases execute in numeric order: 24, 25
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 24. Timed Reminder Scheduling | 0/1 | Not Started | — |
+| 24. Timed Reminder Scheduling | 1/1 | Complete   | 2026-05-09 |
 | 25. Expiry Reminder Truth | 0/1 | Not Started | — |
