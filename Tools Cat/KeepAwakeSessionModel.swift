@@ -24,7 +24,10 @@ final class KeepAwakeSessionModel: ObservableObject {
     private let scheduler: KeepAwakeCountdownScheduling
     private let reminderScheduler: KeepAwakeReminderScheduling
     private let nowProvider: () -> Date
+    private let preExpiryReminderLeadTime: TimeInterval = 120
     private var countdownToken: KeepAwakeCountdownToken?
+    private var activeTimedReminderSessionID: UUID?
+    private var activeTimedReminderIdentifier: String?
 
     init(
         powerController: KeepAwakePowerControlling,
@@ -127,20 +130,27 @@ final class KeepAwakeSessionModel: ObservableObject {
             switch requestedMode {
             case .off:
                 cancelCountdown()
+                cancelActiveTimedReminder()
             case .indefinite:
                 cancelCountdown()
                 countdownNow = requestedCountdownNow ?? nowProvider()
+                cancelActiveTimedReminder()
             case .timed(_, let endDate):
                 let nextNow = requestedCountdownNow ?? nowProvider()
                 countdownNow = nextNow
                 installCountdown(endDate: endDate)
+                installTimedReminder(endDate: endDate, now: nextNow)
             }
         case .success(false), .unchanged(false):
             cancelCountdown()
             confirmedMode = .off
             message = nil
+            cancelActiveTimedReminder()
         case .failure(let current, let failureMessage):
             restoreConfirmedMode(currentEnabled: current)
+            if !current {
+                cancelActiveTimedReminder()
+            }
             message = failureMessage
         }
 
@@ -166,11 +176,15 @@ final class KeepAwakeSessionModel: ObservableObject {
         case .success(false), .unchanged(false):
             confirmedMode = .off
             message = nil
+            cancelActiveTimedReminder()
         case .success(true), .unchanged(true):
             restoreConfirmedMode(currentEnabled: true)
             message = nil
         case .failure(let current, let failureMessage):
             restoreConfirmedMode(currentEnabled: current)
+            if !current {
+                cancelActiveTimedReminder()
+            }
             message = failureMessage
         }
 
@@ -227,6 +241,57 @@ final class KeepAwakeSessionModel: ObservableObject {
     private func cancelCountdown() {
         countdownToken?.cancel()
         countdownToken = nil
+    }
+
+    private func installTimedReminder(endDate: Date, now: Date) {
+        let previousIdentifier = activeTimedReminderIdentifier
+        let sessionID = UUID()
+        let identifier = reminderIdentifier(for: sessionID)
+        let fireAfter = endDate.timeIntervalSince(now) - preExpiryReminderLeadTime
+
+        if let previousIdentifier {
+            reminderScheduler.cancelPendingReminder(identifier: previousIdentifier)
+        }
+
+        guard fireAfter > 0 else {
+            activeTimedReminderSessionID = nil
+            activeTimedReminderIdentifier = nil
+            return
+        }
+
+        activeTimedReminderSessionID = sessionID
+        activeTimedReminderIdentifier = identifier
+
+        reminderScheduler.schedulePreExpiryReminder(
+            identifier: identifier,
+            fireAfter: fireAfter,
+            title: "常亮即将结束",
+            body: "2 分钟后将关闭常亮"
+        ) { [weak self] result in
+            guard let self else { return }
+            guard self.activeTimedReminderSessionID == sessionID else { return }
+
+            switch result {
+            case .scheduled:
+                self.message = nil
+            case .permissionUnavailable:
+                self.message = "提醒不可用：通知权限未开启"
+            case .failed:
+                self.message = "提醒不可用：无法安排提醒"
+            }
+        }
+    }
+
+    private func cancelActiveTimedReminder() {
+        if let activeTimedReminderIdentifier {
+            reminderScheduler.cancelPendingReminder(identifier: activeTimedReminderIdentifier)
+        }
+        activeTimedReminderSessionID = nil
+        activeTimedReminderIdentifier = nil
+    }
+
+    private func reminderIdentifier(for sessionID: UUID) -> String {
+        "keep-awake.session.\(sessionID.uuidString).pre-expiry"
     }
 }
 
