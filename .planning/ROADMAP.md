@@ -36,6 +36,8 @@ This milestone adds one narrow layer of truthful feedback to the already-shipped
   1. Starting a timed keep-awake session that has more than two minutes remaining schedules exactly one local reminder for about two minutes before the session ends.
   2. Starting a timed keep-awake session with two minutes or less remaining skips the pre-expiry reminder instead of sending an immediate or misleading notification.
   3. Replacing a timed session, stopping it early, or switching to `无限常亮` cancels stale scheduled reminders so only the currently active timed session can still notify.
+Plans:
+- [ ] `24-01-PLAN.md` — Add launch-time notification authorization plus session-scoped pre-expiry reminder scheduling, skip, and stale-cancellation truth.
 
 ### Phase 25: Expiry Reminder Truth
 **Goal**: Timed keep-awake ending now produces one truthful local notification, and reminder-unavailable states stay visible to the user without breaking keep-awake behavior.
