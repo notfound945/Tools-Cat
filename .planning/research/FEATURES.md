@@ -1,93 +1,74 @@
 # Feature Research
 
-**Domain:** Friend-installable macOS distribution for `Tools Cat`
-**Researched:** 2026-04-16
+**Domain:** Timed keep-awake reminder notifications for `Tools Cat`
+**Researched:** 2026-05-09
 **Confidence:** HIGH
 
 ## Feature Landscape
 
-This milestone is operational. The "features" are release-chain capabilities that make direct installation trustworthy and repeatable.
+This milestone is a narrow extension of an existing timed session flow. The “feature” is not a broad notification center; it is truthful reminder delivery around a single countdown-driven behavior.
 
 ### Table Stakes
 
 | Feature | Why Required | Complexity | Notes |
 |---------|--------------|------------|-------|
-| Distribution-signed `.app` | A friend-installable macOS app must be signed for distribution, not merely built locally | MEDIUM | The exported app must carry the correct Developer ID signature and be suitable for notarization. |
-| Signed `.dmg` | Apple’s packaging guidance explicitly supports signed disk images for direct distribution | LOW to MEDIUM | The repo already creates `UDZO` DMGs; signing the DMG closes the container-integrity gap. |
-| Notarization of the delivered artifact | Directly distributed macOS software is expected to be notarized for Gatekeeper confidence | MEDIUM | For a DMG-based flow, notarize the outermost DMG rather than trying to notarize multiple nested deliverables separately. |
-| Stapled ticket on the shipped DMG | Makes the final artifact self-contained for installation checks | LOW | The release artifact should not require the recipient to hit a manual allow path. |
-| Repeatable verification commands | The milestone should prove installability, not just assume it | LOW | `codesign`, `spctl`, and fresh-machine/manual smoke steps belong in the documented release checklist. |
-| Credential-safe notarization setup | Release automation must not depend on plaintext secrets in repo scripts | LOW | `notarytool store-credentials` with a named keychain profile is the clean Apple-native path. |
+| Permission request when reminder delivery is first needed | Notifications cannot arrive without user authorization | LOW | Request only when the timed reminder feature is actually invoked. |
+| Pre-expiry reminder for longer timed sessions | This is the main user-requested convenience outcome | LOW to MEDIUM | Must skip short sessions to avoid misleading “2 分钟前” timing. |
+| End-of-session reminder | Confirms the timed keep-awake session has actually ended | LOW to MEDIUM | Should follow the real session end, not just the original scheduled end date. |
+| Stale reminder cancellation | Users lose trust immediately if an old session still notifies later | MEDIUM | Replacement, manual stop, and mode switches all need explicit cancellation truth. |
+| Visible permission-unavailable state | Silent failure would violate the project’s truth rules | MEDIUM | Keep reminder failure visible while leaving keep-awake itself usable. |
 
 ### Differentiators
 
 | Feature | Value | Complexity | Notes |
 |---------|-------|------------|-------|
-| Single-command release pipeline | Reduces operator error and makes future releases practical | MEDIUM | `release.sh` can become the main entrypoint for build, sign, notarize, staple, and verify. |
-| Notary log surfacing in the script | Makes failures diagnosable without digging manually | LOW | Pulling `notarytool log` on failure would tighten the feedback loop. |
-| Preflight checks for missing identities or credentials | Makes release failures earlier and clearer | LOW | The script should fail before a long build if the signing identity or keychain profile is missing. |
-| Fresh-install validation checklist | Keeps the milestone anchored to the actual user outcome | LOW | Document testing on a Mac/environment that has not previously run the app. |
+| Reminder behavior tied to the same session truth as the menu countdown | Makes the app feel dependable rather than “best effort” | MEDIUM | Stronger than a fire-and-forget notification schedule. |
+| Fixed, narrow reminder scope | Keeps the milestone shippable and testable | LOW | Avoids turning one request into a settings/product-surface rewrite. |
 
 ### Anti-Features
 
 | Feature | Why It’s Tempting | Why It’s Out of Scope | Alternative |
 |---------|-------------------|----------------------|-------------|
-| App Store submission support | It sounds like the “full” Apple distribution path | It is a different release channel with different packaging and review requirements | Stay on Developer ID direct distribution |
-| Auto-update framework integration | It often appears next to notarization conversations | It expands runtime scope and support burden beyond installability | Keep manual DMG distribution for this milestone |
-| New end-user UI features | It can feel efficient to combine with a release pass | It weakens milestone focus and makes release regressions harder to isolate | Keep the milestone release-only |
-| CI/CD-first release automation | It sounds more complete | The repo first needs a working local distribution chain before remote automation adds value | Get the local signed/notarized release path stable first |
+| Configurable reminder lead times | Sounds flexible | Adds settings UI, persistence, and more edge cases before validating the core behavior | Ship fixed `2 分钟` first |
+| Notification history or inbox | Feels “complete” | Not needed for a personal menu bar utility validating one reminder flow | Let the system Notification Center own history |
+| WOL/device notifications in the same milestone | Reuses the same API surface | Reopens a broader product area and weakens milestone focus | Keep reminders scoped to timed keep-awake only |
 
 ## Dependency Map
 
 ```text
-[Developer ID Application certificate]
-    ├──enables──> [Distribution-signed app]
-    └──enables──> [Signed DMG]
+[Timed keep-awake session starts]
+    ├──requires──> [Notification permission truth]
+    ├──enables──> [Pre-expiry reminder scheduling]
+    └──enables──> [Expiry reminder scheduling]
 
-[Distribution-signed app]
-    └──required for──> [Notarization submission]
+[Session replaced / stopped / switched]
+    └──requires──> [Stale reminder cancellation]
 
-[Signed DMG]
-    └──submitted as──> [Outermost notarized artifact]
-
-[Notary credentials]
-    └──required for──> [notarytool submit --wait]
-
-[Successful notarization]
-    └──enables──> [Stapled DMG]
-
-[Stapled DMG]
-    └──verified by──> [Friend-install smoke / Gatekeeper assessment]
+[Permission denied / unavailable]
+    └──requires──> [Visible reminder-unavailable state]
 ```
 
 ## MVP Definition
 
-### Must Ship in v1.6
+### Must Ship in v1.9
 
-- [ ] Release process can produce a distribution-signed `Tools Cat.app`
-- [ ] Release process can produce a signed `Tools-Cat.dmg`
-- [ ] The final DMG is notarized and stapled
-- [ ] Repo docs explain required credentials and release verification steps
-- [ ] A friend-install smoke path is defined and used as the acceptance boundary
-
-### Nice to Have if Cheap
-
-- [ ] Release script prints clear preflight failures for missing signing identity or keychain profile
-- [ ] Release script surfaces notarization logs automatically on rejection
-- [ ] Verification commands are bundled into a helper or README subsection
+- [ ] Request notification permission when reminder delivery is needed
+- [ ] Pre-expiry reminder at about `2 分钟` before end for eligible timed sessions
+- [ ] End reminder when the timed session actually ends
+- [ ] Stale reminder cancellation on stop, replacement, and mode switch
+- [ ] Truthful permission-unavailable feedback without blocking keep-awake
 
 ### Defer
 
-- [ ] CI release automation
-- [ ] Auto-update / background update framework
-- [ ] App Store packaging or TestFlight work
+- [ ] Notification preferences UI
+- [ ] Configurable lead times
+- [ ] WOL notifications
+- [ ] Reminder history or analytics
 
 ## Sources
 
-- Apple Developer: Developer ID - https://developer.apple.com/developer-id/
-- Apple Developer Documentation: Packaging Mac software for distribution - https://developer.apple.com/documentation/xcode/packaging-mac-software-for-distribution
-- Apple Developer Documentation: Customizing the notarization workflow - https://developer.apple.com/documentation/security/customizing-the-notarization-workflow
-- Local repo: `README.md`, `release.sh`, `build_dmg.sh`
+- User request from current milestone discussion
+- Local repo: `KeepAwakeSessionModel`, keep-awake menu/status presentation, keep-awake tests
 
 ---
-*Feature research for: v1.6 Distribution Hardening*
+*Feature research for: v1.9 Timed Keep-Awake Notifications*

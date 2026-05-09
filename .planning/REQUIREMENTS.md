@@ -1,0 +1,65 @@
+# Requirements: Tools Cat
+
+**Defined:** 2026-05-09
+**Core Value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
+
+## v1 Requirements
+
+Requirements for the v1.9 timed keep-awake notifications milestone. This milestone stays tightly scoped to local reminders around an already-shipped timed keep-awake flow: the current duration model, menu structure, and countdown truth remain the same, but timed sessions should no longer end silently when the user is away from the menu bar.
+
+### Notifications
+
+- [ ] **NOTF-01**: User can allow local notification permission the first time timed keep-awake reminder delivery is needed
+- [ ] **NOTF-02**: User receives one local notification about `2 分钟` before a timed keep-awake session ends when the session duration leaves at least two minutes remaining
+- [ ] **NOTF-03**: User receives one local notification when a timed keep-awake session actually ends
+- [ ] **NOTF-04**: Replacing, stopping, or switching away from a timed keep-awake session cancels stale scheduled reminders so old notifications never describe the wrong active session
+- [ ] **NOTF-05**: If local notification permission is unavailable, timed keep-awake still works and the app surfaces a truthful reminder-unavailable state instead of implying reminders will arrive
+
+## v2 Requirements
+
+Deferred until after the v1.9 timed keep-awake notifications milestone is complete.
+
+### Convenience
+
+- **CONV-04**: User can access a short recent-devices list for faster repeat wake actions
+- **AWAKE-12**: User can create a one-off timed keep-awake duration without saving it into the managed list
+- **AWAKE-13**: User can assign custom labels or notes to managed keep-awake durations
+
+### Notifications
+
+- **NOTF-06**: User can configure whether pre-expiry reminders are enabled
+- **NOTF-07**: User can configure the reminder lead time instead of using the fixed `2 分钟` rule
+- **NOTF-08**: User can review reminder history or notification-delivery troubleshooting inside the app
+
+## Out of Scope
+
+Explicitly excluded to keep v1.9 focused on truthful local reminders for the existing timed keep-awake flow.
+
+| Feature | Reason |
+|---------|--------|
+| Adding WOL notifications or generic app-wide notification surfaces | This milestone only covers timed keep-awake reminders |
+| Adding a settings UI for notification preferences or customizable reminder lead times | A fixed `2 分钟` reminder plus one expiry reminder is enough to validate the behavior |
+| Blocking timed keep-awake when local notification permission is denied | Reminder delivery should fail visibly, but keep-awake itself must remain usable |
+| Reworking managed duration CRUD, sorting, or presentation | v1.9 adds reminder behavior to existing timed sessions, not new duration-management UX |
+| Changing the shipped keep-awake root menu structure or reopening `AWAKE-12` one-off durations | Keep scope on reminder delivery rather than broader keep-awake expansion |
+
+## Traceability
+
+Phase mapping assigned during roadmap creation.
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| NOTF-01 | Phase 24 | Pending |
+| NOTF-02 | Phase 24 | Pending |
+| NOTF-04 | Phase 24 | Pending |
+| NOTF-03 | Phase 25 | Pending |
+| NOTF-05 | Phase 25 | Pending |
+
+**Coverage:**
+- v1 requirements: 5 total
+- Mapped to phases: 5
+- Unmapped: 0 ✓
+
+---
+*Requirements defined: 2026-05-09*
+*Last updated: 2026-05-09 after starting milestone v1.9*

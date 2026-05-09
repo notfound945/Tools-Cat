@@ -1,123 +1,67 @@
 # Architecture Research
 
-**Domain:** Direct-distribution release chain for `Tools Cat`
-**Researched:** 2026-04-16
+**Domain:** Timed keep-awake reminder architecture for `Tools Cat`
+**Researched:** 2026-05-09
 **Confidence:** HIGH
 
 ## Current Architecture
 
-Today’s release chain is:
+Today’s timed keep-awake flow is already centralized:
 
-1. `release.sh` runs `xcodebuild clean build`
-2. It locates the Release `.app` in DerivedData
-3. It calls `build_dmg.sh`
-4. `build_dmg.sh` stages the app with `ditto` and emits a `UDZO` DMG
-5. The repo explicitly tells users the DMG is not notarized and must be manually allowed
+1. `KeepAwakeSessionModel` owns `confirmedMode`, `pendingAction`, `countdownNow`, and the timed session `endDate`
+2. A countdown scheduler ticks every second and stops the session when the active timed session reaches expiry
+3. `StatusBarController` renders the keep-awake presentation from that shared model
+4. `AppDelegate` builds the shared session once and hands it to the status/menu surfaces
 
-That architecture is good enough for local packaging, but not for friend distribution.
+That structure is the correct foundation for reminder notifications.
 
 ## Target Architecture
 
-The target release chain should be:
+The target reminder path should be:
 
-1. Build or export a distribution-signed `.app`
-2. Verify the app signature and hardened-runtime/notarization readiness
-3. Stage the app into a DMG source directory
-4. Create a `UDZO` DMG
-5. Sign the DMG with a Developer ID Application identity
-6. Submit the DMG to Apple using `notarytool submit --wait`
-7. On success, staple the notarization ticket to the DMG
-8. Verify the DMG locally with `codesign` and `spctl`
-9. Perform a fresh-install smoke on a clean machine/environment
+1. Timed session start/replace/stop still flows through `KeepAwakeSessionModel`
+2. `KeepAwakeSessionModel` calls a reminder-scheduling seam whenever the active timed-session truth changes
+3. The production scheduler implementation uses `UNUserNotificationCenter` to request permission, schedule reminder requests, and cancel stale ones
+4. The model exposes a reminder-unavailable message/state when permission or scheduling fails
+5. Existing menu/status presentation renders that state without changing the keep-awake lifecycle truth
 
 ## Recommended Component Layout
 
 | Component | Responsibility | Repo Fit |
 |-----------|----------------|----------|
-| `release.sh` | Orchestrate the end-to-end release pipeline | Best place to become the main release entrypoint |
-| `build_dmg.sh` | Keep focused on deterministic DMG creation | Can stay small and reusable if signing/notarization happen around it |
-| Notarization helper (shell or inline release step) | Submit, wait, log, staple | Could live inside `release.sh` or a dedicated helper if clarity improves |
-| README release docs | Document prerequisites, credentials, and verification | Necessary because this repo is currently explicit about the opposite behavior |
-| Xcode project signing config | Provide correct distribution signing inputs | Needs review for hardened runtime and predictable Team/identity selection |
-
-## Credential and Identity Flow
-
-The release flow should separate:
-
-- **Build/signing identity**
-  - Developer ID Application certificate
-  - Chosen deterministically at release time
-- **Notarization authentication**
-  - `notarytool` keychain profile or API-key credentials
-  - Kept outside the repo and outside plaintext shell variables where possible
-
-This separation matters because code signing and notarization are related but not the same step.
-
-## Build Order Recommendation
-
-The safest build order for this repo is:
-
-1. **Preflight**
-   - Check that required tools exist: `xcodebuild`, `codesign`, `notarytool`, `stapler`, `spctl`, `hdiutil`
-   - Check that signing identity is available
-   - Check that notarization keychain profile exists
-2. **Signed app**
-   - Build or export the app for distribution
-   - Verify the app signature
-3. **Signed DMG**
-   - Create the DMG
-   - Sign the DMG with Developer ID Application
-4. **Notarization**
-   - Submit the DMG
-   - Wait for completion
-   - Retrieve log on failure
-5. **Staple + verify**
-   - Staple the ticket to the DMG
-   - Assess with `spctl`
-   - Keep a final manual smoke step documented
+| `KeepAwakeSessionModel` | Own active timed-session truth and tell reminder scheduling when that truth changes | Best place to keep reminder behavior synchronized with countdown/expiry state |
+| `KeepAwakeNotificationScheduling` seam | Request authorization, schedule pre-expiry and expiry notifications, cancel stale requests | Keeps production notification APIs out of model tests |
+| `UNUserNotificationCenter` implementation | Real macOS permission and local-notification operations | AppKit-native production implementation |
+| `KeepAwakePresentation` / menu status rendering | Show reminder-unavailable truth if notifications cannot be delivered | Reuses existing presentation architecture |
 
 ## Architectural Choices
 
-### Prefer: notarize the outermost DMG
+### Prefer: schedule from session-state transitions, not from ad hoc UI callbacks
 
-Apple’s packaging guidance is explicit that for nested containers you sign each signable layer, but notarize the outermost container you distribute. For this repo’s current DMG-based workflow, that points to:
+The app already trusts the session model instead of menu clicks for countdown truth. Reminder scheduling should follow that same rule so replacement, stop, and expiry remain correct no matter which UI surface triggered the state change.
 
-- sign the `.app`
-- create the DMG
-- sign the DMG
-- notarize the DMG
-- staple the DMG
+### Prefer: explicit identifiers for the active timed session
 
-### Prefer: fail-fast release automation
+Pre-expiry and expiry requests should be cancelable as a pair. Identifier derivation should make it impossible for an older session’s reminders to survive after a replacement.
 
-This repo is small; opaque release scripts create more pain than they save. The release chain should stop immediately on:
+### Prefer: non-blocking failure handling
 
-- missing Developer ID identity
-- missing notarization credentials
-- notarization rejection
-- failed staple
-- failed Gatekeeper assessment
-
-### Prefer: local-first release automation before CI
-
-The milestone should first make local release work reliably on the maintainer’s Mac. CI can come later, once the exact identity, credential, and verification model is stable.
+Notification permission denial should not prevent keep-awake from starting. Instead, the reminder feature should report “unavailable” while keep-awake itself remains truthful and functional.
 
 ## Integration Points With Current Repo
 
 | File | Change Pressure | Why |
 |------|-----------------|-----|
-| `release.sh` | HIGH | It is the natural place to grow from local build orchestration into full release orchestration |
-| `build_dmg.sh` | MEDIUM | It may need a signing seam or at least a clean handoff for post-create signing |
-| `README.md` | HIGH | Current docs promise an unnotarized DMG and manual security bypasses |
-| `Tools Cat.xcodeproj/project.pbxproj` | MEDIUM | Signing behavior needs review for distribution readiness and hardened runtime visibility |
-| `Tools Cat/Tools_Cat.entitlements` | LOW to MEDIUM | Current entitlement surface is small, but runtime exceptions should stay minimal and intentional |
+| `Tools Cat/KeepAwakeSessionModel.swift` | HIGH | Timed-session lifecycle and reminder synchronization belong here |
+| `Tools Cat/AppDelegate.swift` | MEDIUM | The shared session likely needs the production notification scheduler injected at creation time |
+| `Tools Cat/KeepAwakePresentation.swift` | MEDIUM | Reminder-unavailable state may need visible presentation text |
+| `Tools Cat/StatusBarController.swift` | LOW to MEDIUM | Renders the shared keep-awake presentation and should inherit any new truthful message state |
+| `Tools CatTests/KeepAwakeSessionModelTests.swift` | HIGH | Best place to prove scheduling, cancellation, and expiry behavior without real system notifications |
 
 ## Sources
 
-- Apple Developer Documentation: Packaging Mac software for distribution - https://developer.apple.com/documentation/xcode/packaging-mac-software-for-distribution
-- Apple Developer Documentation: Customizing the notarization workflow - https://developer.apple.com/documentation/security/customizing-the-notarization-workflow
-- Apple Developer Documentation: Resolving common notarization issues - https://developer.apple.com/documentation/security/resolving-common-notarization-issues
-- Local repo: `release.sh`, `build_dmg.sh`, `README.md`, `Tools Cat.xcodeproj/project.pbxproj`, `Tools Cat/Tools_Cat.entitlements`
+- Local repo: `KeepAwakeSessionModel.swift`, `StatusBarController.swift`, `AppDelegate.swift`, `KeepAwakeSessionModelTests.swift`
+- Apple Developer Documentation — local notification scheduling and authorization flow
 
 ---
-*Architecture research for: v1.6 Distribution Hardening*
+*Architecture research for: v1.9 Timed Keep-Awake Notifications*

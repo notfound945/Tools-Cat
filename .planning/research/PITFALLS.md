@@ -1,124 +1,117 @@
 # Pitfalls Research
 
-**Domain:** Apple signing and notarization pitfalls for direct macOS distribution
-**Researched:** 2026-04-16
+**Domain:** Timed keep-awake reminder pitfalls for `Tools Cat`
+**Researched:** 2026-05-09
 **Confidence:** HIGH
 
 ## Critical Pitfalls
 
-### Pitfall 1: Using a local-development build as if it were a distribution build
+### Pitfall 1: Scheduling reminders from UI taps instead of active session truth
 
 **What goes wrong:**
-The app launches locally, the DMG gets created, but the artifact is still tied to local signing state or lacks the exact Developer ID distribution path needed for friend installs.
+Notifications reflect the user’s initial menu click rather than the session that actually survived replacements, failures, or explicit stops.
 
 **Why it happens:**
-The repo’s current release flow is centered on `xcodebuild clean build`, which is enough for local packaging and smoke tests.
+It is tempting to schedule local notifications right where the menu action fires.
 
 **How to avoid:**
-Make the release path explicitly distribution-oriented. Verify which identity signed the `.app`, and avoid assuming that a successful local build equals a distributable artifact.
+Schedule and cancel reminders only from `KeepAwakeSessionModel` transitions after the model knows which timed session is currently authoritative.
 
 **Warning signs:**
-- The release script never prints the final signing identity
-- The only proof of success is “the app runs on my machine”
-- Different Macs produce differently signed artifacts
+- Replacing a timed session still delivers the first session’s reminder
+- Tests can only prove menu-click behavior, not session-truth behavior
 
-### Pitfall 2: Missing hardened runtime
+**Phase to address:**
+Phase 24
+
+---
+
+### Pitfall 2: Sending misleading “2 分钟前” reminders for short sessions
 
 **What goes wrong:**
-Notarization fails even though the app is signed.
+A timed session of one or two minutes emits an immediate “about to end” reminder that feels broken or late.
 
 **Why it happens:**
-Apple only notarizes macOS apps that enable hardened runtime. Small utility apps often overlook this because they don’t need unusual runtime exceptions.
+The implementation blindly subtracts two minutes from `endDate` without checking whether enough time remains.
 
 **How to avoid:**
-Explicitly verify hardened-runtime readiness in the distribution path and keep runtime exceptions minimal. Do not assume it is configured correctly just because Xcode signs the app.
+Gate pre-expiry scheduling on remaining duration strictly greater than two minutes and let short sessions keep only the expiry reminder.
 
 **Warning signs:**
-- Notary log reports “The executable does not have the hardened runtime enabled”
-- The project has no explicit verification step for runtime hardening
+- Very short sessions schedule a pre-expiry request at or before “now”
+- The reminder logic does not branch on duration length
 
-### Pitfall 3: Notarizing the wrong file
+**Phase to address:**
+Phase 24
+
+---
+
+### Pitfall 3: Silent permission failure
 
 **What goes wrong:**
-The app is notarized separately, or multiple nested artifacts are submitted inconsistently, creating a confused or non-repeatable release process.
+Timed keep-awake works, but reminders never arrive and the user has no idea the feature is unavailable.
 
 **Why it happens:**
-Teams mix “sign every signable layer” with “submit every layer for notarization.”
+Local-notification authorization is easy to treat as best-effort background work.
 
 **How to avoid:**
-For the current DMG-based distribution path, sign the app, sign the DMG, and notarize the outermost DMG that will be sent to users.
+Keep permission denial or scheduling failure visible through the shared keep-awake presentation while leaving the core timed session behavior intact.
 
 **Warning signs:**
-- The scripts submit both `.app` and `.dmg` separately without a clear reason
-- The shipped file is not the same file that was notarized
+- No new user-visible state appears when notification permission is denied
+- The milestone relies on “system settings will handle it” instead of explicit app truth
 
-### Pitfall 4: Forgetting to sign the DMG
+**Phase to address:**
+Phase 25
+
+---
+
+### Pitfall 4: End reminder firing for sessions that never actually ended naturally
 
 **What goes wrong:**
-The app bundle is signed, but the disk image container can still be modified after packaging.
+The app sends an “ended” reminder after the user already stopped the session manually or changed to `无限常亮`.
 
 **Why it happens:**
-Many simple release scripts stop after `hdiutil create`.
+Expiry notifications were scheduled once and never canceled when the session lifecycle changed.
 
 **How to avoid:**
-Treat the DMG as a real distribution container: create it, sign it with Developer ID Application, then notarize that signed DMG.
+Pair expiry scheduling with explicit cancellation on every stop, replacement, and mode-switch path.
 
 **Warning signs:**
-- `build_dmg.sh` never calls `codesign`
-- The release checklist mentions notarization but not DMG signing
+- Stopping a timed session leaves pending notification identifiers around
+- Cancellation logic exists only for pre-expiry reminders, not expiry reminders
 
-### Pitfall 5: Storing notarization credentials unsafely
+**Phase to address:**
+Phase 25
 
-**What goes wrong:**
-Secrets leak into shell history, CI logs, or the repo.
+## Technical Debt Patterns
 
-**Why it happens:**
-It is tempting to pass Apple ID credentials directly to scripts because it is the fastest first implementation.
+| Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
+|----------|-------------------|----------------|-----------------|
+| Hardcoding notification API calls directly into `KeepAwakeSessionModel` | Faster first implementation | Makes model tests brittle and couples business truth to system APIs | Never for this repo’s current testing style |
+| Treating permission denial as “no-op” | Less UI/presentation work | Violates the project’s visible-truth rule and creates support ambiguity | Never |
+| Using one generic notification identifier forever | Simpler scheduling code | Makes stale-notification cancellation unreliable after session replacement | Never |
 
-**How to avoid:**
-Use `notarytool store-credentials` with a named keychain profile and make the release script consume that profile.
+## "Looks Done But Isn't" Checklist
 
-**Warning signs:**
-- README tells users to paste passwords into environment variables directly
-- Shell scripts contain literal Apple ID or app-specific password placeholders
+- [ ] **Pre-expiry reminders:** Verify short timed sessions do not schedule a misleading `2 分钟前` notification
+- [ ] **Session replacement:** Verify replacing one timed duration cancels the older session’s pending reminders
+- [ ] **Manual stop:** Verify stopping timed keep-awake early cancels both pending reminder requests
+- [ ] **Permission denial:** Verify keep-awake still functions and the app surfaces reminder-unavailable truth
 
-### Pitfall 6: Verifying only on the development Mac
+## Pitfall-to-Phase Mapping
 
-**What goes wrong:**
-The artifact appears installable because the maintainer’s machine already trusts local signing state, cached notarization tickets, or previously allowed launches.
-
-**Why it happens:**
-Developer machines are contaminated by prior builds and trust decisions.
-
-**How to avoid:**
-Keep a clean-machine or fresh-environment install smoke as a milestone acceptance boundary. At minimum, use Gatekeeper assessment commands plus one real friend-install test.
-
-**Warning signs:**
-- There is no verification step beyond “double-clicked it locally”
-- The release docs never mention testing on a fresh Mac/environment
-
-### Pitfall 7: Expanding scope into App Store or updater work
-
-**What goes wrong:**
-The milestone turns into a generalized release-platform rewrite and never closes the immediate installability problem.
-
-**Why it happens:**
-Signing, notarization, App Store packaging, CI release automation, and auto-update all live in the same mental bucket.
-
-**How to avoid:**
-Hold the line on the actual user need: send the app to friends and let them install it directly. Anything beyond that is a later milestone.
-
-**Warning signs:**
-- Requirements start mentioning TestFlight, App Store review, or auto-update
-- The roadmap can’t explain why each task is necessary for friend installs
+| Pitfall | Prevention Phase | Verification |
+|---------|------------------|--------------|
+| UI-driven instead of session-driven scheduling | Phase 24 | Model tests prove reminders follow the active confirmed timed session only |
+| Misleading short-session pre-reminders | Phase 24 | Tests prove sessions of `<= 2 分钟` skip the pre-expiry request |
+| Silent permission failure | Phase 25 | Presentation/menu tests prove reminder-unavailable state is visible |
+| Expiry reminder after manual stop or replacement | Phase 25 | Tests prove cancellation clears pending end reminders on all lifecycle exits |
 
 ## Sources
 
-- Apple Developer: Developer ID - https://developer.apple.com/developer-id/
-- Apple Developer Documentation: Resolving common notarization issues - https://developer.apple.com/documentation/security/resolving-common-notarization-issues
-- Apple Developer Documentation: Configuring the hardened runtime - https://developer.apple.com/documentation/xcode/configuring-the-hardened-runtime
-- Apple Developer Documentation: Packaging Mac software for distribution - https://developer.apple.com/documentation/xcode/packaging-mac-software-for-distribution
-- Local repo: `release.sh`, `build_dmg.sh`, `README.md`
+- Local repo behavior and current keep-awake architecture
+- User-requested milestone scope for v1.9
 
 ---
-*Pitfall research for: v1.6 Distribution Hardening*
+*Pitfalls research for: v1.9 Timed Keep-Awake Notifications*
