@@ -180,6 +180,7 @@ final class StatusBarController: NSObject {
             confirmedMode: keepAwakeSession.confirmedMode,
             pendingAction: keepAwakeSession.pendingAction,
             message: keepAwakeSession.message,
+            reminderAvailability: keepAwakeSession.reminderAvailability,
             now: keepAwakeSession.countdownNow
         )
 
@@ -194,8 +195,24 @@ final class StatusBarController: NSObject {
 
         keepAwakeActionItems.forEach { $0.isEnabled = !presentation.isPending }
         keepAwakeStatusItem.isEnabled = false
-        keepAwakeStatusItem.title = presentation.statusText ?? ""
-        keepAwakeStatusItem.isHidden = presentation.statusText == nil
+        switch presentation.statusLines {
+        case nil:
+            keepAwakeStatusItem.title = ""
+            keepAwakeStatusItem.attributedTitle = nil
+            keepAwakeStatusItem.isHidden = true
+        case .some(let lines):
+            keepAwakeStatusItem.isHidden = false
+            if let secondary = lines.secondary {
+                keepAwakeStatusItem.attributedTitle = makeKeepAwakeStatusTitle(
+                    primary: lines.primary,
+                    secondary: secondary
+                )
+                keepAwakeStatusItem.title = lines.primary
+            } else {
+                keepAwakeStatusItem.attributedTitle = nil
+                keepAwakeStatusItem.title = lines.primary
+            }
+        }
 
         guard let button = statusItem.button else { return }
         button.image = NSImage(
@@ -356,6 +373,30 @@ final class StatusBarController: NSObject {
         title.append(
             NSAttributedString(
                 string: "\n\(device.macAddress)",
+                attributes: [
+                    .font: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize),
+                    .foregroundColor: NSColor.secondaryLabelColor,
+                    .paragraphStyle: paragraphStyle,
+                ]
+            )
+        )
+        return title
+    }
+
+    private func makeKeepAwakeStatusTitle(primary: String, secondary: String) -> NSAttributedString {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 1
+
+        let title = NSMutableAttributedString(
+            string: primary,
+            attributes: [
+                .font: NSFont.menuFont(ofSize: 0),
+                .paragraphStyle: paragraphStyle,
+            ]
+        )
+        title.append(
+            NSAttributedString(
+                string: "\n\(secondary)",
                 attributes: [
                     .font: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize),
                     .foregroundColor: NSColor.secondaryLabelColor,

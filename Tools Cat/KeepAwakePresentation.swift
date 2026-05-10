@@ -10,7 +10,13 @@ struct KeepAwakePresentation: Equatable {
     let confirmedMode: KeepAwakeMode
     let pendingAction: KeepAwakePendingAction?
     let message: String?
+    let reminderAvailability: KeepAwakeReminderAvailability
     let now: Date
+
+    struct KeepAwakeStatusLines: Equatable {
+        let primary: String
+        let secondary: String?
+    }
 
     var isIndefiniteActive: Bool {
         if case .indefinite = confirmedMode {
@@ -28,22 +34,28 @@ struct KeepAwakePresentation: Equatable {
         return nil
     }
 
-    var statusText: String? {
+    var statusLines: KeepAwakeStatusLines? {
         if let pendingAction {
-            return pendingStatusText(for: pendingAction)
+            return KeepAwakeStatusLines(
+                primary: pendingStatusText(for: pendingAction),
+                secondary: nil
+            )
         }
 
         if let message, !message.isEmpty {
-            return message
+            return KeepAwakeStatusLines(primary: message, secondary: nil)
         }
 
         switch confirmedMode {
         case .off:
             return nil
         case .indefinite:
-            return "当前：无限常亮"
+            return KeepAwakeStatusLines(primary: "当前：无限常亮", secondary: nil)
         case .timed(_, let endDate):
-            return "还剩 \(formattedDuration(until: endDate))"
+            return KeepAwakeStatusLines(
+                primary: "还剩 \(formattedDuration(until: endDate))",
+                secondary: reminderUnavailableTextIfAny
+            )
         }
     }
 
@@ -89,6 +101,15 @@ struct KeepAwakePresentation: Equatable {
             return false
         case .indefinite, .timed:
             return true
+        }
+    }
+
+    private var reminderUnavailableTextIfAny: String? {
+        switch reminderAvailability {
+        case .available:
+            return nil
+        case .unavailable(let text):
+            return text
         }
     }
 
