@@ -23,7 +23,7 @@ This milestone adds one narrow layer of truthful feedback to the already-shipped
 - v1.9 therefore starts at Phase 24
 
 - [x] **Phase 24: Timed Reminder Scheduling** - Add local notification authorization, pre-expiry reminder scheduling, and stale-reminder cancellation that stay aligned with the active timed keep-awake session. (completed 2026-05-09)
-- [ ] **Phase 25: Expiry Reminder Truth** - Deliver the end-of-session reminder and make notification-unavailable states visible without breaking the existing timed keep-awake truth boundary.
+- [x] **Phase 25: Expiry Reminder Truth** - Deliver the end-of-session reminder and make notification-unavailable states visible without breaking the existing timed keep-awake truth boundary. (completed 2026-05-10)
 
 ## Phase Details
 
@@ -59,4 +59,4 @@ Phases execute in numeric order: 24, 25
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 24. Timed Reminder Scheduling | 1/1 | Complete    | 2026-05-10 |
-| 25. Expiry Reminder Truth | 0/1 | Not Started | — |
+| 25. Expiry Reminder Truth | 1/1 | Complete   | 2026-05-10 |
