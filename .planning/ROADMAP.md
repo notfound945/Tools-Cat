@@ -48,6 +48,8 @@ Plans:
   1. When a timed keep-awake session actually reaches its end and turns off, the app sends one local notification that the session has ended.
   2. If local notifications are denied or otherwise unavailable, timed keep-awake still starts, counts down, and ends correctly while the app surfaces that reminder delivery is unavailable.
   3. The end reminder never fires for an older replaced session or for a session the user already stopped manually.
+Plans:
+- [ ] `25-01-PLAN.md` — Extend the existing reminder scheduler and keep-awake session truth so confirmed timed expiry sends one `.expiry` notification, unavailable reminder state stays visible in the current keep-awake status area, and the menu surface remains unchanged.
 
 ## Progress
 
