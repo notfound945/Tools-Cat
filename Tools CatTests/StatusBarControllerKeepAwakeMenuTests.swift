@@ -216,7 +216,7 @@ final class StatusBarControllerKeepAwakeMenuTests: XCTestCase {
         assertStatusItemSymbol(button.image, equals: "bolt.fill")
     }
 
-    func testReminderPermissionUnavailableReusesKeepAwakeStatusRow() async throws {
+    func testReminderPermissionUnavailableShowsCountdownAndUnavailableTextInExistingStatusRow() async throws {
         let reminderScheduler = FakeKeepAwakeReminderScheduler()
         let fixture = makeFixture(reminderScheduler: reminderScheduler)
 
@@ -229,7 +229,47 @@ final class StatusBarControllerKeepAwakeMenuTests: XCTestCase {
 
         XCTAssertEqual(fixture.controller.keepAwake15MinutesItem.state, .on)
         XCTAssertEqual(fixture.controller.keepAwakeOffItem.isHidden, false)
-        XCTAssertEqual(fixture.controller.keepAwakeStatusItem.title, "提醒不可用：通知权限未开启")
+        XCTAssertEqual(fixture.controller.keepAwakeStatusItem.title, "还剩 15 分钟")
+        XCTAssertEqual(
+            fixture.controller.keepAwakeStatusItem.attributedTitle?.string,
+            "还剩 15 分钟\n提醒不可用：通知权限未开启"
+        )
+        XCTAssertEqual(
+            visibleKeepAwakeActionTitles(of: fixture.controller),
+            ["无限常亮", "15 分钟", "30 分钟", "1 小时", "2 小时", "关闭常亮"]
+        )
+    }
+
+    func testTwoMinuteTimedSessionStillShowsReminderUnavailableInExistingStatusRow() async {
+        let reminderScheduler = FakeKeepAwakeReminderScheduler()
+        reminderScheduler.authorizationStates = [.unavailable]
+        let fixture = makeShortSessionFixture(reminderScheduler: reminderScheduler)
+
+        trigger(fixture.controller.keepAwake2MinutesItem)
+        fixture.powerController.complete(with: .success(true))
+        await flushControllerUpdates()
+
+        XCTAssertEqual(fixture.controller.keepAwakeStatusItem.title, "还剩 2 分钟")
+        XCTAssertEqual(
+            fixture.controller.keepAwakeStatusItem.attributedTitle?.string,
+            "还剩 2 分钟\n提醒不可用：通知权限未开启"
+        )
+        XCTAssertEqual(
+            visibleKeepAwakeActionTitles(of: fixture.controller),
+            ["无限常亮", "2 分钟", "关闭常亮"]
+        )
+    }
+
+    func testReminderAvailableTimedSessionKeepsSingleLineCountdownStatus() async {
+        let reminderScheduler = FakeKeepAwakeReminderScheduler()
+        let fixture = makeFixture(reminderScheduler: reminderScheduler)
+
+        trigger(fixture.controller.keepAwake15MinutesItem)
+        fixture.powerController.complete(with: .success(true))
+        await flushControllerUpdates()
+
+        XCTAssertEqual(fixture.controller.keepAwakeStatusItem.title, "还剩 15 分钟")
+        XCTAssertNil(fixture.controller.keepAwakeStatusItem.attributedTitle)
         XCTAssertEqual(
             visibleKeepAwakeActionTitles(of: fixture.controller),
             ["无限常亮", "15 分钟", "30 分钟", "1 小时", "2 小时", "关闭常亮"]
@@ -248,6 +288,51 @@ final class StatusBarControllerKeepAwakeMenuTests: XCTestCase {
         let durationSuiteName = "StatusBarControllerKeepAwakeMenuTests.\(UUID().uuidString)"
         let durationDefaults = UserDefaults(suiteName: durationSuiteName)!
         durationDefaults.removePersistentDomain(forName: durationSuiteName)
+        let durationStore = KeepAwakeDurationStore(
+            repository: UserDefaultsKeepAwakeDurationRepository(defaults: durationDefaults)
+        )
+        let session = KeepAwakeSessionModel(
+            powerController: powerController,
+            scheduler: scheduler,
+            reminderScheduler: reminderScheduler,
+            nowProvider: { now.value }
+        )
+        let controller = StatusBarController(
+            deviceLibrary: deviceLibrary,
+            wolSession: wolSession,
+            keepAwakeSession: session,
+            keepAwakeDurationStore: durationStore
+        )
+
+        return KeepAwakeMenuFixture(
+            controller: controller,
+            session: session,
+            powerController: powerController,
+            scheduler: scheduler,
+            reminderScheduler: reminderScheduler,
+            durationStore: durationStore,
+            durationDefaults: durationDefaults,
+            now: now,
+            startNow: now.value
+        )
+    }
+
+    private func makeShortSessionFixture(
+        initiallyEnabled: Bool = false,
+        reminderScheduler: FakeKeepAwakeReminderScheduler = FakeKeepAwakeReminderScheduler()
+    ) -> KeepAwakeMenuFixture {
+        let deviceLibrary = SavedDeviceLibraryStore(repository: KeepAwakeMenuSavedDeviceRepository())
+        let wolSession = WOLSessionModel(deviceLibrary: deviceLibrary, wakeSender: NoopWakeSender())
+        let powerController = RecordingKeepAwakePowerController(isEnabled: initiallyEnabled)
+        let scheduler = RecordingKeepAwakeCountdownScheduler()
+        let now = MutableNowBox(value: Date(timeIntervalSinceReferenceDate: 80_000))
+        let durationSuiteName = "StatusBarControllerKeepAwakeMenuTests.Short.\(UUID().uuidString)"
+        let durationDefaults = UserDefaults(suiteName: durationSuiteName)!
+        durationDefaults.removePersistentDomain(forName: durationSuiteName)
+        let shortDurationData = try! JSONEncoder().encode([
+            ManagedKeepAwakeDuration(durationSeconds: 120),
+        ])
+        durationDefaults.set(shortDurationData, forKey: "managed_keep_awake_durations")
         let durationStore = KeepAwakeDurationStore(
             repository: UserDefaultsKeepAwakeDurationRepository(defaults: durationDefaults)
         )
@@ -322,6 +407,18 @@ private struct KeepAwakeMenuFixture {
     let durationDefaults: UserDefaults
     let now: MutableNowBox
     let startNow: Date
+}
+
+private extension StatusBarController {
+    var keepAwake2MinutesItem: NSMenuItem {
+        guard let item = keepAwakeTimedItemsForTesting.first(where: {
+            ($0.representedObject as? ManagedKeepAwakeDuration)?.durationSeconds == 120
+        }) else {
+            fatalError("Expected timed keep-awake item for 120 seconds")
+        }
+
+        return item
+    }
 }
 
 private final class MutableNowBox {

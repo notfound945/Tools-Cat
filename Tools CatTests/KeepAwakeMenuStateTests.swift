@@ -14,12 +14,16 @@ final class KeepAwakeMenuStateTests: XCTestCase {
             confirmedMode: .indefinite,
             pendingAction: nil,
             message: nil,
+            reminderAvailability: .available,
             now: referenceDate
         )
 
         XCTAssertTrue(presentation.isIndefiniteActive)
         XCTAssertNil(presentation.activeTimedDuration)
-        XCTAssertEqual(presentation.statusText, "当前：无限常亮")
+        XCTAssertEqual(
+            presentation.statusLines,
+            .init(primary: "当前：无限常亮", secondary: nil)
+        )
         XCTAssertEqual(presentation.iconSymbol, "bolt.fill")
         XCTAssertEqual(presentation.buttonToolTip, "常亮已开启：无限常亮")
         XCTAssertFalse(presentation.isPending)
@@ -33,6 +37,7 @@ final class KeepAwakeMenuStateTests: XCTestCase {
             ),
             pendingAction: nil,
             message: nil,
+            reminderAvailability: .available,
             now: referenceDate
         )
         let minutePresentation = KeepAwakePresentation(
@@ -42,6 +47,7 @@ final class KeepAwakeMenuStateTests: XCTestCase {
             ),
             pendingAction: nil,
             message: nil,
+            reminderAvailability: .available,
             now: referenceDate
         )
         let secondPresentation = KeepAwakePresentation(
@@ -51,14 +57,18 @@ final class KeepAwakeMenuStateTests: XCTestCase {
             ),
             pendingAction: nil,
             message: nil,
+            reminderAvailability: .available,
             now: referenceDate
         )
 
         XCTAssertEqual(hourPresentation.activeTimedDuration, hours2)
-        XCTAssertEqual(hourPresentation.statusText, "还剩 1 小时 28 分钟")
+        XCTAssertEqual(
+            hourPresentation.statusLines,
+            .init(primary: "还剩 1 小时 28 分钟", secondary: nil)
+        )
         XCTAssertEqual(hourPresentation.buttonToolTip, "常亮已开启：剩余 1 小时 28 分钟")
-        XCTAssertEqual(minutePresentation.statusText, "还剩 28 分钟")
-        XCTAssertEqual(secondPresentation.statusText, "还剩 42 秒")
+        XCTAssertEqual(minutePresentation.statusLines, .init(primary: "还剩 28 分钟", secondary: nil))
+        XCTAssertEqual(secondPresentation.statusLines, .init(primary: "还剩 42 秒", secondary: nil))
     }
 
     func testPendingPresentationUsesExactModeSpecificStatusCopy() {
@@ -76,10 +86,14 @@ final class KeepAwakeMenuStateTests: XCTestCase {
                 confirmedMode: confirmedMode,
                 pendingAction: pendingAction,
                 message: nil,
+                reminderAvailability: .available,
                 now: referenceDate
             )
 
-            XCTAssertEqual(presentation.statusText, expectedStatus)
+            XCTAssertEqual(
+                presentation.statusLines,
+                .init(primary: expectedStatus, secondary: nil)
+            )
             XCTAssertEqual(presentation.activeTimedDuration, expectedDuration)
             XCTAssertTrue(presentation.isPending)
             XCTAssertEqual(presentation.iconSymbol, "bolt.slash")
@@ -95,14 +109,15 @@ final class KeepAwakeMenuStateTests: XCTestCase {
             ),
             pendingAction: nil,
             message: "关闭失败",
+            reminderAvailability: .available,
             now: referenceDate
         )
 
         XCTAssertEqual(presentation.activeTimedDuration, minutes30)
-        XCTAssertEqual(presentation.statusText, "关闭失败")
+        XCTAssertEqual(presentation.statusLines, .init(primary: "关闭失败", secondary: nil))
         XCTAssertEqual(presentation.iconSymbol, "bolt.fill")
         XCTAssertEqual(presentation.buttonToolTip, "常亮已开启：剩余 20 分钟")
-        XCTAssertFalse(presentation.statusText?.contains("已结束") ?? false)
+        XCTAssertFalse(presentation.statusLines?.primary.contains("已结束") ?? false)
     }
 
     func testStopActionVisibilityFollowsConfirmedAndPendingState() {
@@ -121,6 +136,7 @@ final class KeepAwakeMenuStateTests: XCTestCase {
                 confirmedMode: confirmedMode,
                 pendingAction: pendingAction,
                 message: nil,
+                reminderAvailability: .available,
                 now: referenceDate
             )
 
