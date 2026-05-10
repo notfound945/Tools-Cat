@@ -62,6 +62,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func bootstrapLaunchServices() {
         configureSharedStores()
+        keepAwakeReminderScheduler.installForegroundPresentationDelegate()
         guard shouldRequestReminderAuthorizationAtLaunch else { return }
         keepAwakeReminderScheduler.requestAuthorizationAtLaunch()
     }

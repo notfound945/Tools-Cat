@@ -13,12 +13,23 @@ enum KeepAwakePendingAction: Equatable {
     case stopping
 }
 
+enum KeepAwakeReminderAvailability: Equatable {
+    case available
+    case unavailable(String)
+}
+
 @MainActor
 final class KeepAwakeSessionModel: ObservableObject {
     @Published private(set) var confirmedMode: KeepAwakeMode
     @Published private(set) var pendingAction: KeepAwakePendingAction?
     @Published private(set) var message: String?
     @Published private(set) var countdownNow: Date
+    @Published private(set) var reminderAvailability: KeepAwakeReminderAvailability
+
+    private enum KeepAwakeStopReason: Equatable {
+        case manual
+        case timedExpiry(sessionID: UUID)
+    }
 
     private let powerController: KeepAwakePowerControlling
     private let scheduler: KeepAwakeCountdownScheduling
@@ -26,8 +37,9 @@ final class KeepAwakeSessionModel: ObservableObject {
     private let nowProvider: () -> Date
     private let preExpiryReminderLeadTime: TimeInterval = 120
     private var countdownToken: KeepAwakeCountdownToken?
-    private var activeTimedReminderSessionID: UUID?
-    private var activeTimedReminderIdentifier: String?
+    private var activeTimedSessionID: UUID?
+    private var activePreExpiryReminderIdentifier: String?
+    private var pendingStopReason: KeepAwakeStopReason?
 
     init(
         powerController: KeepAwakePowerControlling,
@@ -44,6 +56,7 @@ final class KeepAwakeSessionModel: ObservableObject {
         self.pendingAction = nil
         self.message = nil
         self.countdownNow = initialNow
+        self.reminderAvailability = .available
     }
 
     convenience init(
@@ -113,7 +126,7 @@ final class KeepAwakeSessionModel: ObservableObject {
             message = nil
             completion?()
         case .indefinite, .timed:
-            beginStop(completion: completion)
+            beginStop(reason: .manual, completion: completion)
         }
     }
 
@@ -125,39 +138,45 @@ final class KeepAwakeSessionModel: ObservableObject {
         switch outcome {
         case .success(true), .unchanged(true):
             message = nil
+            pendingStopReason = nil
             confirmedMode = requestedMode
 
             switch requestedMode {
             case .off:
                 cancelCountdown()
-                cancelActiveTimedReminder()
+                clearTimedSessionState()
             case .indefinite:
                 cancelCountdown()
                 countdownNow = requestedCountdownNow ?? nowProvider()
-                cancelActiveTimedReminder()
+                clearTimedSessionState()
             case .timed(_, let endDate):
                 let nextNow = requestedCountdownNow ?? nowProvider()
                 countdownNow = nextNow
                 installCountdown(endDate: endDate)
-                installTimedReminder(endDate: endDate, now: nextNow)
+                activateTimedSession(endDate: endDate, now: nextNow)
             }
         case .success(false), .unchanged(false):
             cancelCountdown()
             confirmedMode = .off
             message = nil
-            cancelActiveTimedReminder()
+            clearTimedSessionState()
         case .failure(let current, let failureMessage):
             restoreConfirmedMode(currentEnabled: current)
             if !current {
-                cancelActiveTimedReminder()
+                clearTimedSessionState()
             }
             message = failureMessage
+            pendingStopReason = nil
         }
 
         pendingAction = nil
     }
 
-    private func beginStop(completion: (() -> Void)? = nil) {
+    private func beginStop(
+        reason: KeepAwakeStopReason,
+        completion: (() -> Void)? = nil
+    ) {
+        pendingStopReason = reason
         pendingAction = .stopping
         message = nil
         cancelCountdown()
@@ -174,16 +193,26 @@ final class KeepAwakeSessionModel: ObservableObject {
     private func handleStopOutcome(_ outcome: KeepAwakeToggleOutcome) {
         switch outcome {
         case .success(false), .unchanged(false):
+            let stopReason = pendingStopReason
+            let activeSessionID = activeTimedSessionID
             confirmedMode = .off
             message = nil
-            cancelActiveTimedReminder()
+            clearTimedSessionState()
+
+            if case let .timedExpiry(sessionID) = stopReason,
+               activeSessionID == sessionID {
+                deliverExpiryReminder(for: sessionID)
+            }
         case .success(true), .unchanged(true):
             restoreConfirmedMode(currentEnabled: true)
             message = nil
+            pendingStopReason = nil
         case .failure(let current, let failureMessage):
             restoreConfirmedMode(currentEnabled: current)
             if !current {
-                cancelActiveTimedReminder()
+                clearTimedSessionState()
+            } else {
+                pendingStopReason = nil
             }
             message = failureMessage
         }
@@ -233,9 +262,10 @@ final class KeepAwakeSessionModel: ObservableObject {
         guard case .timed(_, let currentEndDate) = confirmedMode, currentEndDate == endDate else {
             return
         }
-
         guard currentEndDate.timeIntervalSince(countdownNow) <= 0 else { return }
-        beginStop()
+        guard let sessionID = activeTimedSessionID else { return }
+
+        beginStop(reason: .timedExpiry(sessionID: sessionID), completion: nil)
     }
 
     private func cancelCountdown() {
@@ -243,55 +273,86 @@ final class KeepAwakeSessionModel: ObservableObject {
         countdownToken = nil
     }
 
-    private func installTimedReminder(endDate: Date, now: Date) {
-        let previousIdentifier = activeTimedReminderIdentifier
+    private func activateTimedSession(endDate: Date, now: Date) {
+        let previousIdentifier = activePreExpiryReminderIdentifier
         let sessionID = UUID()
-        let identifier = reminderIdentifier(for: sessionID)
-        let fireAfter = endDate.timeIntervalSince(now) - preExpiryReminderLeadTime
+
+        activeTimedSessionID = sessionID
+        activePreExpiryReminderIdentifier = nil
+        pendingStopReason = nil
+        reminderAvailability = .available
 
         if let previousIdentifier {
             reminderScheduler.cancelPendingReminder(identifier: previousIdentifier)
         }
 
-        guard fireAfter > 0 else {
-            activeTimedReminderSessionID = nil
-            activeTimedReminderIdentifier = nil
-            return
-        }
-
-        activeTimedReminderSessionID = sessionID
-        activeTimedReminderIdentifier = identifier
-
-        reminderScheduler.schedulePreExpiryReminder(
-            identifier: identifier,
-            fireAfter: fireAfter,
-            title: "常亮即将结束",
-            body: "2 分钟后将关闭常亮"
-        ) { [weak self] result in
+        reminderScheduler.fetchAuthorizationState { [weak self] state in
             guard let self else { return }
-            guard self.activeTimedReminderSessionID == sessionID else { return }
+            guard self.activeTimedSessionID == sessionID else { return }
 
-            switch result {
-            case .scheduled:
-                self.message = nil
-            case .permissionUnavailable:
-                self.message = "提醒不可用：通知权限未开启"
-            case .failed:
-                self.message = "提醒不可用：无法安排提醒"
+            switch state {
+            case .authorized:
+                self.reminderAvailability = .available
+                let fireAfter = endDate.timeIntervalSince(now) - self.preExpiryReminderLeadTime
+                guard fireAfter > 120 || fireAfter > 0 else {
+                    if endDate.timeIntervalSince(now) <= self.preExpiryReminderLeadTime {
+                        self.activePreExpiryReminderIdentifier = nil
+                    }
+                    return
+                }
+
+                let identifier = self.preExpiryReminderIdentifier(for: sessionID)
+                self.activePreExpiryReminderIdentifier = identifier
+                self.reminderScheduler.schedulePreExpiryReminder(
+                    identifier: identifier,
+                    fireAfter: fireAfter,
+                    title: "常亮即将结束",
+                    body: "2 分钟后将关闭常亮"
+                ) { [weak self] result in
+                    guard let self else { return }
+                    guard self.activeTimedSessionID == sessionID else { return }
+
+                    switch result {
+                    case .scheduled:
+                        self.reminderAvailability = .available
+                    case .permissionUnavailable:
+                        self.activePreExpiryReminderIdentifier = nil
+                        self.reminderAvailability = .unavailable("提醒不可用：通知权限未开启")
+                    case .failed:
+                        self.activePreExpiryReminderIdentifier = nil
+                        self.reminderAvailability = .unavailable("提醒不可用：无法安排提醒")
+                    }
+                }
+            case .unavailable:
+                self.reminderAvailability = .unavailable("提醒不可用：通知权限未开启")
             }
         }
     }
 
-    private func cancelActiveTimedReminder() {
-        if let activeTimedReminderIdentifier {
-            reminderScheduler.cancelPendingReminder(identifier: activeTimedReminderIdentifier)
+    private func clearTimedSessionState() {
+        if let activePreExpiryReminderIdentifier {
+            reminderScheduler.cancelPendingReminder(identifier: activePreExpiryReminderIdentifier)
         }
-        activeTimedReminderSessionID = nil
-        activeTimedReminderIdentifier = nil
+        activeTimedSessionID = nil
+        activePreExpiryReminderIdentifier = nil
+        pendingStopReason = nil
+        reminderAvailability = .available
     }
 
-    private func reminderIdentifier(for sessionID: UUID) -> String {
+    private func deliverExpiryReminder(for sessionID: UUID) {
+        reminderScheduler.deliverExpiryReminder(
+            identifier: expiryReminderIdentifier(for: sessionID),
+            title: "常亮已结束",
+            body: "已按时关闭常亮"
+        ) { _ in }
+    }
+
+    private func preExpiryReminderIdentifier(for sessionID: UUID) -> String {
         "keep-awake.session.\(sessionID.uuidString).pre-expiry"
+    }
+
+    private func expiryReminderIdentifier(for sessionID: UUID) -> String {
+        "keep-awake.session.\(sessionID.uuidString).expiry"
     }
 }
 
