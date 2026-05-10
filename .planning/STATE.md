@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Completed 25-01-PLAN.md
-last_updated: "2026-05-10T03:35:14.955Z"
+status: complete
+stopped_at: Phase 25 completed
+last_updated: "2026-05-10T04:08:00Z"
 last_activity: 2026-05-10
 progress:
   total_phases: 2
@@ -20,13 +20,13 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-09)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Phase 25 — expiry-reminder-truth
+**Current focus:** Milestone complete — v1.9 Timed Keep-Awake Notifications
 
 ## Current Position
 
-Phase: 25 (expiry-reminder-truth) — COMPLETE
-Plan: 1 of 1 complete
-Status: Phase complete — ready for verification
+Phase: —
+Plan: —
+Status: Phase 25 complete
 Last activity: 2026-05-10
 
 Progress: [██████████] 2/2 current milestone phases complete
@@ -51,7 +51,7 @@ Progress: [██████████] 2/2 current milestone phases complete
 
 - Last shipped milestone: v1.8 WOL Feedback Guardrails (Phases 22-23)
 - Trend: recent milestones remain intentionally narrow and interaction-focused; v1.9 keeps that pattern by adding notification truth around an existing timed keep-awake flow.
-- The next executable step is Phase 25 discussion or direct planning.
+- The active roadmap milestone is fully complete; the next executable step is to review progress or start a new milestone.
 
 | Phase 24 | complete | summary written | 6 files |
 | Phase 25 | complete | summary written | 9 files |

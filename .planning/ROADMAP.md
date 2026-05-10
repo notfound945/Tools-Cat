@@ -43,13 +43,13 @@ Plans:
 **Goal**: Timed keep-awake ending now produces one truthful local notification, and reminder-unavailable states stay visible to the user without breaking keep-awake behavior.
 **Depends on**: Phase 24
 **Requirements**: NOTF-03, NOTF-05
-**Plans**: 0/1 plans complete
+**Plans**: 1/1 plans complete
 **Success Criteria** (what must be TRUE):
   1. When a timed keep-awake session actually reaches its end and turns off, the app sends one local notification that the session has ended.
   2. If local notifications are denied or otherwise unavailable, timed keep-awake still starts, counts down, and ends correctly while the app surfaces that reminder delivery is unavailable.
   3. The end reminder never fires for an older replaced session or for a session the user already stopped manually.
 Plans:
-- [ ] `25-01-PLAN.md` — Extend the existing reminder scheduler and keep-awake session truth so confirmed timed expiry sends one `.expiry` notification, unavailable reminder state stays visible in the current keep-awake status area, and the menu surface remains unchanged.
+- [x] `25-01-PLAN.md` — Extend the existing reminder scheduler and keep-awake session truth so confirmed timed expiry sends one `.expiry` notification, unavailable reminder state stays visible in the current keep-awake status area, and the menu surface remains unchanged. Summary: `.planning/phases/25-expiry-reminder-truth/25-01-SUMMARY.md`
 
 ## Progress
 
@@ -59,4 +59,4 @@ Phases execute in numeric order: 24, 25
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 24. Timed Reminder Scheduling | 1/1 | Complete    | 2026-05-10 |
-| 25. Expiry Reminder Truth | 1/1 | Complete   | 2026-05-10 |
+| 25. Expiry Reminder Truth | 1/1 | Complete    | 2026-05-10 |
