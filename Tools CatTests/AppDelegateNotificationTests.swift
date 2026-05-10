@@ -5,7 +5,7 @@ import XCTest
 final class AppDelegateNotificationTests: XCTestCase {
     private static var retainedDelegates: [AppDelegate] = []
 
-    func testApplicationDidFinishLaunchingRequestsReminderAuthorizationOnce() {
+    func testBootstrapLaunchServicesInstallsForegroundPresentationBeforeAuthorizationRequest() {
         let suiteName = "AppDelegateNotificationTests.\(UUID().uuidString)"
         guard let defaults = UserDefaults(suiteName: suiteName) else {
             XCTFail("Expected isolated test defaults")
@@ -24,7 +24,10 @@ final class AppDelegateNotificationTests: XCTestCase {
         subject.bootstrapLaunchServices()
         Self.retainedDelegates.append(subject)
 
-        XCTAssertEqual(scheduler.requestedAuthorizationCount, 1)
+        XCTAssertEqual(
+            scheduler.events,
+            ["installForegroundPresentationDelegate", "requestAuthorizationAtLaunch"]
+        )
         defaults.removePersistentDomain(forName: suiteName)
     }
 
@@ -61,6 +64,7 @@ final class AppDelegateNotificationTests: XCTestCase {
 private final class LaunchFakeKeepAwakeReminderScheduler: KeepAwakeReminderScheduling {
     var requestedAuthorizationCount = 0
     var wasFactoryUsed = false
+    var events: [String] = []
     var scheduledRequests: [ScheduledRequest] = []
     var canceledIdentifiers: [String] = []
 
@@ -72,7 +76,20 @@ private final class LaunchFakeKeepAwakeReminderScheduler: KeepAwakeReminderSched
     }
 
     func requestAuthorizationAtLaunch() {
+        events.append("requestAuthorizationAtLaunch")
         requestedAuthorizationCount += 1
+    }
+
+    func installForegroundPresentationDelegate() {
+        events.append("installForegroundPresentationDelegate")
+    }
+
+    func fetchAuthorizationState(
+        completion: @escaping @MainActor (KeepAwakeReminderAuthorizationState) -> Void
+    ) {
+        Task { @MainActor in
+            completion(.authorized)
+        }
     }
 
     func schedulePreExpiryReminder(
@@ -92,6 +109,17 @@ private final class LaunchFakeKeepAwakeReminderScheduler: KeepAwakeReminderSched
         )
         Task { @MainActor in
             completion(.scheduled)
+        }
+    }
+
+    func deliverExpiryReminder(
+        identifier: String,
+        title: String,
+        body: String,
+        completion: @escaping @MainActor (KeepAwakeReminderDeliveryResult) -> Void
+    ) {
+        Task { @MainActor in
+            completion(.delivered)
         }
     }
 

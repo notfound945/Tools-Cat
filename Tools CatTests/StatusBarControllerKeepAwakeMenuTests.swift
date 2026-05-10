@@ -224,7 +224,7 @@ final class StatusBarControllerKeepAwakeMenuTests: XCTestCase {
         fixture.powerController.complete(with: .success(true))
         await flushControllerUpdates()
 
-        reminderScheduler.completeRequest(at: 0, with: .permissionUnavailable)
+        reminderScheduler.completeScheduledRequest(at: 0, with: .permissionUnavailable)
         await flushControllerUpdates()
 
         XCTAssertEqual(fixture.controller.keepAwake15MinutesItem.state, .on)

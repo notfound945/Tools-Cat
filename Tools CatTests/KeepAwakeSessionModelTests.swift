@@ -363,6 +363,7 @@ final class KeepAwakeSessionModelTests: XCTestCase {
         let powerController = FakeKeepAwakePowerController(isEnabled: false)
         let scheduler = FakeKeepAwakeCountdownScheduler()
         let reminderScheduler = FakeKeepAwakeReminderScheduler()
+        reminderScheduler.authorizationStates = [.authorized]
         let startNow = Date(timeIntervalSinceReferenceDate: 120_000)
         let minutes15 = makeDuration(900)
         let model = KeepAwakeSessionModel(
@@ -376,14 +377,130 @@ final class KeepAwakeSessionModelTests: XCTestCase {
         powerController.complete(with: .success(true))
         await flushSessionModelUpdates()
 
-        reminderScheduler.completeRequest(at: 0, with: .permissionUnavailable)
+        reminderScheduler.completeScheduledRequest(at: 0, with: .permissionUnavailable)
         await flushSessionModelUpdates()
 
         XCTAssertEqual(
             model.confirmedMode,
             .timed(duration: minutes15, endDate: startNow.addingTimeInterval(900))
         )
-        XCTAssertEqual(model.message, "提醒不可用：通知权限未开启")
+        XCTAssertNil(model.message)
+        XCTAssertEqual(model.reminderAvailability, .unavailable("提醒不可用：通知权限未开启"))
+    }
+
+    func testTimedExpirySuccessfulStopDeliversOneExpiryReminder() async throws {
+        let powerController = FakeKeepAwakePowerController(isEnabled: false)
+        let scheduler = FakeKeepAwakeCountdownScheduler()
+        let reminderScheduler = FakeKeepAwakeReminderScheduler()
+        let startNow = Date(timeIntervalSinceReferenceDate: 130_000)
+        let minutes15 = makeDuration(900)
+        let expiryNow = startNow.addingTimeInterval(TimeInterval(minutes15.durationSeconds))
+        var currentNow = startNow
+        let model = KeepAwakeSessionModel(
+            powerController: powerController,
+            scheduler: scheduler,
+            reminderScheduler: reminderScheduler,
+            nowProvider: { currentNow }
+        )
+
+        model.startTimed(minutes15)
+        powerController.complete(with: .success(true))
+        await flushSessionModelUpdates()
+
+        let preExpiryIdentifier = try XCTUnwrap(reminderScheduler.scheduledRequests.first?.identifier)
+        XCTAssertTrue(preExpiryIdentifier.hasPrefix("keep-awake.session."))
+        XCTAssertTrue(preExpiryIdentifier.hasSuffix(".pre-expiry"))
+
+        currentNow = expiryNow
+        scheduler.startedTokens[0].fire()
+        await flushSessionModelUpdates()
+
+        powerController.complete(with: .success(false))
+        await flushSessionModelUpdates()
+
+        XCTAssertEqual(reminderScheduler.deliveredExpiryReminders.count, 1)
+        let reminder = try XCTUnwrap(reminderScheduler.deliveredExpiryReminders.first)
+        XCTAssertTrue(reminder.identifier.hasPrefix("keep-awake.session."))
+        XCTAssertTrue(reminder.identifier.hasSuffix(".expiry"))
+        XCTAssertEqual(reminder.title, "常亮已结束")
+        XCTAssertEqual(reminder.body, "已按时关闭常亮")
+        XCTAssertEqual(reminderScheduler.canceledIdentifiers, [preExpiryIdentifier])
+    }
+
+    func testTimedExpiryDisableFailureDoesNotDeliverExpiryReminder() async {
+        let powerController = FakeKeepAwakePowerController(isEnabled: false)
+        let scheduler = FakeKeepAwakeCountdownScheduler()
+        let reminderScheduler = FakeKeepAwakeReminderScheduler()
+        let startNow = Date(timeIntervalSinceReferenceDate: 140_000)
+        let minutes15 = makeDuration(900)
+        let expiryNow = startNow.addingTimeInterval(TimeInterval(minutes15.durationSeconds))
+        var currentNow = startNow
+        let model = KeepAwakeSessionModel(
+            powerController: powerController,
+            scheduler: scheduler,
+            reminderScheduler: reminderScheduler,
+            nowProvider: { currentNow }
+        )
+
+        model.startTimed(minutes15)
+        powerController.complete(with: .success(true))
+        await flushSessionModelUpdates()
+
+        currentNow = expiryNow
+        scheduler.startedTokens[0].fire()
+        await flushSessionModelUpdates()
+
+        powerController.complete(with: .failure(current: true, message: "关闭失败"))
+        await flushSessionModelUpdates()
+
+        XCTAssertTrue(reminderScheduler.deliveredExpiryReminders.isEmpty)
+    }
+
+    func testManualStopDoesNotDeliverExpiryReminder() async {
+        let powerController = FakeKeepAwakePowerController(isEnabled: false)
+        let scheduler = FakeKeepAwakeCountdownScheduler()
+        let reminderScheduler = FakeKeepAwakeReminderScheduler()
+        let startNow = Date(timeIntervalSinceReferenceDate: 150_000)
+        let minutes15 = makeDuration(900)
+        let model = KeepAwakeSessionModel(
+            powerController: powerController,
+            scheduler: scheduler,
+            reminderScheduler: reminderScheduler,
+            nowProvider: { startNow }
+        )
+
+        model.startTimed(minutes15)
+        powerController.complete(with: .success(true))
+        await flushSessionModelUpdates()
+
+        model.stop()
+        powerController.complete(with: .success(false))
+        await flushSessionModelUpdates()
+
+        XCTAssertTrue(reminderScheduler.deliveredExpiryReminders.isEmpty)
+    }
+
+    func testShortTimedSessionStillSurfacesReminderUnavailableTruth() async {
+        let powerController = FakeKeepAwakePowerController(isEnabled: false)
+        let scheduler = FakeKeepAwakeCountdownScheduler()
+        let reminderScheduler = FakeKeepAwakeReminderScheduler()
+        reminderScheduler.authorizationStates = [.unavailable]
+        let startNow = Date(timeIntervalSinceReferenceDate: 160_000)
+        let twoMinutes = makeDuration(120)
+        let model = KeepAwakeSessionModel(
+            powerController: powerController,
+            scheduler: scheduler,
+            reminderScheduler: reminderScheduler,
+            nowProvider: { startNow }
+        )
+
+        model.startTimed(twoMinutes)
+        powerController.complete(with: .success(true))
+        await flushSessionModelUpdates()
+
+        XCTAssertEqual(reminderScheduler.fetchAuthorizationStateCallCount, 1)
+        XCTAssertTrue(reminderScheduler.scheduledRequests.isEmpty)
+        XCTAssertEqual(model.reminderAvailability, .unavailable("提醒不可用：通知权限未开启"))
     }
 
     private func makeDuration(_ seconds: Int) -> ManagedKeepAwakeDuration {
@@ -393,6 +510,8 @@ final class KeepAwakeSessionModelTests: XCTestCase {
     private func flushSessionModelUpdates() async {
         await Task.yield()
         await Task.yield()
+        await Task.yield()
+        try? await Task.sleep(nanoseconds: 50_000_000)
     }
 }
 
@@ -435,13 +554,38 @@ final class FakeKeepAwakeReminderScheduler: KeepAwakeReminderScheduling {
         let body: String
     }
 
+    struct DeliveredReminder: Equatable {
+        let identifier: String
+        let title: String
+        let body: String
+    }
+
     private(set) var requestedAuthorizationCount = 0
+    private(set) var installForegroundPresentationDelegateCallCount = 0
+    private(set) var fetchAuthorizationStateCallCount = 0
     private(set) var scheduledRequests: [ScheduledRequest] = []
+    private(set) var deliveredExpiryReminders: [DeliveredReminder] = []
     private(set) var canceledIdentifiers: [String] = []
-    private var pendingCompletions: [(KeepAwakeReminderScheduleResult) -> Void] = []
+    private var pendingScheduleCompletions: [(KeepAwakeReminderScheduleResult) -> Void] = []
+    var authorizationStates: [KeepAwakeReminderAuthorizationState] = [.authorized]
+    var deliveryResults: [KeepAwakeReminderDeliveryResult] = [.delivered]
 
     func requestAuthorizationAtLaunch() {
         requestedAuthorizationCount += 1
+    }
+
+    func installForegroundPresentationDelegate() {
+        installForegroundPresentationDelegateCallCount += 1
+    }
+
+    func fetchAuthorizationState(
+        completion: @escaping @MainActor (KeepAwakeReminderAuthorizationState) -> Void
+    ) {
+        fetchAuthorizationStateCallCount += 1
+        let state = authorizationStates.isEmpty ? .authorized : authorizationStates.removeFirst()
+        Task { @MainActor in
+            completion(state)
+        }
     }
 
     func schedulePreExpiryReminder(
@@ -459,10 +603,25 @@ final class FakeKeepAwakeReminderScheduler: KeepAwakeReminderScheduling {
                 body: body
             )
         )
-        pendingCompletions.append { result in
+        pendingScheduleCompletions.append { result in
             Task { @MainActor in
                 completion(result)
             }
+        }
+    }
+
+    func deliverExpiryReminder(
+        identifier: String,
+        title: String,
+        body: String,
+        completion: @escaping @MainActor (KeepAwakeReminderDeliveryResult) -> Void
+    ) {
+        deliveredExpiryReminders.append(
+            DeliveredReminder(identifier: identifier, title: title, body: body)
+        )
+        let result = deliveryResults.isEmpty ? .delivered : deliveryResults.removeFirst()
+        Task { @MainActor in
+            completion(result)
         }
     }
 
@@ -470,8 +629,8 @@ final class FakeKeepAwakeReminderScheduler: KeepAwakeReminderScheduling {
         canceledIdentifiers.append(identifier)
     }
 
-    func completeRequest(at index: Int, with result: KeepAwakeReminderScheduleResult) {
-        let completion = pendingCompletions.remove(at: index)
+    func completeScheduledRequest(at index: Int, with result: KeepAwakeReminderScheduleResult) {
+        let completion = pendingScheduleCompletions.remove(at: index)
         completion(result)
     }
 }
