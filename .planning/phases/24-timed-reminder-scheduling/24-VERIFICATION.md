@@ -1,6 +1,6 @@
 ---
 phase: 24-timed-reminder-scheduling
-verified: 2026-05-09T23:51:43+08:00
+verified: 2026-05-10T21:35:51+08:00
 status: human_needed
 score: 5/5 must-haves verified
 human_verification:
@@ -15,9 +15,9 @@ human_verification:
 # Phase 24: Timed Reminder Scheduling Verification Report
 
 **Phase Goal:** The app can request local-notification permission when needed and keep pre-expiry reminder scheduling tied to the currently active timed keep-awake session.  
-**Verified:** 2026-05-09T23:51:43+08:00  
+**Verified:** 2026-05-10T21:35:51+08:00  
 **Status:** human_needed  
-**Re-verification:** No - this is the initial Phase 24 verification
+**Re-verification:** Yes - the startup authorization prompt is now recorded as passed in `24-HUMAN-UAT.md`, while the live pre-expiry delivery proof remains pending.
 
 ## Goal Achievement
 
@@ -90,7 +90,7 @@ All requirement IDs declared in PLAN frontmatter are accounted for in `.planning
 **Expected:** The menu bar item appears immediately, the macOS notification authorization prompt appears once, and answering it does not freeze startup.  
 **Why human:** The real system permission prompt is OS-managed and intentionally replaced with an injected fake in XCTest.
 
-**Current manual evidence:** On 2026-05-10, the live app did issue `UNUserNotificationCenter.requestAuthorization(options: [.alert, .sound])` during startup, but the local machine contains multiple registered `cn.notfound945.Tools-Cat` app paths in LaunchServices (`/Applications`, multiple repo build outputs, and the current DerivedData Debug app). In this environment the production launch returned `Requested authorization [ didGrant: 0 hasError: 1 ]` before a clean, deterministic first-prompt path could be proven, so the final prompt acceptance still needs one explicit human pass on the intended shipped app path.
+**Current manual evidence:** On 2026-05-10, the user confirmed that the live app did present the macOS notification authorization prompt during startup. This closes the startup prompt boundary recorded in `24-HUMAN-UAT.md`; no missing menu-bar item or startup-responsiveness problem was reported alongside that approval.
 
 ### 2. Real Pre-Expiry Notification Delivery
 
@@ -98,13 +98,13 @@ All requirement IDs declared in PLAN frontmatter are accounted for in `.planning
 **Expected:** Only the longer session produces one pre-expiry local notification near `endDate - 120s`; the shorter session produces none.  
 **Why human:** Notification delivery timing, system presentation, and permission-state interaction are controlled by macOS rather than deterministic unit tests.
 
-**Current manual evidence:** The code path, focused tests, and live menu behavior all agree that authorized sessions longer than `2 分钟` should schedule exactly one pending reminder and `<= 2 分钟` sessions should skip it, but the same local authorization-state ambiguity above prevented a trustworthy end-to-end desktop-delivery proof on 2026-05-10. This remains a real macOS manual check, not an automated gap in the phase implementation itself.
+**Current manual evidence:** The code path, focused tests, and live menu behavior all agree that authorized sessions longer than `2 分钟` should schedule exactly one pending reminder and `<= 2 分钟` sessions should skip it, but one explicit live allowed-notification run that records the actual desktop delivery is still missing from `24-HUMAN-UAT.md`. This remains a real macOS manual check, not an automated gap in the phase implementation itself.
 
 ### Gaps Summary
 
-No code, wiring, or automated behavior gaps were found against the Phase 24 must-haves. The remaining verification work is limited to macOS-managed behavior outside deterministic XCTest coverage: the real permission prompt path and actual local-notification delivery timing. On this machine, duplicate LaunchServices registrations for the same bundle identifier made that manual proof nondeterministic, so the phase remains `human_needed` rather than `passed`.
+No code, wiring, or automated behavior gaps were found against the Phase 24 must-haves. The startup authorization prompt boundary is now closed in `24-HUMAN-UAT.md`. The only remaining verification work is one macOS-managed behavior outside deterministic XCTest coverage: explicit live proof that an allowed `> 2 分钟` timed session delivers one pre-expiry reminder while a `<= 2 分钟` session delivers none. The phase therefore remains `human_needed` rather than `passed`.
 
 ---
 
-_Verified: 2026-05-09T23:51:43+08:00_  
+_Verified: 2026-05-10T21:35:51+08:00_  
 _Verifier: Codex_
