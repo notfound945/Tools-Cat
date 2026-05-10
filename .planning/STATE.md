@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Completed 24-01-PLAN.md
-last_updated: "2026-05-10T01:54:47.418Z"
+status: planning
+stopped_at: Phase 25 context gathered
+last_updated: "2026-05-10T02:25:23.554Z"
 last_activity: 2026-05-10
 progress:
   total_phases: 2
@@ -129,6 +129,6 @@ The latest completed milestone established these durable decisions:
 
 ## Session Continuity
 
-Last session: 2026-05-09T15:39:59.048Z
-Stopped at: Completed 24-01-PLAN.md
-Resume file: None
+Last session: 2026-05-10T02:25:23.552Z
+Stopped at: Phase 25 context gathered
+Resume file: .planning/phases/25-expiry-reminder-truth/25-CONTEXT.md
