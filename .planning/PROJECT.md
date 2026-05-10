@@ -13,7 +13,7 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 - Active milestone: `v1.9 Timed Keep-Awake Notifications`
 - Live product identity: `Tools Cat`
 - Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, stabilized direct-launch manager smokes, a non-notarized friend-share DMG flow with repeatable release verification, deferred saved-device validation reveal timing, exact-once first-use device seeding for `UGREEN NAS`, transient shared WOL feedback that auto-clears after three seconds in both the window and menu bar, and a required-field save guard that enables `保存设备` only after trimmed name and MAC input exist
-- Planning state: v1.9 is being defined around local timed keep-awake reminders and notification-truth guardrails rather than a broader notification/settings expansion.
+- Planning state: Phase 24 is complete with automated verification green and explicit human notification checks still outstanding; Phase 25 is next and will add the actual end-of-session reminder while keeping the same narrow notification scope.
 
 ## Next Milestone Goals
 
@@ -154,13 +154,14 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 - ✓ Existing non-empty saved-device libraries are never modified by the default-device seed path — validated in Phase 20 and closed through Phase 21 verification
 - ✓ WOL send result in the WOL window now auto-clears after three seconds — validated in Phase 22
 - ✓ WOL send result in the menu-bar wake section now auto-clears after three seconds — validated in Phase 22
+- ✓ Timed keep-awake can request local-notification authorization from app launch through one shared reminder scheduler seam — validated in Phase 24 with remaining macOS prompt acceptance kept as human verification debt
+- ✓ Timed keep-awake sends one local notification about `2 分钟` before expiry when the remaining duration allows it — validated in Phase 24 through focused regression coverage with remaining desktop-delivery proof kept as human verification debt
+- ✓ Reminder delivery stays truthful for pre-expiry scheduling: stale notifications are canceled on replacement, stop, or switch-away transitions — validated in Phase 24
 
 ### Active
 
-- [ ] Timed keep-awake can request local-notification authorization when reminder delivery is first needed
-- [ ] Timed keep-awake sends one local notification about `2 分钟` before expiry when the remaining duration allows it
 - [ ] Timed keep-awake sends one local notification when the session actually ends
-- [ ] Reminder delivery stays truthful: stale notifications are canceled and permission-unavailable states remain visible without blocking keep-awake
+- [ ] If local notification permission is unavailable, timed keep-awake still works and the app surfaces a truthful reminder-unavailable state instead of implying reminders will arrive
 
 ### Out of Scope
 
@@ -250,8 +251,8 @@ Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, mo
 | Keep WOL result lifetime owned by one shared `WOLSessionModel` seam so both the window and menu-bar row clear together after three seconds | The user wanted transient feedback in both surfaces without divergent behavior or duplicate timers | Validated in Phase 22 |
 | Rebuild `快速 WOL` from the updated device library on the next main-thread turn after device mutations | `@Published` device-change notifications can fire before synchronous menu rebuilds observe the new array, leaving the quick WOL menu stale after add/edit flows | Validated in Phase 22 follow-up |
 | Keep the saved-device save affordance owned by `DeviceLibrarySessionModel.canSaveDraft` and gate only on trimmed required-field presence | The button should stop no-op submits without weakening delayed validation reveal or submit-time MAC truth | Validated in Phase 23 |
-| Keep v1.9 limited to local reminders for timed keep-awake instead of adding broader notification settings or WOL notifications | The user asked for narrow pre-expiry and expiry reminders, and the milestone should stay behavior-focused | Pending |
-| Keep reminder scheduling and cancellation aligned with the active `KeepAwakeSessionModel` lifecycle, and surface permission-unavailable states without blocking timed keep-awake | Reminder truth should follow the same single-source-of-truth rules as keep-awake state itself | Pending |
+| Keep v1.9 limited to local reminders for timed keep-awake instead of adding broader notification settings or WOL notifications | The user asked for narrow pre-expiry and expiry reminders, and the milestone should stay behavior-focused | Validated in Phase 24 |
+| Keep reminder scheduling and cancellation aligned with the active `KeepAwakeSessionModel` lifecycle, and surface permission-unavailable states without blocking timed keep-awake | Reminder truth should follow the same single-source-of-truth rules as keep-awake state itself | Validated in Phase 24 for pre-expiry scheduling; Phase 25 still closes the expiry-reminder half |
 
 ## Evolution
 
@@ -271,4 +272,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-09 after starting milestone v1.9 Timed Keep-Awake Notifications*
+*Last updated: 2026-05-10 after completing Phase 24 Timed Reminder Scheduling*
