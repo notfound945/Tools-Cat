@@ -1,5 +1,27 @@
 # Milestones
 
+## v1.9 Timed Keep-Awake Notifications (Shipped: 2026-05-10)
+
+**Phases completed:** 2 phases, 2 plans, 4 tasks
+**Audit:** tech_debt, no runtime blockers
+
+**Key accomplishments:**
+
+- Timed keep-awake now requests notification authorization at launch and schedules one session-scoped pre-expiry reminder that is skipped for short sessions and canceled on confirmed session changes
+- Truthful timed keep-awake expiry reminders now deliver only after confirmed shutdown, while the existing status row can show countdown truth and reminder-unavailable truth together
+
+**Archive files:**
+
+- `.planning/milestones/v1.9-ROADMAP.md`
+- `.planning/milestones/v1.9-REQUIREMENTS.md`
+- `.planning/milestones/v1.9-MILESTONE-AUDIT.md`
+
+**Known caveat:**
+
+- This milestone was archived with accepted process debt: Phase 24 still lacks one explicit live allowed-state pre-expiry reminder proof, and Phase 24/25 validation contracts remain partial Nyquist records.
+
+---
+
 ## v1.8 WOL Feedback Guardrails (Shipped: 2026-05-07)
 
 **Phases completed:** 2 phases, 2 plans, 4 tasks

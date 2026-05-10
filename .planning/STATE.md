@@ -1,73 +1,70 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: complete
-stopped_at: Phase 25 completed
-last_updated: "2026-05-10T04:08:00Z"
+milestone: archived
+milestone_name: none
+status: milestone_complete
+stopped_at: Completed v1.9 milestone archival
+last_updated: "2026-05-10T22:05:00+08:00"
 last_activity: 2026-05-10
 progress:
-  total_phases: 2
-  completed_phases: 2
-  total_plans: 2
-  completed_plans: 2
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-05-09)
+See: `.planning/PROJECT.md` (updated 2026-05-10)
 
 **Core value:** From the menu bar, I can reliably wake the devices I care about and trust the app's status without editing code or fighting the UI.
-**Current focus:** Milestone complete — v1.9 Timed Keep-Awake Notifications
+**Current focus:** No active milestone — ready for `$gsd-new-milestone`
 
 ## Current Position
 
-Phase: —
-Plan: —
-Status: Phase 25 complete
+Phase: none
+Plan: none
+Status: Milestone v1.9 archived — ready for next milestone definition
 Last activity: 2026-05-10
 
-Progress: [██████████] 2/2 current milestone phases complete
+Progress: [██████████] milestone complete
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 1
-- Average duration: 11m
-- Total execution time: 11m
-- Current milestone plans completed: 1
+- Total plans completed: 0
+- Average duration: 16 min
+- Total execution time: 0 hours
+- Current milestone plans completed: 0
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 24 | 1 | 11m | 11m |
-| 25 | 0 | — | — |
+| v1.9 archived | 2 | 32min | 16min |
 
 **Recent Trend:**
 
-- Last shipped milestone: v1.8 WOL Feedback Guardrails (Phases 22-23)
-- Trend: recent milestones remain intentionally narrow and interaction-focused; v1.9 keeps that pattern by adding notification truth around an existing timed keep-awake flow.
-- The active roadmap milestone is fully complete; the next executable step is to review progress or start a new milestone.
+- Last shipped milestone: v1.9 Timed Keep-Awake Notifications (Phases 24-25)
+- Trend: recent milestones remain intentionally narrow and interaction-focused; v1.9 extended that pattern by adding reminder truth around an existing timed keep-awake flow.
+- The next workflow step is `$gsd-new-milestone`.
 
-| Phase 24 | complete | summary written | 6 files |
-| Phase 25 | complete | summary written | 9 files |
-| Phase 24 P01 | 10min | 2 tasks | 7 files |
-| Phase 25 P01 | 22m | 2 tasks | 9 files |
+| Milestone v1.9 | archived | roadmap + requirements + audit written | 3 archive files |
+| Phase 24 | complete | summary + verification + partial human UAT | 4 files |
+| Phase 25 | complete | summary + verification + approved human UAT | 4 files |
 
 ## Milestone Summary
 
-- Active milestone: `v1.9 Timed Keep-Awake Notifications`
-- Latest archived milestone: `v1.8 WOL Feedback Guardrails`
-- New scope: add timed keep-awake reminder notifications at about two minutes before expiry and again when the session ends
-- Active roadmap: `.planning/ROADMAP.md` (Phases 24-25 planned)
+- Active milestone: none
+- Latest archived milestone: `v1.9 Timed Keep-Awake Notifications`
+- Most recent shipped scope: timed keep-awake reminder notifications before expiry and at actual session end, plus visible reminder-unavailable truth inside the existing status row
+- Active roadmap: `.planning/ROADMAP.md` (archived milestone index only until the next milestone is created)
 - Working files:
   - `.planning/PROJECT.md`
   - `.planning/ROADMAP.md`
-  - `.planning/REQUIREMENTS.md`
   - `.planning/MILESTONES.md`
 - Latest shipped summary: `.planning/MILESTONES.md`
 
@@ -115,6 +112,8 @@ The latest completed milestone established these durable decisions:
 - [Phase 24]: Reuse the existing keep-awake status row for permission-unavailable reminder messaging instead of adding a second notification-specific UI surface.
 - [Phase 24]: KeepAwakeSessionModel owns session-scoped pre-expiry reminder truth via an injected scheduler seam.
 - [Phase 24]: Reminder-unavailable outcomes reuse the existing keep-awake message/status row instead of creating a new notification UI surface.
+- [Phase 25]: Keep expiry reminder delivery inside the existing keep-awake reminder scheduler seam instead of introducing a second notification path.
+- [Phase 25]: Reuse the existing disabled keep-awake status row for one-line or two-line reminder truth instead of expanding the menu surface.
 
 ### Roadmap Evolution
 
@@ -125,11 +124,10 @@ The latest completed milestone established these durable decisions:
 
 ### Open Follow-Up Themes
 
-- Active milestone theme: add truthful timed keep-awake reminders without expanding into general notification settings.
-- Deferred themes after v1.9 planning: `CONV-04`, `AWAKE-12`, `AWAKE-13`.
+- No active milestone theme. Likely next themes remain `CONV-04`, `AWAKE-12`, `AWAKE-13`, `NOTF-06`, `NOTF-07`, and `NOTF-08`.
 
 ## Session Continuity
 
-Last session: 2026-05-10T03:35:14.952Z
-Stopped at: Completed 25-01-PLAN.md
+Last session: 2026-05-10T22:05:00+08:00
+Stopped at: Completed v1.9 milestone archival
 Resume file: None

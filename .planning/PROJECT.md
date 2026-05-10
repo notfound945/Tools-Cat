@@ -10,28 +10,34 @@ From the menu bar, I can reliably wake the devices I care about and trust the ap
 
 ## Current State
 
-- Active milestone: `v1.9 Timed Keep-Awake Notifications`
+- Active milestone: none
 - Live product identity: `Tools Cat`
 - Latest shipped scope: truthful WOL and keep-awake state, saved-device management, shared saved-device wake flows through `快速 WOL` plus the dedicated `发送 WOL …` row, timed keep-awake, native menu/window polish, planning-truth cleanup, validation rebaseline, explicit verification strategy, full rename closure, the keep-awake menu-truth fix, macOS 14 baseline support, user-managed keep-awake durations with live root-menu synchronization, native duration-management and device-library list surfaces, compact retained add/edit sheets, semantic edit/delete affordances, stabilized direct-launch manager smokes, a non-notarized friend-share DMG flow with repeatable release verification, deferred saved-device validation reveal timing, exact-once first-use device seeding for `UGREEN NAS`, transient shared WOL feedback that auto-clears after three seconds in both the window and menu bar, a required-field save guard that enables `保存设备` only after trimmed name and MAC input exist, and truthful timed keep-awake notifications for both pre-expiry and actual session end, including visible unavailable-reminder state that does not block keep-awake behavior
-- Planning state: v1.9 is fully complete. Phase 24 and Phase 25 shipped the full timed keep-awake reminder truth chain, with automated verification plus approved human notification checks.
+- Planning state: v1.9 is shipped and archived. The project is ready to define a fresh milestone-scoped `REQUIREMENTS.md`.
 
 ## Next Milestone Goals
 
-- Send one local notification about `2 分钟` before a timed keep-awake session ends when the session still has enough remaining time.
-- Send one local notification when a timed keep-awake session actually ends.
-- Keep reminder delivery truthful by canceling stale notifications on stop, replacement, or mode switch and by surfacing reminder-unavailable states without breaking keep-awake itself.
+- Decide whether the next milestone should return to deferred convenience work such as `CONV-04`, `AWAKE-12`, and `AWAKE-13`, or extend the new reminder surface with `NOTF-06` through `NOTF-08`.
+- Recreate a fresh milestone-scoped `REQUIREMENTS.md` instead of carrying forward the archived v1.9 reminder contract.
 
-## Current Milestone: v1.9 Timed Keep-Awake Notifications
+## Current Milestone
 
-**Goal:** Add truthful local reminders around timed keep-awake expiry without reopening broader duration management or general notification settings.
+No active milestone is defined yet.
 
-**Target features:**
-- Timed keep-awake can request local-notification permission the first time reminder delivery is needed.
-- Sessions longer than two minutes deliver a `2 分钟` pre-expiry reminder; shorter sessions skip it and keep only the end reminder.
-- All timed sessions deliver one local notification when keep-awake actually ends.
-- Stopping early, replacing a timed session, switching to `无限常亮`, or lacking notification permission never leaves stale or implied-false reminder state behind.
+Use `$gsd-new-milestone` to define the next scoped requirement set and roadmap.
 
-## Latest Shipped Milestone: v1.8 WOL Feedback Guardrails
+## Latest Shipped Milestone: v1.9 Timed Keep-Awake Notifications
+
+**Result:** Timed keep-awake no longer ends silently: the app now requests reminder permission at launch, can warn shortly before expiry, notifies again when the timed session actually ends, and keeps reminder-unavailable truth visible without blocking keep-awake itself.
+
+**Delivered:**
+- Added Apple-native local notification support around the existing timed keep-awake lifecycle, including one session-scoped pre-expiry reminder for eligible durations.
+- Added one truthful end-of-session reminder that only fires after the keep-awake session has actually turned off.
+- Reused the existing keep-awake status row so countdown truth and reminder-unavailable truth can appear together without changing the shipped menu structure.
+- Closed the milestone with a `tech_debt` audit: no runtime blockers remain, but one live pre-expiry reminder proof and the Phase 24/25 Nyquist validation closure are still deferred.
+
+<details>
+<summary>Previous shipped milestone: v1.8 WOL Feedback Guardrails</summary>
 
 **Result:** WOL feedback now feels transient and less noisy, and the saved-device add/edit form no longer exposes an actionable save button before the required fields are filled.
 
@@ -109,6 +115,7 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 </details>
 </details>
 </details>
+</details>
 
 ## Requirements
 
@@ -157,11 +164,17 @@ The shipped baseline became easier to trust and maintain: current-facing plannin
 - ✓ Timed keep-awake can request local-notification authorization from app launch through one shared reminder scheduler seam — validated in Phase 24 with remaining macOS prompt acceptance kept as human verification debt
 - ✓ Timed keep-awake sends one local notification about `2 分钟` before expiry when the remaining duration allows it — validated in Phase 24 through focused regression coverage with remaining desktop-delivery proof kept as human verification debt
 - ✓ Reminder delivery stays truthful for pre-expiry scheduling: stale notifications are canceled on replacement, stop, or switch-away transitions — validated in Phase 24
+- ✓ Timed keep-awake sends one local notification when the session actually ends — validated in Phase 25
+- ✓ If local notification permission is unavailable, timed keep-awake still works and the app surfaces a truthful reminder-unavailable state instead of implying reminders will arrive — validated in Phase 25
 
 ### Active
 
-- ✓ Timed keep-awake sends one local notification when the session actually ends — validated in Phase 25
-- ✓ If local notification permission is unavailable, timed keep-awake still works and the app surfaces a truthful reminder-unavailable state instead of implying reminders will arrive — validated in Phase 25
+- [ ] User can access a short recent-devices list for faster repeat wake actions
+- [ ] User can create a one-off timed keep-awake duration without saving it into the managed list
+- [ ] User can assign custom labels or notes to managed keep-awake durations
+- [ ] User can configure whether pre-expiry reminders are enabled
+- [ ] User can configure the reminder lead time instead of using the fixed `2 分钟` rule
+- [ ] User can review reminder history or notification-delivery troubleshooting inside the app
 
 ### Out of Scope
 
@@ -209,7 +222,7 @@ The v1.7 milestone is now shipped and archived. It kept the current validation r
 
 The v1.8 milestone is intentionally narrower still. It does not introduce new WOL capabilities or reopen the validation contract from v1.7. It only makes wake-result feedback transient again and aligns the saved-device form's save-button affordance with the existing keep-awake duration form pattern.
 
-The v1.9 milestone stays narrow again. Timed keep-awake already counts down and expires truthfully, but it still ends silently unless the user is watching the menu bar. This milestone adds Apple-native local notifications around that existing `endDate`: one reminder shortly before expiry and one when the timed session actually ends. Because this project treats visible truth as a hard constraint, reminder delivery must stay tied to the active timed session and must fail visibly when notification permission is unavailable rather than silently pretending reminders exist.
+The v1.9 milestone is now shipped and archived. Timed keep-awake no longer ends silently: Apple-native local notifications now cover pre-expiry and actual expiry, the existing status row can surface unavailable reminder truth, and the milestone accepted only process debt rather than runtime blockers.
 
 Phase 9 completed the live rename to `Tools Cat`: the Xcode project, targets, module, bundle IDs, regression scripts, release packaging defaults, and active docs now agree on one product identity. Historical workflow-stability exception: the planning artifact directory remains `.planning/phases/09-mac-os-swiss-knife-tools-cat/`.
 
@@ -272,4 +285,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-10 after completing Phase 25 Expiry Reminder Truth*
+*Last updated: 2026-05-10 after archiving milestone v1.9*
