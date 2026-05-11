@@ -12,5 +12,6 @@ require_command() {
 require_command "xcodebuild"
 require_command "hdiutil"
 require_command "ditto"
+require_command "codesign"
 
 echo "[OK] Local-share release preflight passed"

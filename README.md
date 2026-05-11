@@ -23,7 +23,7 @@
 sh ./release.sh
 ```
 
-当前脚本会直接做本地 `Release` 构建，并打包出一个给朋友分发的 DMG，不要求 Apple Developer Program、Developer ID 或 notarization。最终产物为：
+当前脚本会直接做本地 `Release` 构建，对 app 补一个稳定的 ad-hoc 签名后，再打包出一个给朋友分发的 DMG，不要求 Apple Developer Program、Developer ID 或 notarization。最终产物为：
 - `dist/Tools-Cat.dmg`
 
 运行过程中还会保留：
@@ -40,12 +40,13 @@ bash scripts/release/verify-distribution-closure.sh
 - `docs/release/signing-readiness.md`
 
 注意：
-- 这个 DMG 不做 Apple notarization。
+- 这个 DMG 内的 app 会保留 bundle id 绑定的 ad-hoc 签名，但不做 Apple notarization。
 - 朋友第一次打开时，可能需要对 App 执行“右键打开”。
 - 如果仍被 Gatekeeper 拦截，可以移除隔离属性：
 ```bash
 xattr -dr com.apple.quarantine "/Applications/Tools Cat.app"
 ```
+- 保留 ad-hoc 签名的原因之一，是让通知这类系统权限能稳定识别 `Tools Cat` 的应用身份，而不是退化成未绑定 bundle 的临时可执行产物。
 - 上面的脚本验证不等于 fresh-machine / 真实朋友侧 Gatekeeper 验证；那部分仍需要手工烟雾确认。
 
 ## 更名后的可选清理

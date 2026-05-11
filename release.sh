@@ -9,6 +9,7 @@ DERIVED_DATA_PATH="$ROOT_DIR/build/DerivedData"
 BUILD_APP_PATH="$DERIVED_DATA_PATH/Build/Products/$CONFIGURATION/Tools Cat.app"
 LEGACY_DIST_APP_PATH="$ROOT_DIR/dist/Tools Cat.app"
 DMG_PATH="$ROOT_DIR/dist/Tools-Cat.dmg"
+ENTITLEMENTS_PATH="$ROOT_DIR/Tools Cat/Tools_Cat.entitlements"
 
 cd "$ROOT_DIR"
 
@@ -32,9 +33,12 @@ if [[ ! -d "$BUILD_APP_PATH" ]]; then
     exit 1
 fi
 
+echo "[BUILD] Re-signing Release app with a stable ad-hoc bundle signature"
+bash "$ROOT_DIR/scripts/release/ad-hoc-sign-friend-share-app.sh" "$BUILD_APP_PATH" "$ENTITLEMENTS_PATH"
+
 echo "[BUILD] Packaging DMG to $DMG_PATH"
 bash "$ROOT_DIR/build_dmg.sh" "$BUILD_APP_PATH" "Tools-Cat.dmg" "Tools Cat"
 
 echo "[DONE] Release app built at $BUILD_APP_PATH"
 echo "[DONE] Friend-share DMG created at $DMG_PATH"
-echo "[NOTE] This build is not notarized. Friends may need to right-click open the app or remove quarantine manually."
+echo "[NOTE] This build is ad-hoc signed but not notarized. Friends may need to right-click open the app or remove quarantine manually."

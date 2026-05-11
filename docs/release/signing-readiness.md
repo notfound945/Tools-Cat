@@ -9,6 +9,7 @@ This flow expects these command-line tools to be available before `sh ./release.
 - `xcodebuild`
 - `hdiutil`
 - `ditto`
+- `codesign`
 
 The public release command stays:
 
@@ -25,7 +26,7 @@ This release path exists specifically for the case where the maintainer does not
 - no stapling
 - no Gatekeeper-approved double-click install experience
 
-The tradeoff is intentional: the maintainer can still share a DMG with friends, but the friend may need one manual allow step on first launch.
+The tradeoff is intentional: the maintainer can still share a DMG with friends, but the friend may need one manual allow step on first launch. The app is still re-signed ad hoc before packaging so macOS can keep a stable bundle identity for system features such as notification permissions.
 
 ## Release runbook
 
@@ -48,8 +49,9 @@ Preflight failures you should expect:
 Successful friend-share flow:
 
 1. `release.sh` runs `xcodebuild build` with `CODE_SIGNING_ALLOWED=NO` and `CODE_SIGNING_REQUIRED=NO`.
-2. `build_dmg.sh` packages the built app directly into `dist/Tools-Cat.dmg`.
-3. The maintainer sends the DMG to a friend together with first-launch instructions.
+2. `release.sh` reapplies an ad-hoc signature with the app's real bundle identifier and entitlements so the shipped app is still a stable bundle in macOS permission systems.
+3. `build_dmg.sh` packages the signed app directly into `dist/Tools-Cat.dmg`.
+4. The maintainer sends the DMG to a friend together with first-launch instructions.
 
 ## Automated verification
 
@@ -63,7 +65,7 @@ This Phase 18 verification command composes the repo-side checks that should sta
 
 1. `scripts/release/verify-release-readiness.sh` confirms the friend-share release contract still matches the current non-notarized DMG flow.
 2. `scripts/release/verify-release-docs.sh` confirms `README.md` and this runbook still agree on the release and manual-open story.
-3. `scripts/release/verify-friend-share-artifact.sh` mounts `dist/Tools-Cat.dmg` and proves the shipped artifact contains `Tools Cat.app` plus the `/Applications` shortcut.
+3. `scripts/release/verify-friend-share-artifact.sh` mounts `dist/Tools-Cat.dmg`, proves the shipped artifact contains `Tools Cat.app` plus the `/Applications` shortcut, and confirms both the built app and mounted app keep the expected bundle identifier bound into their ad-hoc signature.
 4. A focused regression slice reruns `Tools CatTests/WOLSessionModelTests`, `Tools CatTests/KeepAwakeSessionModelTests`, `Tools CatTests/KeepAwakeMenuStateTests`, and `scripts/run_menu_bar_verification_slice.sh` so WOL and keep-awake behavior stay unchanged by distribution hardening.
 
 ## Friend-side first launch
@@ -81,6 +83,6 @@ xattr -dr com.apple.quarantine "/Applications/Tools Cat.app"
 
 ## Verification Boundary
 
-- This flow only promises a deterministic Release app and DMG for friend sharing.
+- This flow only promises a deterministic Release app and DMG for friend sharing, with a stable ad-hoc bundle signature.
 - It does not promise notarization, stapling, or Gatekeeper approval.
 - Fresh-machine install verification and real friend-side Gatekeeper proof remain manual.
